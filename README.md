@@ -66,6 +66,22 @@ Useful flags while testing:
 
 ---
 
+## Proving that change detection works
+
+```
+python src/prove_diff.py
+```
+
+Noticing what changed is the point of the system, so it can be checked on
+demand rather than waited a month for. The script takes a known page list,
+changes it deliberately, and confirms the comparison reports exactly that
+change: nothing changed must report nothing, an added and removed set must be
+reported exactly, and a first run must count every page as new. Added pages
+are also put through the labeller. It reads the stored snapshot when one is
+present, and writes nothing.
+
+---
+
 ## Configuration
 
 All optional except the email settings.
