@@ -1,0 +1,6 @@
+data/output/
+data/snapshot.json*
+data/month2.json
+__pycache__/
+*.pyc
+.env

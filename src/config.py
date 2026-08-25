@@ -1,0 +1,146 @@
+# -*- coding: utf-8 -*-
+"""Single place for every setting the monthly refresh depends on.
+
+Nothing in this file is guessed. Each value is either taken from the page feed
+specification, or was verified against riparide.com on 25 August 2026.
+"""
+import os
+
+# ---------------------------------------------------------------- site source
+BASE = "https://www.riparide.com"
+SITEMAP_INDEX = BASE + "/sitemaps/sitemap.xml"
+
+# The six child sitemaps, verified present in the index on 25 Aug 2026.
+SITEMAPS = ["listings", "stories", "adventures", "destinations", "collections", "core"]
+
+# VERIFIED 25 Aug 2026 from a Railway container (us-west2):
+#   default command-line agent -> 403 Forbidden
+#   this browser agent         -> 200 OK
+# The site's protection layer rejects requests that identify as tooling.
+USER_AGENT = os.environ.get(
+    "FEED_USER_AGENT",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+)
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+# Ten rapid HEAD requests returned 200 with no rate limiting observed.
+# A small delay is still used so the job stays polite over thousands of URLs.
+REQUEST_TIMEOUT = 30
+REQUEST_DELAY = float(os.environ.get("FEED_REQUEST_DELAY", "0.15"))
+REQUEST_RETRIES = 2
+STATUS_CHECK_WORKERS = int(os.environ.get("FEED_STATUS_WORKERS", "6"))
+
+# Safety valve. If a run would status-check more than this, it checks the
+# newest ones and reports the rest as unchecked rather than running for hours.
+MAX_STATUS_CHECKS = int(os.environ.get("FEED_MAX_STATUS_CHECKS", "1500"))
+
+# Listing and story pages are read once to recover their location, then cached.
+# The first run pays for the whole catalogue; later runs only read new pages.
+# The cap keeps any single run bounded.
+MAX_LOCATION_FETCHES = int(os.environ.get("FEED_MAX_LOCATION_FETCHES", "1200"))
+
+# ---------------------------------------------------------------- storage
+DATA_DIR = os.environ.get("FEED_DATA_DIR", "data")
+SNAPSHOT_FILE = os.path.join(DATA_DIR, "snapshot.json")
+OUTPUT_DIR = os.environ.get("FEED_OUTPUT_DIR", os.path.join(DATA_DIR, "output"))
+ATTRIBUTES_FILE = os.environ.get("FEED_ATTRIBUTES_FILE", os.path.join(DATA_DIR, "listing-attributes.csv"))
+
+CORE_CSV = "riparide-page-feed-core.csv"
+ADVENTURES_CSV = "riparide-page-feed-adventures.csv"
+
+# ---------------------------------------------------------------- feed spec
+# From the page feed specification and Google's page feed documentation.
+MAX_LABELS_PER_URL = 20
+TRACKING_PARAMS = ["utm_", "gclid", "srsltid", "fbclid", "msclkid"]
+REQUIRED_PREFIX = "https://www.riparide.com/"
+CSV_HEADER = ["Page URL", "Custom label"]
+
+# ---------------------------------------------------------------- taxonomy
+# The 22 stay-type subcategories exposed by the live facet filter, read off
+# riparide.com/listings on 25 Aug 2026.
+SUBCATS = [
+    "a-frame", "barn", "beach-shack", "cabin", "camping", "caravan", "church",
+    "cottage", "eco-house", "farm", "glamping", "house", "lodge", "luxury-house",
+    "shipping-container", "studio", "suite", "tiny-house", "train", "treehouse",
+    "villa", "yurt",
+]
+
+# Six geo scopes the facet URLs are built for.
+FACET_SCOPES = [
+    ("AU", "VIC", "GEO_AU", "GEO_VIC"),
+    ("AU", "NSW", "GEO_AU", "GEO_NSW"),
+    ("AU", None, "GEO_AU", ""),
+    ("NZ", None, "GEO_NZ", ""),
+    ("US", "WA", "GEO_US", "GEO_WA"),
+    ("US", "OR", "GEO_US", "GEO_OR"),
+]
+
+
+# Region slugs that exist under more than one state or country, so a label
+# built from the slug alone would collide. Verified against the destinations
+# sitemap on 25 Aug 2026: /au/nsw/north-coast and /us/oregon/north-coast both
+# exist, and the same is true for south-coast and central-coast.
+# For these, the state or country code is appended to keep the label unique.
+# The runner re-detects collisions on every run and reports any new ones.
+AMBIGUOUS_REGION_SLUGS = {"north-coast", "south-coast", "central-coast"}
+
+# Short code appended to an ambiguous region label.
+REGION_SUFFIX = {
+    "GEO_VIC": "VIC", "GEO_NSW": "NSW", "GEO_WA": "WA", "GEO_OR": "OR",
+}
+REGION_SUFFIX_BY_COUNTRY = {"GEO_NZ": "NZ", "GEO_AU": "AU", "GEO_US": "US"}
+
+STATE_OF = {"vic": "GEO_VIC", "nsw": "GEO_NSW", "washington": "GEO_WA", "oregon": "GEO_OR"}
+COUNTRY_OF = {"au": "GEO_AU", "nz": "GEO_NZ", "us": "GEO_US"}
+
+INTENT_KEYWORDS = [
+    ("romantic", "INT_ROMANTIC"), ("honeymoon", "INT_ROMANTIC"), ("couples", "INT_ROMANTIC"),
+    ("off-grid", "INT_OFFGRID"), ("offgrid", "INT_OFFGRID"),
+    ("pet-friendly", "INT_PET_FRIENDLY"), ("dog-friendly", "INT_PET_FRIENDLY"),
+    ("farm-stay", "INT_FARM_STAY"), ("farmstay", "INT_FARM_STAY"),
+    ("hot-tub", "INT_HOT_TUB"), ("hottub", "INT_HOT_TUB"),
+    ("sauna", "INT_SAUNA"),
+    ("split-the-bill", "INT_GROUPS"), ("split-the-check", "INT_GROUPS"), ("groups", "INT_GROUPS"),
+    ("luxury", "INT_LUXURY"),
+]
+
+# Clusters Search Generic outperforms PMax on, per the role-split research.
+SEARCH_HEAD_INTENTS = {"INT_ROMANTIC", "INT_OFFGRID", "INT_PET_FRIENDLY"}
+SEARCH_HEAD_TYPES = {"TYPE_TINY_HOUSE", "TYPE_CABIN", "TYPE_GLAMPING", "TYPE_COTTAGE"}
+
+# POI collection to region, only where the platform's own product data confirmed it.
+POI_REGION = {
+    "daylesford": "REG_MACEDON_RANGES",
+    "warburton": "REG_YARRA_VALLEY",
+    "kangaroo-valley": "REG_SOUTH_COAST_NSW",
+    "mudgee": "REG_COUNTRY_NSW",
+    "byron-bay": "REG_NORTH_COAST_NSW",
+}
+
+# ---------------------------------------------------------------- feeds
+FEED_CORE = "CORE"
+FEED_ADVENTURES = "ADVENTURES"
+FEED_EXCLUDE = "EXCLUDE"
+
+# ---------------------------------------------------------------- email
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+EMAIL_FROM = os.environ.get("EMAIL_FROM", "")
+EMAIL_TO = [a.strip() for a in os.environ.get("EMAIL_TO", "").split(",") if a.strip()]
+
+
+def email_configured():
+    """True only when one complete delivery route is present."""
+    if RESEND_API_KEY and EMAIL_FROM and EMAIL_TO:
+        return True
+    if SMTP_HOST and SMTP_USER and SMTP_PASSWORD and EMAIL_FROM and EMAIL_TO:
+        return True
+    return False

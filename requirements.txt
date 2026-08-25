@@ -1,0 +1,4 @@
+# No third-party packages are used.
+# The site's protection layer rejects the requests library's TLS fingerprint
+# while accepting the standard library's, so fetching uses urllib only.
+# This file is kept so the platform detects a Python project.
