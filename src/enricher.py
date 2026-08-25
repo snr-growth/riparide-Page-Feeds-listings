@@ -31,13 +31,22 @@ import labeller
 
 CACHE_FILE = os.path.join(cfg.DATA_DIR, "location-cache.json")
 
+# Bumped whenever parse_title changes in a way that could alter a stored
+# result. Entries recorded as unmapped under an older parser are re-read.
+PARSER_VERSION = 2
+
 COUNTRY_TOKENS = {"AU": "GEO_AU", "NZ": "GEO_NZ", "US": "GEO_US"}
 STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_OR"}
 
 _TITLE = re.compile(r"<title>(.*?)</title>", re.S | re.I)
 # " - <Stay type> for Rent in " or " - Adventure by <name> in "
 _AFTER_IN = re.compile(r"\s+in\s+(.+?)\s*(?:\|\s*Riparide)?\s*$", re.I)
-_STAY = re.compile(r"-\s*([A-Za-z' \-]+?)\s+for\s+Rent\s+in\s", re.I)
+# Titles can contain several " - " separators, e.g.
+#   "The Hideout - Hot Tub - Pets Ok - Cabin for Rent in ..."
+# The stay type is the segment immediately before "for Rent", so the prefix
+# is matched greedily to land on the LAST separator, and the captured group
+# may not itself contain a dash.
+_STAY = re.compile(r".*[-–]\s*([A-Za-z' ]+?)\s+for\s+Rent\s+in\s", re.I)
 
 
 def parse_title(title):
@@ -117,7 +126,10 @@ def fetch_location(url):
     except Exception:
         return {}
     m = _TITLE.search(body)
-    return parse_title(m.group(1)) if m else {}
+    out = parse_title(m.group(1)) if m else {}
+    if out:
+        out["parser"] = PARSER_VERSION
+    return out
 
 
 def enrich(rows, limit=None, log=print, cache_path=None):
@@ -128,6 +140,18 @@ def enrich(rows, limit=None, log=print, cache_path=None):
     cache = load_cache(cache_path)
     targets = [r for r in rows
                if r["page_type"] in ("PAGE_LISTING", "PAGE_STORY") and not r["country"]]
+
+    # A cached entry that recorded an unmapped stay-type wording may have been
+    # parsed before a parser fix. Those are cheap to re-read and are the only
+    # entries a parser change can alter, so they are refreshed once.
+    stale = [u for u, loc in cache.items()
+             if (loc or {}).get("stay_wording_unmapped")
+             and not (loc or {}).get("parser", 0) >= PARSER_VERSION]
+    for u in stale:
+        cache.pop(u, None)
+    if stale:
+        log("re-reading %d page(s) whose stay type was recorded as unmapped" % len(stale))
+
     todo = [r["url"] for r in targets if r["url"] not in cache]
 
     capped = 0

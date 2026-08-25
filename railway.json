@@ -6,6 +6,6 @@
   "deploy": {
     "startCommand": "python src/run.py",
     "restartPolicyType": "NEVER",
-    "cronSchedule": "*/5 * * * *"
+    "cronSchedule": "0 3 1 * *"
   }
 }
