@@ -33,7 +33,12 @@ CACHE_FILE = os.path.join(cfg.DATA_DIR, "location-cache.json")
 
 # Bumped whenever parse_title changes in a way that could alter a stored
 # result. Entries recorded as unmapped under an older parser are re-read.
-PARSER_VERSION = 3
+PARSER_VERSION = 4
+
+# Keyed the same way a title wording is reduced before comparison, so the
+# readable form can stay in config where it is easy to check against a page.
+_EXTRA_STAY = {re.sub(r"[^a-z]", "", k.lower()): v
+               for k, v in cfg.EXTRA_STAY_WORDINGS.items()}
 
 COUNTRY_TOKENS = {"AU": "GEO_AU", "NZ": "GEO_NZ", "US": "GEO_US"}
 STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_OR"}
@@ -95,10 +100,16 @@ def parse_title(title):
                 out["stay"] = "TYPE_" + sub.upper().replace("-", "_")
                 break
         else:
-            # The title uses a wording that is not in the live subcategory
-            # list. Recorded rather than guessed, and reported after the run
-            # so the mapping can be added deliberately.
-            out["stay_wording_unmapped"] = wording
+            # Not a facet subcategory. It may still be a stay type the site
+            # names in its titles without offering a facet page for it.
+            extra = _EXTRA_STAY.get(want)
+            if extra:
+                out["stay"] = extra
+            else:
+                # A wording nobody has accounted for yet. Recorded rather
+                # than guessed, and reported after the run so it can be
+                # added deliberately, or so a parsing fault shows up.
+                out["stay_wording_unmapped"] = wording
     return out
 
 

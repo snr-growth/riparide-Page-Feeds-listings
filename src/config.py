@@ -70,6 +70,31 @@ SUBCATS = [
     "villa", "yurt",
 ]
 
+# Wordings the site uses for a stay type in its own page titles that have no
+# entry in the facet list above. They become labels in their own right, taken
+# from the site's wording rather than matched to a near neighbour: a beach
+# house is not necessarily a beach shack, and a wrong match would put a
+# listing in the wrong asset group.
+#
+# These are labels only. They are deliberately kept out of SUBCATS, which
+# drives the facet URLs, because no facet page exists for them and a feed of
+# URLs that do not exist is a feed of disapprovals.
+#
+# It is an allow-list on purpose. A wording that is not here is still
+# reported after the run rather than labelled, so a parsing fault cannot
+# quietly invent a stay type. That is how the A-Frame fault was caught.
+EXTRA_STAY_WORDINGS = {
+    "beach house": "TYPE_BEACH_HOUSE",
+    "train carriage": "TYPE_TRAIN_CARRIAGE",
+    "houseboat": "TYPE_HOUSEBOAT",
+    "hotel": "TYPE_HOTEL",
+    "vehicle": "TYPE_VEHICLE",
+    "tipi": "TYPE_TIPI",
+    "kiln": "TYPE_KILN",
+    "cave": "TYPE_CAVE",
+    "igloo": "TYPE_IGLOO",
+}
+
 # Six geo scopes the facet URLs are built for.
 FACET_SCOPES = [
     ("AU", "VIC", "GEO_AU", "GEO_VIC"),
