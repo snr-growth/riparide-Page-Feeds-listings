@@ -33,7 +33,7 @@ CACHE_FILE = os.path.join(cfg.DATA_DIR, "location-cache.json")
 
 # Bumped whenever parse_title changes in a way that could alter a stored
 # result. Entries recorded as unmapped under an older parser are re-read.
-PARSER_VERSION = 2
+PARSER_VERSION = 3
 
 COUNTRY_TOKENS = {"AU": "GEO_AU", "NZ": "GEO_NZ", "US": "GEO_US"}
 STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_OR"}
@@ -41,12 +41,15 @@ STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_O
 _TITLE = re.compile(r"<title>(.*?)</title>", re.S | re.I)
 # " - <Stay type> for Rent in " or " - Adventure by <name> in "
 _AFTER_IN = re.compile(r"\s+in\s+(.+?)\s*(?:\|\s*Riparide)?\s*$", re.I)
-# Titles can contain several " - " separators, e.g.
+# Titles can carry several separators, e.g.
 #   "The Hideout - Hot Tub - Pets Ok - Cabin for Rent in ..."
-# The stay type is the segment immediately before "for Rent", so the prefix
-# is matched greedily to land on the LAST separator, and the captured group
-# may not itself contain a dash.
-_STAY = re.compile(r".*[-–]\s*([A-Za-z' ]+?)\s+for\s+Rent\s+in\s", re.I)
+# The stay type is the segment immediately before "for Rent", so the prefix is
+# matched greedily to land on the last separator. The separator has to be a
+# spaced dash: a stay type can contain a dash of its own, as "A-Frame" does,
+# and splitting on any dash left it reading as "Frame".
+# The leading separator is optional so a title that is only the stay type
+# still parses.
+_STAY = re.compile(r"^(?:.*\s[-–]\s)?([A-Za-z'\- ]+?)\s+for\s+Rent\s+in\s", re.I)
 
 
 def parse_title(title):
