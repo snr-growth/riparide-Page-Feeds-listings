@@ -1,0 +1,66 @@
+name: Build the page feed
+
+# The monthly run delivers its files by email. This workflow exists for the
+# times someone needs the files right now, before email delivery is set up or
+# outside the monthly cycle. It is started by hand and leaves both CSV files
+# attached to the run for anyone to download.
+#
+# It runs here rather than on a laptop because the site's protection layer
+# rejects home connections, so the pages cannot be read from one.
+
+on:
+  workflow_dispatch:
+    inputs:
+      full_status:
+        description: "Status check every URL, not only the new ones. Slower, more thorough."
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    name: Build both feed files
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    env:
+      FEED_MAX_LOCATION_FETCHES: "12000"
+      FEED_MAX_STATUS_CHECKS: "12000"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Fail here rather than twenty minutes in if the site will not answer.
+      - name: Check the site answers
+        run: |
+          cd src
+          python -c "import fetcher; b = fetcher.get('https://www.riparide.com/listings/97-pebble-point'); print('site reachable, %d bytes' % len(b))"
+
+      - name: Build the feed
+        run: |
+          if [ "${{ inputs.full_status }}" = "true" ]; then
+            python src/run.py --full-status
+          else
+            python src/run.py
+          fi
+
+      - name: Show what was produced
+        if: always()
+        run: |
+          ls -la data/output || echo "no output directory"
+          for f in data/output/*.csv; do
+            [ -e "$f" ] || continue
+            echo "=== $f: $(( $(wc -l < "$f") - 1 )) rows ==="
+            head -3 "$f"
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: riparide-page-feed
+          path: data/output/*.csv
+          if-no-files-found: error
+          retention-days: 30
