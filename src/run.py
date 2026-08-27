@@ -20,6 +20,7 @@ import enricher
 import validator
 import writer
 import report
+import sheets
 import emailer
 
 LINE = "-" * 72
@@ -204,6 +205,18 @@ def main(argv=None):
         summary["report_path"] = report.write_report(out_rows, checks, summary)
         log("wrote report -> %s" % summary["report_path"])
 
+        # 8c. update the Google-Ads-facing Google Sheet -----------------------
+        # A dry run never touches this: unlike the local CSV/xlsx files, this
+        # is a real write to shared external state, not something a
+        # --dry-run should have any side effect on.
+        log(LINE)
+        if args.dry_run:
+            log("dry run: Google Sheets not updated")
+            summary["sheets"] = {"configured": cfg.google_sheets_configured(),
+                                 "ok": False, "updated": {}, "error": "dry run"}
+        else:
+            summary["sheets"] = sheets.update_feed_sheets(out_rows, log)
+
         # 9. save the snapshot ----------------------------------------------
         if args.dry_run:
             log("dry run: snapshot not written")
@@ -232,15 +245,26 @@ def main(argv=None):
         # its persistent storage, the last-known-good snapshot can be
         # recovered from this month's email rather than starting over.
         attachments.append(summary["snapshot_path"])
-    subject = "Riparide page feed refresh %s%s" % (
-        started.strftime("%b %Y"), " FAILED" if summary["failed"] else "")
+    sheets_report = summary.get("sheets") or {}
+    sheets_failed = sheets_report.get("configured") and not sheets_report.get("ok") \
+        and not args.dry_run
+    subject = "Riparide page feed refresh %s%s%s" % (
+        started.strftime("%b %Y"),
+        " FAILED" if summary["failed"] else "",
+        " (Google Sheets update failed)" if sheets_failed and not summary["failed"] else "")
     if args.dry_run:
         log(LINE)
         log("dry run: email not sent")
     else:
         emailer.send(subject, body, attachments, log)
 
-    return 1 if summary["failed"] else 0
+    # A Sheets failure never blocks the CSVs/xlsx/email above (a good feed
+    # must never be lost over a delivery-channel hiccup, D5's own principle
+    # applied to the newest channel) - but it still has to surface loudly,
+    # since Sheets may now be how Google Ads actually gets fed. A non-zero
+    # exit here is what makes GitHub Actions mark the run failed and send
+    # its own independent failure notification (see DECISIONS.md D11/D12).
+    return 1 if (summary["failed"] or sheets_failed) else 0
 
 
 if __name__ == "__main__":

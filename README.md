@@ -2,7 +2,7 @@
 
 Rebuilds the Riparide Performance Max page feed every month so it stays accurate without anyone maintaining it by hand.
 
-Runs on a schedule, produces two upload ready CSV files plus a reviewable `.xlsx` report, and emails all of it with a report of what changed.
+Runs on a schedule and produces the feed in two parallel formats: two CSVs plus a reviewable `.xlsx` report as the **client-shared format** (emailed, human-facing, unchanged structurally since first built), and a Google Sheet as the **Google-Ads-facing format** (what Google Ads actually reads from, see DECISIONS.md D14). Both come from the exact same labelled data every run.
 
 ---
 
@@ -17,13 +17,14 @@ Runs on a schedule, produces two upload ready CSV files plus a reviewable `.xlsx
 | 5 | Merge an optional supplied attributes file |
 | 6 | Status check the changed URLs and drop anything that is not 200 |
 | 7 | Run the validation checks |
-| 8 | Write both CSV files, then the `.xlsx` report |
+| 8 | Write both CSV files, then the `.xlsx` report (client-shared format) |
+| 8c | Update the Google Sheet Google Ads reads from (Google-Ads-facing format) |
 | 9 | Save the new snapshot |
 | 10 | Email the report with the CSVs, the `.xlsx` report, and the snapshot attached |
 
-If any validation check fails the run stops before writing anything. A broken feed is worse than a stale one.
+If any validation check fails the run stops before writing anything. A broken feed is worse than a stale one. A Sheets-update failure (step 8c) is the one exception to "nothing else happens" — the CSVs/xlsx/email still complete, since a good feed must never be lost over one delivery channel's hiccup, but the run still exits non-zero so it's never silently missed.
 
-The only manual step left is uploading the two CSV files in Google Ads under Tools, Business data, Page feed.
+Once the Google Sheet is connected as the page feed's source in Google Ads (a one-time setup, see DECISIONS.md D14), there is no manual upload step left at all. Until then, the CSVs remain uploadable by hand under Tools, Business data, Page feed.
 
 ---
 
@@ -38,8 +39,9 @@ src/
   attributes.py  optional supplied attributes file
   store.py       snapshot storage and the month to month diff
   validator.py   the pre upload checks
-  writer.py      CSV output
-  report.py      the .xlsx report (Summary, QA Checks, Label Taxonomy, both feeds)
+  writer.py      CSV output (client-shared format)
+  report.py      the .xlsx report - Summary, QA Checks, Label Taxonomy, both feeds (client-shared format)
+  sheets.py      writes the feed into a Google Sheet (Google-Ads-facing format, D14)
   emailer.py     report delivery, API key or SMTP
   run.py         the run itself
   prove_diff.py  proof that change detection works (see below)
@@ -50,9 +52,11 @@ reports/         the monthly .xlsx report, committed here (see Deployment)
 ```
 
 No third party packages are used anywhere that talks to riparide.com — see
-the note on client fingerprinting below. `openpyxl` (see `requirements.txt`)
-is the one deliberate exception, used only by `report.py` to build the local
-`.xlsx` file; it never touches the network. See DECISIONS.md D13.
+the note on client fingerprinting below. `openpyxl` and `google-auth` (see
+`requirements.txt`) are the two deliberate exceptions: `report.py` uses
+openpyxl purely to build a local `.xlsx` file, and `sheets.py` uses
+google-auth purely to sign a request to Google's own API — neither ever
+touches riparide.com. See DECISIONS.md D13 and D14.
 
 ---
 
@@ -89,8 +93,10 @@ are also put through the labeller. It reads the stored snapshot when one is
 present, and writes nothing.
 
 Unit tests for the individual modules (labelling, validation, the attributes
-merge, the location parser, the robots.txt/AdsBot check) live alongside them
-as `test_*.py`. Run the whole suite with:
+merge, the location parser, the robots.txt/AdsBot check, the Google Sheets
+integration) live alongside them as `test_*.py` — the Sheets tests use a
+throwaway RSA key and a mocked transport, no real Google credentials or
+network access needed. Run the whole suite with:
 
 ```
 cd src
@@ -120,8 +126,10 @@ All optional except the email settings.
 | `EMAIL_FROM`, `EMAIL_TO` | none | sender, and recipients separated by commas |
 | `RESEND_API_KEY` | none | email service route |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | none | SMTP route |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | none | full contents of the service-account key file, see D14 |
+| `GOOGLE_SHEETS_SPREADSHEET_ID` | none | the spreadsheet's ID (from its URL) |
 
-Without email settings the run still completes and reports that the email was not sent.
+Without email settings the run still completes and reports that the email was not sent. Same for the two `GOOGLE_*` settings and the Sheets update — see DECISIONS.md D14 for the one-time setup needed (service account, sheet sharing) before these can be filled in.
 
 Two safety behaviours are set in `config.py` rather than by environment
 variable, since they're policy rather than per-environment config:
@@ -160,8 +168,22 @@ Runs on GitHub Actions (`.github/workflows/monthly-refresh.yml`), not Railway. S
 | Schedule | `0 3 1 * *`, 03:00 UTC on the 1st of each month, plus manual dispatch any time |
 | State persistence | `data/snapshot.json`, `data/snapshot.json.previous`, `data/location-cache.json`, and `reports/riparide-page-feed-report.xlsx` are committed back into this repo by the workflow after a successful run — no external volume |
 | Concurrency | one refresh at a time (`concurrency: group: monthly-page-feed-refresh`), so a manual run can't race the scheduled one |
-| Secrets required | `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet, set as GitHub Actions repository secrets |
+| Secrets required | `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet for email; `GOOGLE_SERVICE_ACCOUNT_JSON` and `GOOGLE_SHEETS_SPREADSHEET_ID` for the Google Sheets update — all as GitHub Actions repository secrets |
 | Failure visibility | a failed run exits non-zero, which GitHub marks as a failed workflow run and emails repo watchers by default — independent of this project's own email delivery |
+
+### Setting up the Google Sheet (one-time, client-side)
+
+None of this can be done from inside this repo — it needs a Google account with access to Google Cloud and to the Google Ads account.
+
+1. In Google Cloud Console, create (or reuse) a project, enable the **Google Sheets API**, and create a **service account**. Generate a JSON key for it and download the file.
+2. Create the Google Sheet (or use an existing one you want to become the feed). Share it with **Editor** access to the service account's email address (it looks like `something@project-id.iam.gserviceaccount.com` — found in the downloaded JSON as `client_email`).
+3. In this repo's GitHub settings → Secrets and variables → Actions, add:
+   - `GOOGLE_SERVICE_ACCOUNT_JSON` — paste the **entire contents** of the downloaded JSON file, unmodified.
+   - `GOOGLE_SHEETS_SPREADSHEET_ID` — the long ID in the sheet's URL, between `/d/` and `/edit`.
+4. In Google Ads, go to Tools → Business data → Page feed, and connect **that same Sheet** as the source (using whichever Google account manages Ads — it needs Editor access too, either because it owns the sheet or because you've shared it with that account as well).
+5. Optional: also share the sheet as "Anyone with the link can view" if other people should be able to open it without being individually added. Not required for steps 2–4 to work.
+
+After that, every monthly run keeps the sheet's `Page Feed - Core` tab (pinned as the first tab, since Google Ads only reads the first one) and `Page Feed - Adventures` tab up to date automatically — no more manual uploads.
 
 ### Every run's outputs and email attachments
 

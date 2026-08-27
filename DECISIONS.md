@@ -260,3 +260,47 @@ Every previous decision in this document about staying stdlib-only (D3, D7) is a
 Unlike the CSVs (`data/output/`, gitignored, fully derived, regenerated every run), the report lives at `reports/riparide-page-feed-report.xlsx` — **not** gitignored, committed by the same `monthly-refresh.yml` step that persists the snapshot and location cache (D12), so every month's report is a reviewable point in git history rather than something that only ever existed in an email inbox. It is also attached to the report email alongside the two CSVs and `snapshot.json`.
 
 Deliberately left out of scope: an "Asset Group Map" or "Build Sequence" tab. Those describe one-time, human-decided Google Ads account structure, not something this run regenerates monthly — including them would mean either leaving them permanently stale or fabricating content this codebase has no basis for. If they're wanted, they belong in the original manually-maintained workbook, not the automated one.
+
+---
+
+## D14. Added a Google Sheets integration as the Google-Ads-facing format, separate from the client-shared CSVs/xlsx
+
+**Date:** 27 August 2026
+**Status:** Built, pending client-side setup (service account creation, sheet sharing, GitHub secrets)
+
+### The ask
+
+The client wants Google Ads to pull the feed itself rather than being sent a file every month, and separately wants to be able to open something and see the current feed themselves. Across that conversation, three options were weighed: hosting the CSV at a plain URL, a password-protected URL, and Google Sheets. The client chose Google Sheets, specifically because Google Ads' own "Upload new page feed data" dialog lists it as a native source type alongside HTTP/HTTPS/FTP/SFTP — screenshotted directly from their account.
+
+### What was verified before building, and why it changed the design
+
+Before writing any code, Google's own current help documentation was checked rather than assumed, per this file's standing rule. Findings:
+
+- **The 2-column format is confirmed correct as-is.** "For page feeds specifically, download the page feed data template or create your own spreadsheet with at least two columns, including a Page URL column... Format the page feed as a CSV with two columns: Page URL and Custom Label" ([How to use page feeds in Performance Max](https://support.google.com/google-ads/answer/13568488?hl=en-AU), [Use a feed to target Dynamic Search Ads and Performance Max](https://support.google.com/google-ads/answer/7166527?hl=en-GB)). Multiple labels per row are semicolon-separated, exactly matching `labeller.label_string`. No change needed to the existing format.
+- **Google Ads' Google Sheets connection only reads the first sheet/tab of the spreadsheet.** "Data Manager can only read data from the first sheet in a Google Sheets spreadsheet" ([Google Sheets - Google Ads Help](https://support.google.com/google-ads/answer/15146000?hl=en-GB)). This was not anticipated when the client first asked for "Core and Adventures as two tabs" — if built that way with Adventures first (or reordered later by anyone), Google Ads would silently start reading the wrong feed with no error surfaced anywhere. `sheets._ensure_tabs()` now actively pins `Page Feed - Core` to sheet index 0 on every single run, not just at setup, specifically to defend against that.
+- **Access is per-Google-account, not "public."** Connecting a sheet requires "Editor access to the Google Sheets file" via "Direct connection... through your Google Drive account" (same source) — i.e. whichever human connects it inside Google Ads authenticates as themselves, with their own granted access, not through any API key or service account this project controls. This means the earlier "does the Sheet need to be public" question has a better answer than either side of that debate: it needs to be **shared with (or owned by) whichever Google account manages Google Ads**, which the client's own access already satisfies for both their own viewing and Ads' ingestion. Making it additionally public ("anyone with the link") is optional — useful if other people at Riparide or SNR want drive-by access without being individually added, but not required for either Ads or the client's own use.
+- **Column header rules**: "The first row in the spreadsheet must consist of valid headers... must start with a letter or underscore, and must not exceed 256 characters" ([About business data and data feeds](https://support.google.com/google-ads/answer/6072708?hl=en), [Google Sheets - Google Ads Help](https://support.google.com/google-ads/answer/15146000?hl=en-GB)). "Page URL" and "Custom label" both satisfy this trivially.
+- **Not confirmed**: the exact automatic refresh cadence for a page feed specifically connected via Google Sheets. Google's documentation describes configurable daily/weekly/first-of-month refresh for ad customizer and dynamic display business data, and separately states new page feed uploads/edits take "2–14 days" to crawl — but nothing found ties those two facts together for a Sheets-connected page feed specifically. **Recommendation, not yet verified**: once the Sheets connection is set up in the account, check the Business Data feed's own schedule/edit screen for a refresh-frequency setting, and confirm it against real crawl behavior rather than assuming either figure applies.
+
+### What was built
+
+`src/sheets.py`, a new, independent delivery path — it does not replace or restructure the two CSVs or the `.xlsx` report (`writer.py`, `report.py`), which remain the **client-shared format**: email attachments, human-readable, unchanged in structure. `sheets.py` writes the exact same `out_rows` data into a client-owned Google Sheet instead, as the **Google-Ads-facing machine format**:
+
+- Authenticates as a Google Cloud service account via the standard OAuth 2.0 JWT-bearer server-to-server flow, signing its own short-lived JWT and exchanging it directly against `oauth2.googleapis.com/token`.
+- Every actual Sheets API v4 call after that is plain `urllib` REST — no `google-api-python-client`, no `httplib2`, no `requests` — matching how `fetcher.py` and `emailer.py`'s Resend route already talk to their respective APIs.
+- `google-auth` is the one new dependency, used only for RSA-signing the JWT (it requires `cryptography`, confirmed via `pip show google-auth`; there was no pure-stdlib way to do RS256 signing, since the standard library has no asymmetric-crypto primitives at all). It never talks to riparide.com, so — like `openpyxl` in D13 — it carries none of the risk D3/D7 documented for the fetching layer specifically.
+- `_ensure_tabs()` creates `Page Feed - Core` / `Page Feed - Adventures` if missing and re-pins Core to index 0 every run (see above).
+- `_write_tab()` clears each tab's data columns before writing, so a feed that shrank doesn't leave stale rows below the new data.
+- Missing configuration (`GOOGLE_SERVICE_ACCOUNT_JSON` / `GOOGLE_SHEETS_SPREADSHEET_ID`) is treated exactly like unconfigured email: skipped, reported, never a failure.
+- A **configured** Sheets update that fails (bad credentials, sheet not shared with the service account, API/network error) is deliberately **not** allowed to block the CSVs, `.xlsx`, or email — a good feed must never be lost over one delivery channel's hiccup, the same principle D5 established for email. But since Sheets may now be how Google Ads actually gets fed, `run.py` still makes the run's overall exit code non-zero in that case, so GitHub Actions marks it failed and sends its own independent notification.
+- Verified without live Google credentials: the JWT is signed and independently verified against a throwaway RSA key pair (confirms the signing implementation is actually correct, not just "doesn't crash"), and every Sheets API interaction (auth, tab creation/pinning, clear-and-write, retry-then-fail, retry-then-succeed) is covered by mocked-transport unit tests in `test_sheets.py`.
+
+### What still requires the client, not this codebase
+
+None of the following can be done from here — no Google Cloud or Google Ads account access exists in this environment:
+
+1. Create a Google Cloud project + service account with the Sheets API enabled, and generate a JSON key for it.
+2. Create the Google Sheet (or use an existing one), and share Editor access with that service account's email.
+3. Paste the full service-account JSON as the `GOOGLE_SERVICE_ACCOUNT_JSON` GitHub Actions secret, and the sheet's ID as `GOOGLE_SHEETS_SPREADSHEET_ID`.
+4. In Google Ads, connect that same Sheet as the page feed's source (Business Data → Page feed → Google Sheets), using whichever Google account manages the Ads account and has (or is given) Editor access to the sheet.
+5. Decide whether to also share the sheet as "Anyone with the link" for broader viewing — optional, not required for the above to work.

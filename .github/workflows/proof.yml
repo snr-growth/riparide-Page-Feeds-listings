@@ -29,9 +29,9 @@ jobs:
       - name: Check every module imports cleanly
         run: |
           cd src
-          python -c "import config, fetcher, labeller, enricher, attributes, store, validator, writer, report, emailer, run; print('all 11 modules import cleanly')"
+          python -c "import config, fetcher, labeller, enricher, attributes, store, validator, writer, report, sheets, emailer, run; print('all 12 modules import cleanly')"
 
-      - name: Unit tests (labeller, validator, attributes, enricher, fetcher, store, report)
+      - name: Unit tests (labeller, validator, attributes, enricher, fetcher, store, report, sheets)
         run: |
           cd src
           python -m unittest discover -p "test_*.py" -v

@@ -1,6 +1,6 @@
 # Riparide Page Feed — Project Status
 
-**Last updated:** 27 August 2026 (post scope-cross-check fixes, GitHub Actions migration, xlsx report, and the push to GitHub)
+**Last updated:** 27 August 2026 (post scope-cross-check fixes, GitHub Actions migration, xlsx report, the push to GitHub, and the Google Sheets integration)
 **Purpose of this document:** a plain-language, accurate snapshot of this project for a client status update (Loom recording). Covers what was asked for, what's been built, how it runs today, and what's still open.
 
 ---
@@ -39,7 +39,7 @@ A companion build spec defines the exact CSV format, hard validation rules, and 
 
 ## 4. What has actually been built
 
-This is a **standalone Python job** — stdlib-only for everything that talks to riparide.com (deliberate, see §6), with one narrow exception: `openpyxl`, used only to build the local `.xlsx` report below, which never touches the network — that automates the entire feed-building pipeline end to end.
+This is a **standalone Python job** — stdlib-only for everything that talks to riparide.com (deliberate, see §6), with two narrow exceptions (`openpyxl` for the local `.xlsx` report, `google-auth` for the Google Sheets integration below — neither ever touches riparide.com) — that automates the entire feed-building pipeline end to end, delivering the result in two independent formats every run: the **client-shared format** (CSVs + `.xlsx`, emailed) and the **Google-Ads-facing format** (a Google Sheet Google Ads reads from directly).
 
 ### 4.1 Pipeline — what one monthly run does
 
@@ -55,11 +55,12 @@ flowchart TD
     G -- fail --> H["STOP — nothing written\n(a broken feed is worse\nthan a stale one)"]
     G -- pass --> I["8. Write 2 CSV files\n(Core, Adventures)"]
     I --> X["8b. Write the .xlsx report\n(Summary, QA Checks,\nLabel Taxonomy, both feeds)"]
-    X --> J["9. Save new snapshot\n(+ per-feed row counts)"]
+    X --> S["8c. Update the Google Sheet\n(Google-Ads-facing format)"]
+    S --> J["9. Save new snapshot\n(+ per-feed row counts)"]
     J --> K["10. Email report\n+ CSVs + xlsx + snapshot attached"]
 ```
 
-If validation fails at step 7, the run stops **before writing anything** — last month's files and snapshot stay intact. Steps 6b, 8b, and the feed-collapse guard in step 7 were all added this session (see §5).
+If validation fails at step 7, the run stops **before writing anything** — last month's files and snapshot stay intact. Step 8c is the one deliberate exception to that rule once past step 7: if the Sheets update itself fails (bad credentials, sheet not shared correctly, a Google API hiccup), the CSVs/xlsx/email still complete anyway — a good feed must never be lost over one delivery channel's problem — but the run is still marked failed so it's never silently missed. Steps 6b, 8b, 8c, and the feed-collapse guard in step 7 were all added this session (see §5).
 
 ### 4.2 How a URL becomes a labeled row
 
@@ -101,9 +102,10 @@ flowchart LR
 | CSV output in Google's exact 2-column format | ✅ Built |
 | **`.xlsx` report** (Summary, QA Checks, Label Taxonomy, both feeds as real sheets) | ✅ **New this session** — committed to the repo every run (`reports/`) and emailed, per your request |
 | Email report with CSVs + xlsx + snapshot attached | ✅ Built — kept as plain text by your choice (reviewed, judged not worth the polish for an ops-facing report); supports Resend API or SMTP, fails safely if unconfigured |
-| Unit test suite (100+ tests) + CI | ✅ Added this session — covers labelling, validation, attributes, location parsing, the robots.txt check, and the xlsx report |
+| Unit test suite (115+ tests) + CI | ✅ Covers labelling, validation, attributes, location parsing, the robots.txt check, the xlsx report, and the Google Sheets integration (mocked, no live credentials needed) |
 | Scheduled + manual run via GitHub Actions | ✅ Built — replaces Railway entirely (see 4.4) |
 | Pushed to `github.com/snr-growth/riparide-Page-Feeds-listings` | ✅ Done — on top of the real existing history, not a fresh/orphaned one |
+| **Google Sheets integration** (the Google-Ads-facing feed) | ✅ **New this session**, per your decision — writes the same feed data into a client-owned Sheet every run, auto-creates its tabs, keeps the Core tab pinned first (see §4.6). Code is done and tested; **needs your one-time setup before it does anything live** (§4.6). |
 
 ### 4.4 How it currently runs (deployment, today)
 
@@ -124,14 +126,27 @@ flowchart LR
 
 **One thing this hasn't proven yet:** whether GitHub's own runner network can actually reach riparide.com. The site's block turned out to be based on more than just which HTTP client is used (see §6) — a normal residential/office connection got blocked outright during this review, which is new information the original design didn't account for. The workflow's first step exists specifically to fail loudly and immediately if this doesn't hold, but **the very first real run needs to be watched** to confirm it, rather than assumed safe because it worked from Railway.
 
-### 4.5 Where the files actually live — CSVs, the Sheet, and email
+### 4.5 Where the files actually live — CSVs, the report, and email
 
-Direct answers to a question worth being explicit about:
+- **The two raw CSVs** are regenerated fresh every run, are not stored in git (they're fully derived from the snapshot, so keeping old copies would just be noise), and reach you two ways: attached to the report email, and as a GitHub Actions build artifact (90-day retention). This is the **client-shared format** — for manual reference/backup, not the primary path into Google Ads anymore.
+- **The `.xlsx` report is stored in GitHub** — every month's version is committed to `reports/riparide-page-feed-report.xlsx`, so the full history of past reports is browsable in the repo, not just whatever's still in an inbox. Also attached to the same email as the CSVs.
+- **The email itself stays plain text**, by your choice — it's a complete, accurate ops report (every check, every count), just not a styled HTML template.
 
-- **There is no live Google Sheet in this automation**, and never has been. The `Riparide_PMax_Page_Feed_Example.xlsx` from the original spec was a one-time, hand-built 108-URL example saved to a Google Drive folder — separate from this codebase, never read or updated by it.
-- **The two raw CSVs** are regenerated fresh every run, are not stored in git (they're fully derived from the snapshot, so keeping old copies would just be noise), and reach you two ways: attached to the report email, and as a GitHub Actions build artifact (90-day retention).
-- **The new `.xlsx` report is stored in GitHub now**, per your request — every month's version is committed to `reports/riparide-page-feed-report.xlsx`, so the full history of past reports is browsable in the repo, not just whatever's still in an inbox. It's also attached to the same email as the CSVs.
-- **The email itself stays plain text**, by your choice — it's a complete, accurate ops report (every check, every count), just not a styled HTML template. That was a deliberate call, not an oversight.
+### 4.6 The Google Sheet — the actual answer to "can we just give Google Ads a URL"
+
+This is new since the last update, and directly replaces the earlier "no live Google Sheet exists" answer — a decision was made to build one on purpose.
+
+**How it works:** every run now also writes the same feed data into a Google Sheet you own, in two tabs — `Page Feed - Core` (kept pinned as the very first tab) and `Page Feed - Adventures`. Google Ads' own "Google Sheets" connection type (the one in your screenshot) only ever reads the *first* tab of a spreadsheet — confirmed directly against Google's current help documentation before building this, not assumed — which is why Core is actively kept first on every single run, not just at setup.
+
+**On "public" vs "protected"** — also confirmed against Google's documentation, and better news than either option we discussed: Google Ads' Sheets connection authenticates as whichever Google account connects it inside Ads, using that account's own normal Editor access to the file. It's **not** a raw public-URL fetch, so it was never actually a public-vs-password-protected decision at all — it just needs to be shared with (or owned by) whichever Google account manages your Ads account. Making it additionally public is optional, only useful if other people need drive-by access without being added individually.
+
+**What's left before this does anything live** (all client-side, listed precisely in `README.md`):
+1. Create a Google Cloud service account, enable the Sheets API, download its key.
+2. Create the Sheet, share Editor access with that service account's email.
+3. Add the key + the Sheet's ID as two GitHub Actions secrets.
+4. Connect that same Sheet in Google Ads (Business Data → Page feed → Google Sheets), using the Ads-managing Google account.
+
+Until that's done, the run simply reports "not configured" and skips this step — exactly like it already does for email — so there's no risk in this being live in the code before the setup is complete.
 
 ---
 
@@ -167,3 +182,5 @@ Riparide's site fingerprints and blocks common tools (`requests`, `curl`) even w
 - Confirm whether Adventures pages should have their own feed/asset-group treatment, since this wasn't part of the original spec.
 - Confirm ownership/timing for the still-manual steps: brand negatives, asset-group restructuring around labels, and the URL-expansion account setting — none of these are things this codebase can do.
 - **Watch the first real GitHub Actions run.** Everything above is verified by code and tests running locally; the one thing that can only be confirmed by actually watching a live scheduled or manually-triggered run is whether GitHub's infrastructure can reach riparide.com the way Railway's did.
+- **Complete the 4-step Google Sheets setup in §4.6** — service account, sheet sharing, GitHub secrets, and the Google Ads connection. The code is done and tested; only this setup is blocking it from doing anything live.
+- **Check the actual refresh cadence** once the Sheets connection is live in Google Ads — Google's documentation doesn't clearly confirm how often a Sheets-connected page feed gets re-read, only that new/edited feeds take 2–14 days to crawl initially. Worth confirming directly in the account rather than assuming.

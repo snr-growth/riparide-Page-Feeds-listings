@@ -203,3 +203,25 @@ def email_configured():
     if SMTP_HOST and SMTP_USER and SMTP_PASSWORD and EMAIL_FROM and EMAIL_TO:
         return True
     return False
+
+
+# ---------------------------------------------------------------- google sheets
+# The Google-Ads-facing machine format (sheets.py). Separate from, and
+# additional to, the CSVs and .xlsx report, which stay the client-shared
+# format (see DECISIONS.md D14). GOOGLE_SERVICE_ACCOUNT_JSON is the full
+# contents of a downloaded service-account key file, pasted verbatim into
+# the env var / GitHub secret.
+GOOGLE_SERVICE_ACCOUNT_JSON = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
+GOOGLE_SHEETS_SPREADSHEET_ID = os.environ.get("GOOGLE_SHEETS_SPREADSHEET_ID", "")
+
+# Core MUST be tab_names[0] wherever it's used - sheets._ensure_tabs() pins
+# it to sheet index 0 because Google Ads' Google Sheets connection only
+# reads the first sheet in the spreadsheet (DECISIONS.md D14). Adventures
+# was never targeted in PMax anyway (ADV_HOLD, D-Adventures), so it staying
+# off the first tab costs nothing.
+SHEET_TAB_CORE = "Page Feed - Core"
+SHEET_TAB_ADVENTURES = "Page Feed - Adventures"
+
+
+def google_sheets_configured():
+    return bool(GOOGLE_SERVICE_ACCOUNT_JSON and GOOGLE_SHEETS_SPREADSHEET_ID)

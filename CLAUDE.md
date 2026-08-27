@@ -4,15 +4,19 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 
-A standalone Python job (stdlib-only except for one deliberate exception, see
-below) that rebuilds Riparide's Google Ads Performance Max **page feed**
-every month: it crawls riparide.com's sitemaps, labels every URL across six
-taxonomy dimensions, diffs against last month's snapshot, validates the
-result, writes two upload-ready CSVs plus a reviewable `.xlsx` report, and
-emails all of it. Deployed on **GitHub Actions** (`.github/workflows/monthly-refresh.yml`)
-as a scheduled job, independent of the actual Riparide site build. It used to
-run on Railway — see DECISIONS.md D12 for why it moved and D7 for the one
-thing about that move that still needs a live-run confirmation.
+A standalone Python job (stdlib-only except for two narrow, deliberate
+exceptions, see below) that rebuilds Riparide's Google Ads Performance Max
+**page feed** every month: it crawls riparide.com's sitemaps, labels every
+URL across six taxonomy dimensions, diffs against last month's snapshot,
+validates the result, and delivers the feed in two parallel, independent
+formats — the **client-shared format** (two CSVs + a reviewable `.xlsx`
+report, emailed, structurally unchanged since first built) and the
+**Google-Ads-facing format** (`sheets.py` writes the same data into a
+client-owned Google Sheet that Google Ads reads from directly, D14).
+Deployed on **GitHub Actions** (`.github/workflows/monthly-refresh.yml`) as a
+scheduled job, independent of the actual Riparide site build. It used to run
+on Railway — see DECISIONS.md D12 for why it moved and D7 for the one thing
+about that move that still needs a live-run confirmation.
 
 This repo is **deliberately separate** from `../escape-wizard` (the live
 Escape Wizard quiz app — Next.js/Fastify monorepo, Vercel + Railway) and from
@@ -60,10 +64,24 @@ code first.
   `urllib` gets 200, `requests` and `curl` (same UA) get 403 (D3). This rule
   is specifically about the fetching layer, not the whole project — see the
   next point.
-- **`openpyxl` is the one deliberate dependency, and it stays scoped to
-  `report.py`** (D13). It never makes a network call, so it doesn't carry
-  D3/D7's risk. Don't use it as precedent for adding another dependency
-  anywhere that touches the network — that's a different risk entirely.
+- **`openpyxl` and `google-auth` are the two deliberate dependencies, scoped
+  to `report.py` and `sheets.py` respectively** (D13, D14). Neither ever
+  makes a network call to riparide.com — `google-auth` only signs a JWT for
+  Google's own OAuth2 endpoint, and the actual Sheets API calls are plain
+  `urllib` REST, same style as `fetcher.py`/`emailer.py`. Don't use either as
+  precedent for a dependency that touches riparide.com — that's the one risk
+  this project actually guards against.
+- **Google Ads' Google Sheets connection only reads the first sheet/tab of a
+  spreadsheet** (D14, confirmed against Google's own help docs, not
+  assumed). `sheets._ensure_tabs()` re-pins `Page Feed - Core` to index 0 on
+  every run for exactly this reason — if you ever add a third tab or change
+  tab ordering logic, keep Core first or Google Ads silently stops seeing
+  updates with no error surfacing anywhere.
+- **A Sheets update failure never blocks the CSVs/xlsx/email** (same
+  never-lose-a-good-feed principle as D5's stance on email) **but still
+  makes the run exit non-zero** so GitHub Actions marks it failed. Don't
+  make Sheets failures silent, and don't make them block file output either
+  — both would be wrong in different ways.
 - **The block is not purely a client fingerprint — IP/ASN reputation is at
   least part of it** (D7). Don't assume "it worked from platform X" transfers
   to platform Y without testing. This is exactly why `monthly-refresh.yml`
@@ -102,16 +120,18 @@ remote history rather than force-pushed over it; if you ever find local work
 here with no `.git`, check `git log` on the actual GitHub repo before
 assuming it's safe to treat as a fresh init again).
 
-Fully implemented and unit-tested (100+ tests across `test_*.py`, plus
+Fully implemented and unit-tested (115+ tests across `test_*.py`, plus
 `prove_diff.py`, all run in CI on every push via
 `.github/workflows/proof.yml`): sitemap fetch, status-checking (now including
 every facet URL every run, D9), all six labelling dimensions + facet URL
 generation, page-title location enrichment with a version-tagged cache,
 optional attributes-file merge, snapshot diff, a validator that now also
 guards against feed collapse (D11) and an automatic 6-monthly full-status
-safety net (D11), a robots.txt/AdsBot-Google check (D10), CSV writer, an
-`.xlsx` report (`report.py`, D13) committed to `reports/` and emailed
-alongside the CSVs, and email delivery (Resend or SMTP, fails open with a
+safety net (D11), a robots.txt/AdsBot-Google check (D10), the CSV writer and
+`.xlsx` report (client-shared format, D13) committed to `reports/` and
+emailed, a Google Sheets writer (Google-Ads-facing format, D14) with JWT
+service-account auth and mocked-transport test coverage of the auth/retry/
+tab-pinning logic, and email delivery (Resend or SMTP, fails open with a
 clear report line if unconfigured, plus `snapshot.json` attached as recovery
 insurance).
 
@@ -127,21 +147,31 @@ Open items:
    (`EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*`
    quartet). Missing config fails open (run completes, report says "email not
    sent") rather than failing the job.
-3. **`data/listing-attributes.csv` doesn't exist yet.** Given `enricher.py`
+3. **The Google Sheets integration needs client-side setup before it does
+   anything** (D14) — a Google Cloud service account, a Sheet shared with
+   it, and `GOOGLE_SERVICE_ACCOUNT_JSON`/`GOOGLE_SHEETS_SPREADSHEET_ID` as
+   GitHub secrets. None of that is possible from this environment. Until
+   it's done, the run just reports "not configured" and skips it, same as
+   email does when unconfigured.
+4. **`data/listing-attributes.csv` doesn't exist yet.** Given `enricher.py`
    already covers most location needs from page titles, confirm with the
    client/SNR whether this file is still needed, and if so, whoever supplies
    it can now do so as a normal commit/PR to this repo instead of needing
    platform-level file access.
-4. **`config.SEARCH_HEAD_TYPES` is an unconfirmed inference** (D8) — needs an
+5. **`config.SEARCH_HEAD_TYPES` is an unconfirmed inference** (D8) — needs an
    explicit answer from SNR/the client before the Option A/B split goes live.
-5. **No live production run has happened yet.** All URL-count figures in
+6. **No live production run has happened yet.** All URL-count figures in
    `config.py`/`DECISIONS.md` are from manual verification on 25 Aug 2026, not
    a real scheduled run.
-6. **The old Railway cron service still needs to be paused/deleted by hand**
+7. **The old Railway cron service still needs to be paused/deleted by hand**
    once the GitHub Actions run is confirmed working, so the job doesn't run
    twice a month from two platforms. This repo has no access to Railway's
    dashboard to do that itself.
-7. **If you add a new label/dimension to `config.py`, update `report.py`'s
+8. **If you add a new label/dimension to `config.py`, update `report.py`'s
    Label Taxonomy sheet too if it's not already generated generically** —
    most of that sheet is built by iterating `config` constants directly, but
    the boundary list is hand-written and can drift.
+9. **The Google Sheets refresh cadence (how often Ads re-reads a connected
+   Sheet) is not confirmed anywhere in Google's docs** (D14) — check the
+   Business Data feed's schedule setting once the connection exists, don't
+   assume it matches any figure from this file.

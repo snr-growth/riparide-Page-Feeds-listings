@@ -4,8 +4,18 @@
 # residential/office IP got blocked outright regardless of client (D7) — so
 # every module that touches the network stays stdlib-only, deliberately.
 #
-# openpyxl is the one deliberate exception, used only by src/report.py to
-# build the monthly .xlsx report. It never makes a network call, so it
-# carries none of the risk the rule above exists to avoid. See DECISIONS.md
-# D13 before adding anything else here.
+# openpyxl and google-auth are the two deliberate exceptions:
+#
+# - openpyxl (src/report.py) builds the monthly .xlsx report. It never
+#   makes a network call at all. See DECISIONS.md D13.
+# - google-auth (src/sheets.py) signs the service-account JWT used to
+#   authenticate to Google's Sheets API. It talks to Google's own
+#   oauth2/sheets endpoints, never to riparide.com, so it carries none of
+#   the risk the rule above exists to avoid either. The actual Sheets API
+#   calls are plain urllib REST, same as the rest of this project - only
+#   the RSA signing needs a real library. See DECISIONS.md D14.
+#
+# Before adding anything beyond these two, re-read D3/D7/D13/D14 and make
+# sure the new dependency's justification is just as narrow.
 openpyxl>=3.1,<4
+google-auth>=2.30,<3

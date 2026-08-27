@@ -187,6 +187,19 @@ def build_report(summary):
             L.append("  %s" % rb.get("note", ""))
         L.append("")
 
+    sh = summary.get("sheets") or {}
+    if sh:
+        L.append("Google Sheets (Google-Ads-facing feed)")
+        if not sh.get("configured"):
+            L.append("  Not configured: %s" % sh.get("error", ""))
+        elif sh.get("ok"):
+            for tab, n in (sh.get("updated") or {}).items():
+                L.append("  %-24s %6d rows" % (tab, n))
+        else:
+            L.append("  FAILED: %s" % sh.get("error", "unknown error"))
+            L.append("  The CSVs/xlsx above are still correct - only the Sheets update failed.")
+        L.append("")
+
     if summary.get("collisions"):
         L.append("Region label collisions detected")
         for label, urls in summary["collisions"].items():

@@ -51,6 +51,11 @@ jobs:
       SMTP_PORT: ${{ secrets.SMTP_PORT }}
       SMTP_USER: ${{ secrets.SMTP_USER }}
       SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      # The Google-Ads-facing feed (sheets.py, DECISIONS.md D14). Missing
+      # either of these is not an error - the run just skips the Sheets
+      # update and reports it, same as email does when unconfigured.
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
 
     steps:
       - uses: actions/checkout@v4
