@@ -27,3 +27,8 @@ jobs:
         run: |
           cd src
           python -c "import config, fetcher, labeller, enricher, attributes, store, validator, writer, emailer, run; print('all 10 modules import cleanly')"
+
+      - name: Unit tests (labeller, validator, attributes, enricher, fetcher)
+        run: |
+          cd src
+          python -m unittest discover -p "test_*.py" -v

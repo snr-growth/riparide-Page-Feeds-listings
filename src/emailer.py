@@ -172,6 +172,21 @@ def build_report(summary):
             L.append("  Still without location: %d" % m.get("still_without_location", 0))
         L.append("")
 
+    rb = summary.get("robots") or {}
+    if rb:
+        L.append("robots.txt / AdsBot check")
+        if not rb.get("fetched"):
+            L.append("  Could not check: %s" % rb.get("note", "unknown reason"))
+        elif rb.get("blocked"):
+            L.append("  WARNING: AdsBot appears blocked on %d path(s):" % len(rb["blocked"]))
+            for p, d in rb["blocked"]:
+                L.append("    %s blocked by Disallow: %s" % (p, d))
+        elif rb.get("adsbot_group_found"):
+            L.append("  AdsBot-Google / AdsBot-Google-Mobile: not blocked")
+        else:
+            L.append("  %s" % rb.get("note", ""))
+        L.append("")
+
     if summary.get("collisions"):
         L.append("Region label collisions detected")
         for label, urls in summary["collisions"].items():

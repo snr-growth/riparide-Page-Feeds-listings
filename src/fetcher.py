@@ -23,6 +23,9 @@ import config as cfg
 
 SM_NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
 
+ROBOTS_URL = cfg.BASE + "/robots.txt"
+ADSBOT_AGENTS = {"adsbot-google", "adsbot-google-mobile"}
+
 
 class FetchError(Exception):
     pass
@@ -108,6 +111,91 @@ def _status(url):
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
+
+
+def parse_robots(text):
+    """Parse robots.txt into groups: [{'agents': {ua, ...}, 'rules': [(kind, path), ...]}].
+
+    A run of consecutive `User-agent:` lines shares the rule block that
+    follows it, per the standard robots.txt grouping convention. Wildcards
+    (`*`, `$`) inside a path are not expanded; matching below is a plain
+    prefix check, which is conservative (it can only over-report a block,
+    never miss one caused by a plain path prefix).
+    """
+    groups = []
+    current = {"agents": [], "rules": []}
+
+    def flush():
+        if current["agents"]:
+            groups.append({"agents": {a.lower() for a in current["agents"]},
+                            "rules": list(current["rules"])})
+
+    for raw in text.splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if not line or ":" not in line:
+            continue
+        field, _, value = line.partition(":")
+        field = field.strip().lower()
+        value = value.strip()
+        if field == "user-agent":
+            if current["rules"]:
+                flush()
+                current = {"agents": [], "rules": []}
+            current["agents"].append(value)
+        elif field in ("disallow", "allow"):
+            current["rules"].append((field, value))
+    flush()
+    return groups
+
+
+def check_adsbot_access(paths, log=print):
+    """Check whether robots.txt blocks AdsBot-Google / AdsBot-Google-Mobile
+    from any of the given path prefixes.
+
+    Per Google Ads' documented AdsBot behaviour, AdsBot-Google and
+    AdsBot-Google-Mobile do not fall back to a bare `User-agent: *` group —
+    only a group naming one of them explicitly applies. Re-verify this against
+    Google's current help documentation if it is ever load-bearing for a
+    disapproval investigation; this check is a QA nicety, not proof.
+
+    Never raises: a network hiccup fetching robots.txt should not fail an
+    otherwise good monthly run. Returns a report dict instead.
+    """
+    report = {"fetched": False, "adsbot_group_found": False, "blocked": [], "note": ""}
+    try:
+        text = get(ROBOTS_URL, retries=1)
+    except Exception as e:
+        report["note"] = "could not fetch robots.txt: %s" % e
+        log("robots.txt: " + report["note"])
+        return report
+
+    report["fetched"] = True
+    groups = parse_robots(text)
+    adsbot_groups = [g for g in groups if g["agents"] & ADSBOT_AGENTS]
+
+    if not adsbot_groups:
+        report["note"] = ("no AdsBot-specific group found; AdsBot does not follow the "
+                          "generic User-agent: * block, so it is not blocked")
+        log("robots.txt: " + report["note"])
+        return report
+
+    report["adsbot_group_found"] = True
+    disallowed = [value for g in adsbot_groups for kind, value in g["rules"]
+                  if kind == "disallow" and value]
+
+    for p in paths:
+        for d in disallowed:
+            if d == "/" or p.startswith(d):
+                report["blocked"].append((p, d))
+                break
+
+    if report["blocked"]:
+        log("robots.txt: WARNING, AdsBot appears blocked: %s" %
+            ", ".join("%s by Disallow: %s" % (p, d) for p, d in report["blocked"]))
+    else:
+        log("robots.txt: AdsBot-Google / AdsBot-Google-Mobile not blocked for %d checked path(s)"
+            % len(paths))
+    return report
 
 
 def status_check(urls, log=print):

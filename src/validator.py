@@ -25,11 +25,15 @@ def _check(name, passed, detail, threshold):
     return {"check": name, "passed": bool(passed), "detail": detail, "threshold": threshold}
 
 
-def validate(rows, status_by_url=None):
+def validate(rows, status_by_url=None, previous_counts=None):
     """rows = [{'url':..,'label':..,'feed':..}, ...] across BOTH feeds.
 
     Returns (all_passed, [check dicts]). status_by_url is optional; when given,
-    any URL whose recorded status is a real non-200 is reported.
+    any URL whose recorded status is a real non-200 is reported. previous_counts
+    is optional, e.g. {"CORE": 3812, "ADVENTURES": 1077} from last month's
+    snapshot; when given, a feed whose row count collapsed versus last month
+    (a network outage marking every URL dead, for example) fails validation
+    instead of silently shipping a near-empty file.
     """
     status_by_url = status_by_url or {}
     results = []
@@ -91,6 +95,22 @@ def validate(rows, status_by_url=None):
                or r.get("label", "").endswith(";")]
     results.append(_check("No empty label slots or stray semicolons",
                           not bad_sep, "%d bad" % len(bad_sep), "0"))
+
+    if previous_counts:
+        counts = Counter(r["feed"] for r in rows)
+        collapsed = []
+        for feed, prev in previous_counts.items():
+            if prev <= 0:
+                continue
+            now = counts.get(feed, 0)
+            if now < prev * cfg.MIN_ROW_RATIO:
+                collapsed.append("%s: %d -> %d" % (feed, prev, now))
+        results.append(_check("Feed size has not collapsed versus last run", not collapsed,
+                              "; ".join(collapsed) if collapsed else "within range of last run",
+                              ">= %d%% of last run's row count" % int(cfg.MIN_ROW_RATIO * 100)))
+    else:
+        results.append(_check("Feed size has not collapsed versus last run", True,
+                              "no prior run to compare against", "n/a"))
 
     return all(c["passed"] for c in results), results
 

@@ -1,6 +1,14 @@
+# CSVs are fully derived from data/snapshot.json + the labelling code, and
+# are distributed via the workflow's email/artifact steps, not git — keep
+# them out to avoid noisy diffs on every run.
 data/output/
-data/snapshot.json*
 data/month2.json
 __pycache__/
 *.pyc
 .env
+
+# data/snapshot.json, data/snapshot.json.previous and
+# data/location-cache.json are DELIBERATELY NOT ignored: since the move off
+# Railway (DECISIONS.md D11), these are the run's persistent state and are
+# committed back to the repo by .github/workflows/monthly-refresh.yml. Do
+# not add them back here.

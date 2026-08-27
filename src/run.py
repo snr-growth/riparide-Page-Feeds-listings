@@ -52,7 +52,8 @@ def main(argv=None):
     ap.add_argument("--skip-status", action="store_true",
                     help="skip the HTTP status checks")
     ap.add_argument("--full-status", action="store_true",
-                    help="status check every URL, not only the changed ones")
+                    help="status check every URL, not only the changed ones "
+                         "(happens automatically every 6 months regardless of this flag, see D4)")
     ap.add_argument("--skip-location", action="store_true",
                     help="skip reading location from listing and story pages")
     ap.add_argument("--offline-snapshot", default=None,
@@ -133,10 +134,26 @@ def main(argv=None):
         if args.skip_status:
             log("status checks skipped by flag")
         else:
-            if args.full_status:
+            auto_full = started.month in cfg.FULL_STATUS_MONTHS
+            full_status = args.full_status or auto_full
+            if full_status:
+                if auto_full and not args.full_status:
+                    log("%s is a full-status safety-net month (D4), checking every URL"
+                        % started.strftime("%B"))
                 targets = [r["url"] for r in rows if r["url"] in by_url]
             else:
-                targets = [u for u in d["added"] if u in by_url]
+                # Facet URLs are synthesised in build_rows(), never fetched
+                # from a sitemap, so they never appear in d["added"] and a
+                # diff-only check would never notice one has started
+                # redirecting. They are cheap (~130 URLs), so they are
+                # checked every run regardless of the diff.
+                facet_urls = [r["url"] for r in rows if r["page_type"] == "PAGE_FACET_TYPE"]
+                seen = set()
+                targets = []
+                for u in facet_urls + [u for u in d["added"] if u in by_url]:
+                    if u not in seen:
+                        seen.add(u)
+                        targets.append(u)
             if len(targets) > cfg.MAX_STATUS_CHECKS:
                 status["unchecked"] = len(targets) - cfg.MAX_STATUS_CHECKS
                 targets = targets[:cfg.MAX_STATUS_CHECKS]
@@ -158,12 +175,17 @@ def main(argv=None):
                 log("removed %d url(s) that did not return 200" % len(dead_set))
         summary["status"] = status
 
+        # 6b. robots.txt / AdsBot check ---------------------------------------
+        log(LINE)
+        summary["robots"] = fetcher.check_adsbot_access(cfg.ADSBOT_CHECK_PATHS, log)
+
         # 7. validate --------------------------------------------------------
         log(LINE)
         out_rows = [{"url": r["url"], "label": labeller.label_string(r),
                      "feed": labeller.feed_of(r)} for r in rows]
         feed_rows = [r for r in out_rows if r["feed"] != cfg.FEED_EXCLUDE]
-        passed, checks = validator.validate(feed_rows)
+        previous_counts = (previous or {}).get("feed_counts")
+        passed, checks = validator.validate(feed_rows, previous_counts=previous_counts)
         summary["checks"] = checks
         log(validator.format_results(checks))
         if not passed:
@@ -180,8 +202,10 @@ def main(argv=None):
         if args.dry_run:
             log("dry run: snapshot not written")
         else:
-            saved = store.save_snapshot(current)
+            feed_counts = {feed: n for feed, (_, n) in outputs.items()}
+            saved = store.save_snapshot(current, feed_counts=feed_counts)
             log("snapshot saved: %d urls at %s" % (saved["total"], saved["taken_at"]))
+            summary["snapshot_path"] = cfg.SNAPSHOT_FILE
 
     except Exception as e:
         summary["failed"] = "%s: %s" % (type(e).__name__, str(e)[:300])
@@ -195,6 +219,11 @@ def main(argv=None):
     log(body)
 
     attachments = [p for p, _ in (summary.get("outputs") or {}).values()]
+    if summary.get("snapshot_path"):
+        # Insurance against losing the baseline: if wherever this runs loses
+        # its persistent storage, the last-known-good snapshot can be
+        # recovered from this month's email rather than starting over.
+        attachments.append(summary["snapshot_path"])
     subject = "Riparide page feed refresh %s%s" % (
         started.strftime("%b %Y"), " FAILED" if summary["failed"] else "")
     if args.dry_run:

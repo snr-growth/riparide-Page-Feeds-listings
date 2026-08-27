@@ -33,7 +33,7 @@ CACHE_FILE = os.path.join(cfg.DATA_DIR, "location-cache.json")
 
 # Bumped whenever parse_title changes in a way that could alter a stored
 # result. Entries recorded as unmapped under an older parser are re-read.
-PARSER_VERSION = 5
+PARSER_VERSION = 4
 
 # Keyed the same way a title wording is reduced before comparison, so the
 # readable form can stay in config where it is easy to check against a page.
@@ -44,36 +44,8 @@ COUNTRY_TOKENS = {"AU": "GEO_AU", "NZ": "GEO_NZ", "US": "GEO_US"}
 STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_OR"}
 
 _TITLE = re.compile(r"<title>(.*?)</title>", re.S | re.I)
-# " - <Stay type> for Rent in " or " - Adventure by <name> in ". The prefix is
-# matched greedily so this lands on the LAST " in " in the title. A listing is
-# free to have " in " inside its own name, as "Cozy Cabin in Brownsbay" and
-# "Karekare Cabin in the Heart of West Coast" do, and matching the first one
-# read the listing's own name as the region.
-_AFTER_IN = re.compile(r"^.*\s+in\s+(.+?)\s*(?:\|\s*Riparide)?\s*$", re.I)
-# A NZ title can carry a postcode of its own, either as its own comma segment
-# ("Waiheke Island, 1971, NZ") or trailing the place ("North Cove 0920").
-_POSTCODE = re.compile(r"^\d{3,5}$")
-_TRAILING_POSTCODE = re.compile(r"\s+\d{3,5}$")
-
-
-def clean_region(name):
-    """Return a usable region name, or "" when the text is not one.
-
-    A region is a place name: a handful of words, no digits and no " in ".
-    Anything else means the title was split in the wrong place, and a wrong
-    label is worse than a missing one because it silently groups a listing
-    with the wrong market.
-    """
-    name = _TRAILING_POSTCODE.sub("", (name or "").strip()).strip()
-    if not name:
-        return ""
-    if re.search(r"\d", name):
-        return ""
-    if re.search(r"in", name, re.I):
-        return ""
-    if len(name.split()) > 5:
-        return ""
-    return name
+# " - <Stay type> for Rent in " or " - Adventure by <name> in "
+_AFTER_IN = re.compile(r"\s+in\s+(.+?)\s*(?:\|\s*Riparide)?\s*$", re.I)
 # Titles can carry several separators, e.g.
 #   "The Hideout - Hot Tub - Pets Ok - Cabin for Rent in ..."
 # The stay type is the segment immediately before "for Rent", so the prefix is
@@ -112,8 +84,7 @@ def parse_title(title):
         state = STATE_TOKENS[rest[-1].upper()]
         rest = rest[:-1]
 
-    rest = [p for p in rest if not _POSTCODE.match(p)]
-    region_name = clean_region(rest[-1]) if rest else ""
+    region_name = rest[-1] if rest else ""
     out = {"country": country, "state": state}
     if region_name:
         slug = re.sub(r"[^a-z0-9]+", "-", region_name.lower()).strip("-")
@@ -184,20 +155,16 @@ def enrich(rows, limit=None, log=print, cache_path=None):
     targets = [r for r in rows
                if r["page_type"] in ("PAGE_LISTING", "PAGE_STORY") and not r["country"]]
 
-    # A cached entry may have been parsed before a parser fix. Two kinds are
-    # re-read: one that recorded an unmapped stay-type wording, and one whose
-    # stored region no longer passes the region check, which is how the titles
-    # that were split in the wrong place get repaired. Both are cheap, and
-    # they are the only entries a parser change can alter.
+    # A cached entry that recorded an unmapped stay-type wording may have been
+    # parsed before a parser fix. Those are cheap to re-read and are the only
+    # entries a parser change can alter, so they are refreshed once.
     stale = [u for u, loc in cache.items()
-             if ((loc or {}).get("stay_wording_unmapped")
-                 or ((loc or {}).get("region_name")
-                     and not clean_region(loc["region_name"])))
+             if (loc or {}).get("stay_wording_unmapped")
              and not (loc or {}).get("parser", 0) >= PARSER_VERSION]
     for u in stale:
         cache.pop(u, None)
     if stale:
-        log("re-reading %d page(s) whose stay type or region needs a fresh parse" % len(stale))
+        log("re-reading %d page(s) whose stay type was recorded as unmapped" % len(stale))
 
     todo = [r["url"] for r in targets if r["url"] not in cache]
 

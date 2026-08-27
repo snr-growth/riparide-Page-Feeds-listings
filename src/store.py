@@ -32,8 +32,13 @@ def load_snapshot(path=None):
     return snap
 
 
-def save_snapshot(urls_by_group, path=None, keep_backup=True):
-    """Write the snapshot atomically, keeping one previous copy."""
+def save_snapshot(urls_by_group, path=None, keep_backup=True, feed_counts=None):
+    """Write the snapshot atomically, keeping one previous copy.
+
+    feed_counts, e.g. {"CORE": 3812, "ADVENTURES": 1077}, is carried forward
+    so the next run can tell whether its own output collapsed versus this
+    one (see validator.validate's previous_counts check).
+    """
     path = path or cfg.SNAPSHOT_FILE
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     if keep_backup and os.path.exists(path):
@@ -42,6 +47,7 @@ def save_snapshot(urls_by_group, path=None, keep_backup=True):
         "taken_at": _now(),
         "total": sum(len(v) for v in urls_by_group.values()),
         "urls_by_group": {k: sorted(v) for k, v in urls_by_group.items()},
+        "feed_counts": feed_counts or {},
     }
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:

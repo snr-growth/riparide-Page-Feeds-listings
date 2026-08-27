@@ -35,6 +35,20 @@ REQUEST_DELAY = float(os.environ.get("FEED_REQUEST_DELAY", "0.15"))
 REQUEST_RETRIES = 2
 STATUS_CHECK_WORKERS = int(os.environ.get("FEED_STATUS_WORKERS", "6"))
 
+# D4's safety net, made automatic: a diff-only status check can never notice
+# a sitemap URL that quietly started returning 404 without being removed
+# from the sitemap. Every run in one of these months (by UTC date) checks
+# every URL, not just the ones the diff flagged, regardless of whether
+# --full-status was passed. See DECISIONS.md D11.
+FULL_STATUS_MONTHS = {1, 7}
+
+# If a network problem (blocked IP, site outage, DNS failure) makes every
+# status check fail, every checked URL gets excluded as "dead" and the feed
+# would otherwise ship as a near-empty file that silently overwrites a good
+# one. A run whose per-feed row count falls below this fraction of last
+# month's is treated as a validation failure instead. See DECISIONS.md D11.
+MIN_ROW_RATIO = 0.5
+
 # Safety valve. If a run would status-check more than this, it checks the
 # newest ones and reports the rest as unchecked rather than running for hours.
 MAX_STATUS_CHECKS = int(os.environ.get("FEED_MAX_STATUS_CHECKS", "1500"))
@@ -52,6 +66,11 @@ ATTRIBUTES_FILE = os.environ.get("FEED_ATTRIBUTES_FILE", os.path.join(DATA_DIR, 
 
 CORE_CSV = "riparide-page-feed-core.csv"
 ADVENTURES_CSV = "riparide-page-feed-adventures.csv"
+
+# Representative path prefixes covering every page type this feed can
+# contain. Used to check robots.txt doesn't block Google's AdsBot crawlers,
+# per the page feed spec's QA requirement. See DECISIONS.md D10.
+ADSBOT_CHECK_PATHS = ["/listings", "/stories", "/au", "/nz", "/us"]
 
 # ---------------------------------------------------------------- feed spec
 # From the page feed specification and Google's page feed documentation.
@@ -132,10 +151,19 @@ INTENT_KEYWORDS = [
     ("sauna", "INT_SAUNA"),
     ("split-the-bill", "INT_GROUPS"), ("split-the-check", "INT_GROUPS"), ("groups", "INT_GROUPS"),
     ("luxury", "INT_LUXURY"),
+    ("getaway", "INT_GETAWAY"),  # substring match also covers "getaways" and "weekend-getaway"
 ]
 
-# Clusters Search Generic outperforms PMax on, per the role-split research.
-SEARCH_HEAD_INTENTS = {"INT_ROMANTIC", "INT_OFFGRID", "INT_PET_FRIENDLY"}
+# Clusters Search Generic outperforms PMax on 2x+, per the role-split research
+# (SNR, 9 Aug 2026): romantic, getaways, off-grid, pet-friendly. All four must
+# be represented here or Option B's PMax exclusion list silently misses one.
+SEARCH_HEAD_INTENTS = {"INT_ROMANTIC", "INT_OFFGRID", "INT_PET_FRIENDLY", "INT_GETAWAY"}
+
+# UNCONFIRMED, see DECISIONS.md D8. The role-split research names query-intent
+# clusters (romantic, getaways, off-grid, pet-friendly), not stay types, as
+# where Search Generic beats PMax. This set is an inference applied only to
+# the synthetic facet-type pages, not verified against SNR's own findings.
+# Do not extend it to listing/story rows without the same confirmation.
 SEARCH_HEAD_TYPES = {"TYPE_TINY_HOUSE", "TYPE_CABIN", "TYPE_GLAMPING", "TYPE_COTTAGE"}
 
 # POI collection to region, only where the platform's own product data confirmed it.
