@@ -46,6 +46,34 @@ def build_rows(urls_by_group):
     return unique
 
 
+def select_status_check_targets(rows, added_urls, full_status):
+    """URLs to live-status-check this run, facet URLs always first.
+
+    Facet URLs are synthesised in build_rows(), never fetched from a
+    sitemap, so a diff-only check would never notice one has started
+    redirecting (DECISIONS.md D9) - they must be checked every run
+    regardless of the diff. That guarantee has to hold in full_status mode
+    too: on a large site, "every row, in row order" comfortably exceeds
+    cfg.MAX_STATUS_CHECKS, and facet rows are appended last in build_rows(),
+    so without this they get silently truncated away by the per-run cap -
+    confirmed happening on the very first live run against production
+    (10,208 real URLs, all 132 facet URLs dropped by the 1500 cap).
+    """
+    by_url = {r["url"]: r for r in rows}
+    facet_urls = [r["url"] for r in rows if r["page_type"] == "PAGE_FACET_TYPE"]
+    if full_status:
+        rest = [r["url"] for r in rows if r["url"] in by_url]
+    else:
+        rest = [u for u in added_urls if u in by_url]
+
+    seen, targets = set(), []
+    for u in facet_urls + rest:
+        if u not in seen:
+            seen.add(u)
+            targets.append(u)
+    return targets
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Riparide page feed monthly refresh")
     ap.add_argument("--dry-run", action="store_true",
@@ -137,24 +165,10 @@ def main(argv=None):
         else:
             auto_full = started.month in cfg.FULL_STATUS_MONTHS
             full_status = args.full_status or auto_full
-            if full_status:
-                if auto_full and not args.full_status:
-                    log("%s is a full-status safety-net month (D4), checking every URL"
-                        % started.strftime("%B"))
-                targets = [r["url"] for r in rows if r["url"] in by_url]
-            else:
-                # Facet URLs are synthesised in build_rows(), never fetched
-                # from a sitemap, so they never appear in d["added"] and a
-                # diff-only check would never notice one has started
-                # redirecting. They are cheap (~130 URLs), so they are
-                # checked every run regardless of the diff.
-                facet_urls = [r["url"] for r in rows if r["page_type"] == "PAGE_FACET_TYPE"]
-                seen = set()
-                targets = []
-                for u in facet_urls + [u for u in d["added"] if u in by_url]:
-                    if u not in seen:
-                        seen.add(u)
-                        targets.append(u)
+            if full_status and auto_full and not args.full_status:
+                log("%s is a full-status safety-net month (D4), checking every URL"
+                    % started.strftime("%B"))
+            targets = select_status_check_targets(rows, d["added"], full_status)
             if len(targets) > cfg.MAX_STATUS_CHECKS:
                 status["unchecked"] = len(targets) - cfg.MAX_STATUS_CHECKS
                 targets = targets[:cfg.MAX_STATUS_CHECKS]

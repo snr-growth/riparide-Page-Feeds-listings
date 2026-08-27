@@ -46,6 +46,50 @@ SAMPLE_SNAPSHOT = {
 ROBOTS_TXT = "User-agent: *\nDisallow: /admin\n"
 
 
+def _row(url, page_type):
+    return {"url": url, "page_type": page_type}
+
+
+class SelectStatusCheckTargetsTests(unittest.TestCase):
+    """Regression coverage for the gap found on the first live production
+    run: with full_status=True on a site bigger than cfg.MAX_STATUS_CHECKS,
+    facet URLs (appended last by build_rows()) were silently truncated away
+    by the per-run cap before it ever reached them, because the full_status
+    branch checked "every row, in row order" instead of prioritising facet
+    URLs the way the non-full_status branch already did (DECISIONS.md D9).
+    """
+
+    def setUp(self):
+        self.facets = [_row("https://x/listings?country=AU", "PAGE_FACET_TYPE"),
+                       _row("https://x/listings?country=NZ", "PAGE_FACET_TYPE")]
+        self.listings = [_row("https://x/listings/%d" % i, "PAGE_LISTING")
+                          for i in range(5)]
+        self.rows = self.listings + self.facets  # facets appended last, like build_rows() does
+
+    def test_full_status_puts_facet_urls_first_regardless_of_row_order(self):
+        targets = run.select_status_check_targets(self.rows, added_urls=[], full_status=True)
+        self.assertEqual(targets[:2], [r["url"] for r in self.facets])
+        self.assertEqual(len(targets), 7)
+
+    def test_full_status_with_a_tight_cap_still_keeps_every_facet_url(self):
+        targets = run.select_status_check_targets(self.rows, added_urls=[], full_status=True)
+        capped = targets[:2]  # simulates cfg.MAX_STATUS_CHECKS smaller than the row count
+        self.assertEqual(set(capped), {r["url"] for r in self.facets})
+
+    def test_incremental_mode_still_includes_facet_urls_even_when_not_added(self):
+        added = [self.listings[0]["url"]]  # only one listing is "new" this run
+        targets = run.select_status_check_targets(self.rows, added_urls=added, full_status=False)
+        for facet in self.facets:
+            self.assertIn(facet["url"], targets)
+        self.assertIn(added[0], targets)
+        self.assertNotIn(self.listings[1]["url"], targets)
+
+    def test_no_duplicates_when_a_facet_url_is_also_in_added(self):
+        added = [self.facets[0]["url"]]
+        targets = run.select_status_check_targets(self.rows, added_urls=added, full_status=False)
+        self.assertEqual(targets.count(self.facets[0]["url"]), 1)
+
+
 class FullRunTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
