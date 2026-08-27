@@ -6,6 +6,20 @@ specification, or was verified against riparide.com on 25 August 2026.
 """
 import os
 
+
+def _int_env(name, default):
+    """int(os.environ[name]), tolerant of a env var that's present but blank.
+
+    GitHub Actions sets an unset repository secret's env var to "" rather
+    than leaving it absent, so os.environ.get(name, default) never falls
+    back to default - the key exists, it's just empty. int("") then raises.
+    This is not hypothetical: it's exactly what took down the first real
+    workflow_dispatch run of monthly-refresh.yml, on SMTP_PORT, before any
+    email secret had been set at all.
+    """
+    return int(os.environ.get(name) or default)
+
+
 # ---------------------------------------------------------------- site source
 BASE = "https://www.riparide.com"
 SITEMAP_INDEX = BASE + "/sitemaps/sitemap.xml"
@@ -185,7 +199,7 @@ FEED_EXCLUDE = "EXCLUDE"
 
 # ---------------------------------------------------------------- email
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
-SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_PORT = _int_env("SMTP_PORT", "587")
 SMTP_USER = os.environ.get("SMTP_USER", "")
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
