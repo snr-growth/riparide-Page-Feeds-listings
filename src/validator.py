@@ -8,7 +8,6 @@ from collections import Counter
 from urllib.parse import urlsplit
 
 import config as cfg
-import labeller
 
 CANONICAL_ORDER = ["country", "state", "subcategories", "type"]
 

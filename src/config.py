@@ -10,9 +10,6 @@ import os
 BASE = "https://www.riparide.com"
 SITEMAP_INDEX = BASE + "/sitemaps/sitemap.xml"
 
-# The six child sitemaps, verified present in the index on 25 Aug 2026.
-SITEMAPS = ["listings", "stories", "adventures", "destinations", "collections", "core"]
-
 # VERIFIED 25 Aug 2026 from a Railway container (us-west2):
 #   default command-line agent -> 403 Forbidden
 #   this browser agent         -> 200 OK

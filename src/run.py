@@ -6,7 +6,6 @@ failed run leaves last month's baseline intact and the next run picks up
 exactly where this one should have.
 """
 import argparse
-import os
 import sys
 import traceback
 from datetime import datetime, timezone

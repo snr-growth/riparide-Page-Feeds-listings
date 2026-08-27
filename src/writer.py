@@ -38,12 +38,3 @@ def write_all(rows, out_dir=None):
         cfg.FEED_CORE: write_feed(rows, cfg.FEED_CORE, cfg.CORE_CSV, out_dir),
         cfg.FEED_ADVENTURES: write_feed(rows, cfg.FEED_ADVENTURES, cfg.ADVENTURES_CSV, out_dir),
     }
-
-
-def read_feed(path):
-    """Read a written feed back, for verification."""
-    with open(path, encoding="utf-8") as f:
-        r = csv.reader(f)
-        header = next(r)
-        rows = [row for row in r]
-    return header, rows
