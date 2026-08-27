@@ -67,6 +67,12 @@ ATTRIBUTES_FILE = os.environ.get("FEED_ATTRIBUTES_FILE", os.path.join(DATA_DIR, 
 CORE_CSV = "riparide-page-feed-core.csv"
 ADVENTURES_CSV = "riparide-page-feed-adventures.csv"
 
+# The .xlsx report (report.py) is committed to the repo, unlike the CSVs in
+# OUTPUT_DIR above, so every month's report is visible in git history. See
+# DECISIONS.md D13.
+REPORT_DIR = os.environ.get("FEED_REPORT_DIR", "reports")
+REPORT_XLSX = "riparide-page-feed-report.xlsx"
+
 # Representative path prefixes covering every page type this feed can
 # contain. Used to check robots.txt doesn't block Google's AdsBot crawlers,
 # per the page feed spec's QA requirement. See DECISIONS.md D10.

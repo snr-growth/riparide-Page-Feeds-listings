@@ -20,15 +20,18 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       - name: Change detection proof
         run: python src/prove_diff.py
 
       - name: Check every module imports cleanly
         run: |
           cd src
-          python -c "import config, fetcher, labeller, enricher, attributes, store, validator, writer, emailer, run; print('all 10 modules import cleanly')"
+          python -c "import config, fetcher, labeller, enricher, attributes, store, validator, writer, report, emailer, run; print('all 11 modules import cleanly')"
 
-      - name: Unit tests (labeller, validator, attributes, enricher, fetcher)
+      - name: Unit tests (labeller, validator, attributes, enricher, fetcher, store, report)
         run: |
           cd src
           python -m unittest discover -p "test_*.py" -v

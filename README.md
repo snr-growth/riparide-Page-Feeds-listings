@@ -2,7 +2,7 @@
 
 Rebuilds the Riparide Performance Max page feed every month so it stays accurate without anyone maintaining it by hand.
 
-Runs on a schedule, produces two upload ready CSV files, and emails a report of what changed.
+Runs on a schedule, produces two upload ready CSV files plus a reviewable `.xlsx` report, and emails all of it with a report of what changed.
 
 ---
 
@@ -17,9 +17,9 @@ Runs on a schedule, produces two upload ready CSV files, and emails a report of 
 | 5 | Merge an optional supplied attributes file |
 | 6 | Status check the changed URLs and drop anything that is not 200 |
 | 7 | Run the validation checks |
-| 8 | Write both CSV files |
+| 8 | Write both CSV files, then the `.xlsx` report |
 | 9 | Save the new snapshot |
-| 10 | Email the report with both files attached |
+| 10 | Email the report with the CSVs, the `.xlsx` report, and the snapshot attached |
 
 If any validation check fails the run stops before writing anything. A broken feed is worse than a stale one.
 
@@ -39,15 +39,20 @@ src/
   store.py       snapshot storage and the month to month diff
   validator.py   the pre upload checks
   writer.py      CSV output
+  report.py      the .xlsx report (Summary, QA Checks, Label Taxonomy, both feeds)
   emailer.py     report delivery, API key or SMTP
   run.py         the run itself
   prove_diff.py  proof that change detection works (see below)
   test_*.py      unit tests for the individual modules (see below)
 DECISIONS.md     every decision, with its reason and evidence
 PROJECT_STATUS.md  plain-language status snapshot for non-technical readers
+reports/         the monthly .xlsx report, committed here (see Deployment)
 ```
 
-No third party packages are used. See the note on client fingerprinting below.
+No third party packages are used anywhere that talks to riparide.com — see
+the note on client fingerprinting below. `openpyxl` (see `requirements.txt`)
+is the one deliberate exception, used only by `report.py` to build the local
+`.xlsx` file; it never touches the network. See DECISIONS.md D13.
 
 ---
 
@@ -105,6 +110,7 @@ All optional except the email settings.
 |---|---|---|
 | `FEED_DATA_DIR` | `data` | where the snapshot and cache live |
 | `FEED_OUTPUT_DIR` | `data/output` | where the CSV files are written |
+| `FEED_REPORT_DIR` | `reports` | where the `.xlsx` report is written |
 | `FEED_ATTRIBUTES_FILE` | `data/listing-attributes.csv` | optional supplied attributes |
 | `FEED_MAX_STATUS_CHECKS` | `1500` | per run cap on status checks |
 | `FEED_MAX_LOCATION_FETCHES` | `1200` | per run cap on pages read for location |
@@ -139,7 +145,7 @@ instead of letting it silently ship a near-empty feed.
 
 That is why this project deliberately uses only the standard library, and why it has no dependencies. Swapping in an HTTP client will break it.
 
-A second finding, from a residential/office IP on 27 August 2026: the exact same `urllib` client and browser user agent got a flat Cloudflare 403 on *every* URL, including `robots.txt`. That means the block is not purely a client-library fingerprint as first concluded — IP/ASN reputation is at least part of it. See DECISIONS.md D9 for what this means for where this job can run.
+A second finding, from a residential/office IP on 27 August 2026: the exact same `urllib` client and browser user agent got a flat Cloudflare 403 on *every* URL, including `robots.txt`. That means the block is not purely a client-library fingerprint as first concluded — IP/ASN reputation is at least part of it. See DECISIONS.md D7 for what this means for where this job can run.
 
 **Facet parameters must stay in alphabetical order** (`country`, `state`, `subcategories`, `type`). Any other order redirects, and a page feed of redirects is a page feed of disapprovals.
 
@@ -147,16 +153,16 @@ A second finding, from a residential/office IP on 27 August 2026: the exact same
 
 ## Deployment
 
-Runs on GitHub Actions (`.github/workflows/monthly-refresh.yml`), not Railway. See DECISIONS.md D11 for why.
+Runs on GitHub Actions (`.github/workflows/monthly-refresh.yml`), not Railway. See DECISIONS.md D12 for why.
 
 | Item | Value |
 |---|---|
 | Schedule | `0 3 1 * *`, 03:00 UTC on the 1st of each month, plus manual dispatch any time |
-| State persistence | `data/snapshot.json`, `data/snapshot.json.previous` and `data/location-cache.json` are committed back into this repo by the workflow after a successful run — no external volume |
+| State persistence | `data/snapshot.json`, `data/snapshot.json.previous`, `data/location-cache.json`, and `reports/riparide-page-feed-report.xlsx` are committed back into this repo by the workflow after a successful run — no external volume |
 | Concurrency | one refresh at a time (`concurrency: group: monthly-page-feed-refresh`), so a manual run can't race the scheduled one |
 | Secrets required | `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet, set as GitHub Actions repository secrets |
 | Failure visibility | a failed run exits non-zero, which GitHub marks as a failed workflow run and emails repo watchers by default — independent of this project's own email delivery |
 
-### Every run's checked URLs and email attachments
+### Every run's outputs and email attachments
 
-Both output CSVs are attached to the workflow's own artifact upload (90-day retention) and to the report email, along with `data/snapshot.json` itself — the latter purely as recovery insurance in case the repo's committed state is ever lost or reverted.
+Both output CSVs and the `.xlsx` report are attached to the workflow's own artifact upload (90-day retention) and to the report email, along with `data/snapshot.json` itself — the latter purely as recovery insurance in case the repo's committed state is ever lost or reverted. Unlike the CSVs, the `.xlsx` report is also committed to the repo (`reports/`), so every month's report is a reviewable point in git history, not just a file that passed through an inbox.

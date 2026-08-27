@@ -4,11 +4,12 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 
-A standalone, stdlib-only Python job that rebuilds Riparide's Google Ads
-Performance Max **page feed** every month: it crawls riparide.com's sitemaps,
-labels every URL across six taxonomy dimensions, diffs against last month's
-snapshot, validates the result, writes two upload-ready CSVs, and emails a
-report. Deployed on **GitHub Actions** (`.github/workflows/monthly-refresh.yml`)
+A standalone Python job (stdlib-only except for one deliberate exception, see
+below) that rebuilds Riparide's Google Ads Performance Max **page feed**
+every month: it crawls riparide.com's sitemaps, labels every URL across six
+taxonomy dimensions, diffs against last month's snapshot, validates the
+result, writes two upload-ready CSVs plus a reviewable `.xlsx` report, and
+emails all of it. Deployed on **GitHub Actions** (`.github/workflows/monthly-refresh.yml`)
 as a scheduled job, independent of the actual Riparide site build. It used to
 run on Railway — see DECISIONS.md D12 for why it moved and D7 for the one
 thing about that move that still needs a live-run confirmation.
@@ -54,10 +55,15 @@ code first.
 
 ## Non-negotiable technical constraints (from DECISIONS.md, don't relitigate without new evidence)
 
-- **stdlib `urllib` only, no `requests`, no third-party HTTP client.** Verified
-  from a Railway container: `urllib` gets 200, `requests` and `curl` (same UA)
-  get 403 (D3). `requirements.txt` is a placeholder comment only — do not add
-  packages to it without re-verifying this still holds.
+- **stdlib `urllib` only, no `requests`, no third-party HTTP client, for
+  anything that talks to riparide.com.** Verified from a Railway container:
+  `urllib` gets 200, `requests` and `curl` (same UA) get 403 (D3). This rule
+  is specifically about the fetching layer, not the whole project — see the
+  next point.
+- **`openpyxl` is the one deliberate dependency, and it stays scoped to
+  `report.py`** (D13). It never makes a network call, so it doesn't carry
+  D3/D7's risk. Don't use it as precedent for adding another dependency
+  anywhere that touches the network — that's a different risk entirely.
 - **The block is not purely a client fingerprint — IP/ASN reputation is at
   least part of it** (D7). Don't assume "it worked from platform X" transfers
   to platform Y without testing. This is exactly why `monthly-refresh.yml`
@@ -89,16 +95,25 @@ code first.
 
 ## Where things stand (as of this review, 27 Aug 2026)
 
-Fully implemented and unit-tested (82+ tests across `test_*.py`, plus
+Connected to `github.com/snr-growth/riparide-Page-Feeds-listings` and pushed
+(the real history, 9 original commits, is preserved — this repo was
+`git init`'d fresh locally at one point and had to be rebuilt onto the real
+remote history rather than force-pushed over it; if you ever find local work
+here with no `.git`, check `git log` on the actual GitHub repo before
+assuming it's safe to treat as a fresh init again).
+
+Fully implemented and unit-tested (100+ tests across `test_*.py`, plus
 `prove_diff.py`, all run in CI on every push via
 `.github/workflows/proof.yml`): sitemap fetch, status-checking (now including
 every facet URL every run, D9), all six labelling dimensions + facet URL
 generation, page-title location enrichment with a version-tagged cache,
 optional attributes-file merge, snapshot diff, a validator that now also
 guards against feed collapse (D11) and an automatic 6-monthly full-status
-safety net (D11), a robots.txt/AdsBot-Google check (D10), CSV writer, and
-email delivery (Resend or SMTP, fails open with a clear report line if
-unconfigured, plus `snapshot.json` attached as recovery insurance).
+safety net (D11), a robots.txt/AdsBot-Google check (D10), CSV writer, an
+`.xlsx` report (`report.py`, D13) committed to `reports/` and emailed
+alongside the CSVs, and email delivery (Resend or SMTP, fails open with a
+clear report line if unconfigured, plus `snapshot.json` attached as recovery
+insurance).
 
 Open items:
 
@@ -122,8 +137,11 @@ Open items:
 5. **No live production run has happened yet.** All URL-count figures in
    `config.py`/`DECISIONS.md` are from manual verification on 25 Aug 2026, not
    a real scheduled run.
-6. **This folder isn't connected to the `github.com/snr-growth/…` remote
-   yet** (no `.git` here). Confirm with the user before running `git init` +
-   push vs. re-cloning — a wrong choice here could lose or duplicate history.
-   Once connected, remember to also disable/delete the old Railway cron
-   service so the job doesn't run twice a month from two platforms.
+6. **The old Railway cron service still needs to be paused/deleted by hand**
+   once the GitHub Actions run is confirmed working, so the job doesn't run
+   twice a month from two platforms. This repo has no access to Railway's
+   dashboard to do that itself.
+7. **If you add a new label/dimension to `config.py`, update `report.py`'s
+   Label Taxonomy sheet too if it's not already generated generically** —
+   most of that sheet is built by iterating `config` constants directly, but
+   the boundary list is hand-written and can drift.

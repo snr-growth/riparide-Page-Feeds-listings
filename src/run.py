@@ -19,6 +19,7 @@ import attributes
 import enricher
 import validator
 import writer
+import report
 import emailer
 
 LINE = "-" * 72
@@ -198,6 +199,11 @@ def main(argv=None):
         for feed, (path, n) in outputs.items():
             log("wrote %-11s %6d rows -> %s" % (feed, n, path))
 
+        # 8b. write the xlsx report -------------------------------------------
+        log(LINE)
+        summary["report_path"] = report.write_report(out_rows, checks, summary)
+        log("wrote report -> %s" % summary["report_path"])
+
         # 9. save the snapshot ----------------------------------------------
         if args.dry_run:
             log("dry run: snapshot not written")
@@ -219,6 +225,8 @@ def main(argv=None):
     log(body)
 
     attachments = [p for p, _ in (summary.get("outputs") or {}).values()]
+    if summary.get("report_path"):
+        attachments.append(summary["report_path"])
     if summary.get("snapshot_path"):
         # Insurance against losing the baseline: if wherever this runs loses
         # its persistent storage, the last-known-good snapshot can be

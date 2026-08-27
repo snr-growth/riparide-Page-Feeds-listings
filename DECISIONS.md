@@ -232,3 +232,31 @@ Railway required an unverified volume mount (`/data`) for the snapshot and locat
 ### What is not yet verified
 
 D7's finding — that this dev machine gets blocked by Cloudflare on every URL, in a way D3's original testing didn't anticipate — means GitHub Actions' own runner IPs have not actually been proven to get through, only assumed to, on the basis that `build-feed.yml` (the workflow this replaces) was written with a reachability-check step already in it. **The first real `workflow_dispatch` run of `monthly-refresh.yml` is the actual test of this.** If it fails at the "Check the site answers" step, the migration's core assumption is wrong and needs a different plan (e.g. a residential-proxy egress, or staying on Railway specifically for its network path rather than its volume).
+
+---
+
+## D13. Added an .xlsx report, and with it, one deliberate dependency
+
+**Date:** 27 August 2026
+**Status:** Built
+
+### The ask
+
+The client wants a proper spreadsheet alongside the raw upload CSVs — something closer to the original manual `Riparide_PMax_Page_Feed_Example.xlsx` (Summary, QA Checks, Label Taxonomy tabs) than a bare 2-column CSV — generated every run, stored in this repo (not just emailed), and attached to the report email.
+
+### Why `openpyxl`, breaking the "no third-party packages" rule
+
+Every previous decision in this document about staying stdlib-only (D3, D7) is about the *fetching* layer: the site's protection rejects `requests`/`curl`, and possibly the requesting IP itself. `openpyxl` never makes a network call — it only writes a local `.xlsx` file — so it carries none of that risk. The realistic alternative, hand-rolling the OOXML zip/XML format with only `zipfile` and `xml.etree`, is a well-known rabbit hole: multiple interdependent XML parts (workbook, sheets, styles, shared strings, relationships) that are easy to get subtly wrong in a way that produces a file Excel refuses to open. Given the goal is a reliable monthly artifact, not proving a point about dependencies, `openpyxl` (pure Python, MIT licensed, no native extensions, no network access) is the pragmatic choice. `requirements.txt` documents this exception explicitly so it doesn't read as an accidental violation of the stated rule.
+
+### What was built
+
+`src/report.py` builds `reports/riparide-page-feed-report.xlsx` with five sheets:
+
+- **Summary** — the same content as the plain-text email report (changes, status checks, location, robots/AdsBot result, files written), in a readable table.
+- **QA Checks** — every validator result, colour-coded pass (green) / fail (red).
+- **Label Taxonomy** — generated directly from `config.py`'s constants (subcategories, intent keywords, boundaries), not hand-maintained, so it cannot drift out of sync with the code the way a manually-written reference sheet would.
+- **Page Feed - Core** / **Page Feed - Adventures** — the exact same rows as the two CSVs, as real filterable sheets.
+
+Unlike the CSVs (`data/output/`, gitignored, fully derived, regenerated every run), the report lives at `reports/riparide-page-feed-report.xlsx` — **not** gitignored, committed by the same `monthly-refresh.yml` step that persists the snapshot and location cache (D12), so every month's report is a reviewable point in git history rather than something that only ever existed in an email inbox. It is also attached to the report email alongside the two CSVs and `snapshot.json`.
+
+Deliberately left out of scope: an "Asset Group Map" or "Build Sequence" tab. Those describe one-time, human-decided Google Ads account structure, not something this run regenerates monthly — including them would mean either leaving them permanently stale or fabricating content this codebase has no basis for. If they're wanted, they belong in the original manually-maintained workbook, not the automated one.

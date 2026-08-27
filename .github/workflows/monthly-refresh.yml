@@ -59,6 +59,9 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
       # Fail here rather than partway through a run if this runner's IP or
       # TLS fingerprint gets rejected the way a plain home connection does.
       - name: Check the site answers from this runner
@@ -82,27 +85,30 @@ jobs:
             echo "=== $f: $(( $(wc -l < "$f") - 1 )) rows ==="
             head -3 "$f"
           done
+          ls -la reports || echo "no reports directory"
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: riparide-page-feed-${{ github.run_number }}
-          path: data/output/*.csv
+          path: |
+            data/output/*.csv
+            reports/*.xlsx
           if-no-files-found: ignore
           retention-days: 90
 
       # Runs even if the refresh step above failed, so a partially-filled
       # location cache from before the failure is not thrown away — but a
-      # failed run never touches data/snapshot.json in the first place
-      # (run.py only writes it after a full success), so a bad run can never
-      # commit a bad baseline. Skipped entirely for an explicit dry run.
-      - name: Persist snapshot + location cache back to the repo
+      # failed run never touches data/snapshot.json or reports/*.xlsx in the
+      # first place (run.py only writes them after a full success), so a bad
+      # run can never commit a bad baseline. Skipped entirely for a dry run.
+      - name: Persist snapshot, location cache, and the xlsx report back to the repo
         if: always() && inputs.dry_run != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          CANDIDATES=(data/snapshot.json data/snapshot.json.previous data/location-cache.json)
+          CANDIDATES=(data/snapshot.json data/snapshot.json.previous data/location-cache.json reports/riparide-page-feed-report.xlsx)
           EXISTING=()
           for f in "${CANDIDATES[@]}"; do
             [ -e "$f" ] && EXISTING+=("$f")

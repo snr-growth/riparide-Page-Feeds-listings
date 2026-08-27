@@ -1,6 +1,6 @@
 # Riparide Page Feed — Project Status
 
-**Last updated:** 27 August 2026 (post scope-cross-check fixes + GitHub Actions migration)
+**Last updated:** 27 August 2026 (post scope-cross-check fixes, GitHub Actions migration, xlsx report, and the push to GitHub)
 **Purpose of this document:** a plain-language, accurate snapshot of this project for a client status update (Loom recording). Covers what was asked for, what's been built, how it runs today, and what's still open.
 
 ---
@@ -39,7 +39,7 @@ A companion build spec defines the exact CSV format, hard validation rules, and 
 
 ## 4. What has actually been built
 
-This is a **standalone, dependency-free Python job** (no third-party libraries — deliberate, see §6) that automates the entire feed-building pipeline end to end.
+This is a **standalone Python job** — stdlib-only for everything that talks to riparide.com (deliberate, see §6), with one narrow exception: `openpyxl`, used only to build the local `.xlsx` report below, which never touches the network — that automates the entire feed-building pipeline end to end.
 
 ### 4.1 Pipeline — what one monthly run does
 
@@ -54,11 +54,12 @@ flowchart TD
     R --> G{"7. Validate\n(9 checks, incl. feed-collapse guard)"}
     G -- fail --> H["STOP — nothing written\n(a broken feed is worse\nthan a stale one)"]
     G -- pass --> I["8. Write 2 CSV files\n(Core, Adventures)"]
-    I --> J["9. Save new snapshot\n(+ per-feed row counts)"]
-    J --> K["10. Email report\n+ CSVs + snapshot attached"]
+    I --> X["8b. Write the .xlsx report\n(Summary, QA Checks,\nLabel Taxonomy, both feeds)"]
+    X --> J["9. Save new snapshot\n(+ per-feed row counts)"]
+    J --> K["10. Email report\n+ CSVs + xlsx + snapshot attached"]
 ```
 
-If validation fails at step 7, the run stops **before writing anything** — last month's files and snapshot stay intact. Step 6b and the feed-collapse guard in step 7 were both added this session (see §5).
+If validation fails at step 7, the run stops **before writing anything** — last month's files and snapshot stay intact. Steps 6b, 8b, and the feed-collapse guard in step 7 were all added this session (see §5).
 
 ### 4.2 How a URL becomes a labeled row
 
@@ -98,9 +99,11 @@ flowchart LR
 | Pre-upload validation (now 9 checks) | ✅ Built — duplicates, missing labels, label count, tracking params, domain, facet param order, dead links, label character set, **and a new feed-collapse guard** |
 | Automatic 6-monthly full status check | ✅ Now genuinely automatic (Jan/Jul) — previously only a recommendation nobody had wired up |
 | CSV output in Google's exact 2-column format | ✅ Built |
-| Email report with both files + the snapshot attached | ✅ Built — supports Resend API or SMTP, fails safely (reports "not sent") if unconfigured |
-| Unit test suite (86 tests) + CI | ✅ Added this session — covers labelling, validation, attributes, location parsing, and the new robots.txt check |
+| **`.xlsx` report** (Summary, QA Checks, Label Taxonomy, both feeds as real sheets) | ✅ **New this session** — committed to the repo every run (`reports/`) and emailed, per your request |
+| Email report with CSVs + xlsx + snapshot attached | ✅ Built — kept as plain text by your choice (reviewed, judged not worth the polish for an ops-facing report); supports Resend API or SMTP, fails safely if unconfigured |
+| Unit test suite (100+ tests) + CI | ✅ Added this session — covers labelling, validation, attributes, location parsing, the robots.txt check, and the xlsx report |
 | Scheduled + manual run via GitHub Actions | ✅ Built — replaces Railway entirely (see 4.4) |
+| Pushed to `github.com/snr-growth/riparide-Page-Feeds-listings` | ✅ Done — on top of the real existing history, not a fresh/orphaned one |
 
 ### 4.4 How it currently runs (deployment, today)
 
@@ -120,6 +123,15 @@ flowchart LR
 **Railway is no longer used.** `railway.json` has been removed and the state that used to live on its volume now lives as ordinary git commits made by the workflow itself — reviewable in the repo's history like any other change. This also means a run failure shows up as a red GitHub Actions run, which GitHub emails repo watchers about automatically, on top of this project's own report email.
 
 **One thing this hasn't proven yet:** whether GitHub's own runner network can actually reach riparide.com. The site's block turned out to be based on more than just which HTTP client is used (see §6) — a normal residential/office connection got blocked outright during this review, which is new information the original design didn't account for. The workflow's first step exists specifically to fail loudly and immediately if this doesn't hold, but **the very first real run needs to be watched** to confirm it, rather than assumed safe because it worked from Railway.
+
+### 4.5 Where the files actually live — CSVs, the Sheet, and email
+
+Direct answers to a question worth being explicit about:
+
+- **There is no live Google Sheet in this automation**, and never has been. The `Riparide_PMax_Page_Feed_Example.xlsx` from the original spec was a one-time, hand-built 108-URL example saved to a Google Drive folder — separate from this codebase, never read or updated by it.
+- **The two raw CSVs** are regenerated fresh every run, are not stored in git (they're fully derived from the snapshot, so keeping old copies would just be noise), and reach you two ways: attached to the report email, and as a GitHub Actions build artifact (90-day retention).
+- **The new `.xlsx` report is stored in GitHub now**, per your request — every month's version is committed to `reports/riparide-page-feed-report.xlsx`, so the full history of past reports is browsable in the repo, not just whatever's still in an inbox. It's also attached to the same email as the CSVs.
+- **The email itself stays plain text**, by your choice — it's a complete, accurate ops report (every check, every count), just not a styled HTML template. That was a deliberate call, not an oversight.
 
 ---
 

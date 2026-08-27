@@ -1,4 +1,11 @@
-# No third-party packages are used.
-# The site's protection layer rejects the requests library's TLS fingerprint
-# while accepting the standard library's, so fetching uses urllib only.
-# This file is kept so the platform detects a Python project.
+# No third-party packages are used for fetching, or for anything that talks
+# to riparide.com. The site's protection layer rejects requests/curl even
+# with an identical browser user agent to urllib (DECISIONS.md D3), and a
+# residential/office IP got blocked outright regardless of client (D7) — so
+# every module that touches the network stays stdlib-only, deliberately.
+#
+# openpyxl is the one deliberate exception, used only by src/report.py to
+# build the monthly .xlsx report. It never makes a network call, so it
+# carries none of the risk the rule above exists to avoid. See DECISIONS.md
+# D13 before adding anything else here.
+openpyxl>=3.1,<4
