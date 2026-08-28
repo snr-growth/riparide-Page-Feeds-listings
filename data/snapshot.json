@@ -1,6 +1,6 @@
 {
-"taken_at": "2026-08-27T14:09:25Z",
-"total": 10208,
+"taken_at": "2026-08-28T10:00:29Z",
+"total": 10215,
 "urls_by_group": {
 "listings": [
 "https://www.riparide.com/listings/1000-the-dairy-at-abington-farm",
@@ -2227,9 +2227,12 @@
 "https://www.riparide.com/listings/18687-myrtle-casa",
 "https://www.riparide.com/listings/18689-weetaliba-country-retreat",
 "https://www.riparide.com/listings/18690-two-waters",
+"https://www.riparide.com/listings/18691-the-lake-house-coongulla",
 "https://www.riparide.com/listings/18692-bella-vita-warburton-views-with-sauna",
 "https://www.riparide.com/listings/18695-grandview-luxe-barwon-heads",
 "https://www.riparide.com/listings/18696-river-house-cottage-luxe-villa-retreat-with-pool-and-tennis-courts",
+"https://www.riparide.com/listings/18697-dashaway-i-pet-friendly",
+"https://www.riparide.com/listings/18700-mackerel-shackerel-beachfront-cottage-sleeps-6-with-views",
 "https://www.riparide.com/listings/1877-sawmill-cottage-farm",
 "https://www.riparide.com/listings/1895-koovelly-spa-villa",
 "https://www.riparide.com/listings/1904-warby-weekender",
@@ -4309,6 +4312,7 @@
 "https://www.riparide.com/stories/2740-a-canopy-escape-at-birdcloud",
 "https://www.riparide.com/stories/2741-a-taste-of-ranch-life",
 "https://www.riparide.com/stories/2743-countryside-and-comfort-in-matakana",
+"https://www.riparide.com/stories/2745-find-your-way-to-applegarth",
 "https://www.riparide.com/stories/275-lazy-weekend",
 "https://www.riparide.com/stories/277-ocean-roads-and-sandy-toes",
 "https://www.riparide.com/stories/279-relaxation-recreation",
@@ -9408,6 +9412,9 @@
 "https://www.riparide.com/adventures/33601-bird-watching-at-tawharanui-regional-park",
 "https://www.riparide.com/adventures/33602-brunch-at-the-farmers-daughter",
 "https://www.riparide.com/adventures/33603-walk-along-omaha-beach",
+"https://www.riparide.com/adventures/33607-hassans-wall-lookout",
+"https://www.riparide.com/adventures/33608-a-quaint-cafe",
+"https://www.riparide.com/adventures/33609-stroll-through-historic-hartley",
 "https://www.riparide.com/adventures/3366-mt-william",
 "https://www.riparide.com/adventures/3367-dream-time-rock-climbing",
 "https://www.riparide.com/adventures/3368-tribute-and-amnesty-rock-climbing",
@@ -10224,7 +10231,7 @@
 ]
 },
 "feed_counts": {
-"CORE": 4836,
-"ADVENTURES": 5489
+"CORE": 4840,
+"ADVENTURES": 5492
 }
 }
