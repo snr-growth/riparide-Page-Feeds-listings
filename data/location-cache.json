@@ -13063,14 +13063,6 @@
 "stay": "TYPE_CABIN",
 "parser": 4
 },
-"https://www.riparide.com/listings/13117-kawau-lodge-boutique-resort": {
-"country": "GEO_NZ",
-"state": "",
-"region": "REG_NORTH_COVE_0920",
-"region_name": "North Cove 0920",
-"stay": "TYPE_LODGE",
-"parser": 4
-},
 "https://www.riparide.com/listings/13150-the-roost-cottage-2-ocean-views-country-tranquillity": {
 "country": "GEO_AU",
 "state": "GEO_VIC",
@@ -28646,6 +28638,6645 @@
 "parser": 5
 },
 "https://www.riparide.com/stories/559-vintage-mountain-living": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/listings/13117-kawau-lodge-boutique-resort": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTH_COVE",
+"region_name": "North Cove",
+"stay": "TYPE_LODGE",
+"parser": 5
+},
+"https://www.riparide.com/stories/562-mabi-dome-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/563-dreamy-lakefront-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/566-disconnect-to-reconnect": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/567-cozy-cabin-by-the-prom": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/568-soak-up-the-stars": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/569-timeless-sapphire-coast-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/571-retreat-in-the-garden": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/572-cruising-in-copacabana": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/575-lovers-getaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/578-a-frame-away-from-home": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/579-dome-sweet-dome": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/580-paterson-s-cottage-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/581-seaside-escape-at-kiama": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/582-slow-down-and-reconnect": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/583-riverbank-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/586-historic-grampians-charm": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/587-recuperate-connect": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/588-romantic-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/590-wollombi-valley-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/593-indulgence-at-the-longhouse": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/594-hidden-mountain-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/596-gunning-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/597-mountain-view-glamping": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/598-charming-bushland-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/599-unplug-in-the-blue-mountains": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/600-country-coastal-vibes": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/602-dog-friendly-billabong-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/603-bush-magic": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/607-switching-off-at-wondernest": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/608-a-romantic-mountain-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/644-gorgeous-boat-in-the-grampians": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/646-by-the-river": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/647-inverloch-glamping-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/648-heart-of-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/649-down-johanna-way": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/650-wild-wild-nest": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/651-glamping-at-readleaf-creek": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/652-calm-and-cozy": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/653-bushland-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/654-back-in-time": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/657-tiny-forest-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/659-weekend-at-jack-s": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/660-high-altitude-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/662-fairytale-getaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/664-slowly-salty": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/665-beyond-the-highland-mist": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/666-what-a-mount-beauty": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/700-beachside-in-byron": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/701-mi-casa-su-casa": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/704-a-cosy-family-escape-in-torquay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/705-a-big-warm-hug": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/707-meeting-mr-oak": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/708-mesmerised-in-the-otway-s": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/711-adventure-in-the-grampians": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/713-charming-farm-house-at-fernleigh": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/715-banksia-amongst-the-gum-trees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/716-long-sky": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/719-hidden-hills-of-howqua": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/721-retreat-yourself": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/723-artists-retreat-in-belgrave": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/724-cosy-cottage-in-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/725-next-stop-redleaf-farm": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/727-serenity-by-the-water": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/730-crackenback-cottage": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/732-hawkesbury-river-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/733-the-bunkie-in-bundeena": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/771-culburra-beach-weekender": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/774-immersed-in-the-rainforest": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/778-the-dacha-bath-house": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/779-good-times-in-the-vines": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/781-unwind-by-the-elm-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/783-the-bello-vintage-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/784-luxurious-hideaway-at-blue-bay": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/785-away-at-fellcroft-farmstay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/786-slow-fire": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/787-cosy-and-wild": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/791-warmth-in-warburton": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/793-hounds-and-howqua-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/795-cosy-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/796-idyllic-farm-retreat-on-the-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/797-retreat-to-the-beach": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/798-dog-friendly-delight-in-the-gold-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/799-cosy-tree-frog-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/800-solo-adventures-by-the-creek": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/803-an-escape-from-the-city": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WELLINGTON",
+"region_name": "Wellington",
+"parser": 5
+},
+"https://www.riparide.com/stories/804-a-treetop-hideaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/809-unwind-and-reconnect-by-the-river": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_RUAPEHU",
+"region_name": "Ruapehu",
+"parser": 5
+},
+"https://www.riparide.com/stories/812-beauty-in-brigadoon": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/847-sandy-toes-salty-air": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/848-coastal-roaming": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/854-nestled-among-the-forest": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/855-orchestra-of-nostalgia": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/856-retro-retreat": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/857-sea-spray-getaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/858-japanese-nordic-luxury-in-rye": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/859-tiny-home-huge-vibe": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/861-off-grid-solitude": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/866-tranquility-in-the-bush": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/867-luxury-country-living": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/869-modern-love": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/873-cosy-fire-lit-cabin-among-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/875-luxury-chalet-by-the-bay": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/879-chilling-in-the-vines": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/881-farmstay-on-the-ridge": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/882-romantic-notebook-experience": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/885-rural-retreat-near-raglan": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/888-beachside-cottage-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/889-cabins-for-unplugging": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/891-unwind-in-the-bushland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/892-hunter-valley-country-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/893-it-was-all-a-dream": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/895-a-grecian-paradise-in-bowentown": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/898-a-hidden-escape-in-the-blue-mountains": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/899-majestic-mountains-and-nature-s-expanse": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/901-countryside-stunner": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/902-escape-to-the-sunny-hawke-s-bay": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/936-moody-mozart-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/937-surf-style-and-romance": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/940-beachfront-bliss": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WELLINGTON",
+"region_name": "Wellington",
+"parser": 5
+},
+"https://www.riparide.com/stories/941-escape-to-waiheke-island": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIHEKE_ISLAND",
+"region_name": "Waiheke Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/942-the-luxurious-magical-nissen-hut": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/943-serenity-among-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/947-couple-s-retreat-at-sawmill-mountain": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/948-escape-to-the-bush": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/950-farm-and-a-view-for-you": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/951-getaway-in-the-sky": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/952-waiheke-island-paradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIHEKE_ISLAND",
+"region_name": "Waiheke Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/953-disconnect-to-reconnect": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/955-back-in-time-with-this-retro-caravan": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/956-stargazing-hut-by-the-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/957-off-grid-cabin-in-ancient-totara-grove": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TAIR_WHITI_GISBORNE",
+"region_name": "Tair\u0101whiti Gisborne",
+"parser": 5
+},
+"https://www.riparide.com/stories/958-tiny-home-big-adventures": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/960-under-the-bright-stars": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/962-slow-burn-sunsets": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/964-relaxing-forest-getaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/965-bodacious-beach-lodge": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/966-surf-tripping": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/968-little-s-boot-shop-with-a-lot-of-soul": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/975-outdoor-bathing-in-the-bush": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/977-forest-bathing": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/979-seclusion-on-the-central-coast": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/980-all-encompassing-eco-village": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/984-glamping-glowworms": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/985-beachside-bliss": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_THE_COROMANDEL",
+"region_name": "The Coromandel",
+"parser": 5
+},
+"https://www.riparide.com/stories/986-hideaway-haven": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/987-a-journey-through-time-at-the-storekeepers-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/989-a-hidden-gem-at-the-end-of-the-lane": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/991-still-in-kilcunda": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/992-escaping-the-blues": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/993-a-luxurious-mt-baker-lakeside-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/994-not-your-run-of-the-mill": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/996-lavender-farm-bungalow-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/997-escape-to-the-dawning-day-farms-vineyard": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1001-beachside-bliss": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1003-lakefront-paradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_ROTORUA",
+"region_name": "Rotorua",
+"parser": 5
+},
+"https://www.riparide.com/stories/1006-hobbit-house-living": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/1008-so-close-yet-so-far-away": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1009-cosy-cubby-in-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1010-cosy-cabin-with-the-cows": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1012-classic-kiwi-escape": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1014-modern-luxury-in-the-foothills-of-mount-baker": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1015-sunsets-and-seaside-views": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1016-the-bus-life-dream": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1018-hilltop-cabin-in-the-hinterlands": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1019-head-in-the-clouds": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1021-a-cozy-cascade-cabin-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1026-introvert-s-paradise": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1027-retreat-and-recharge": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1028-a-cozy-loft-stay-in-the-central-cascades": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1030-plunge-into-this-coastal-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1031-luxe-stay-simple-fun": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1032-lakeside-retreat-in-the-heart-of-the-olympics": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1033-a-cozy-corner-in-maple-falls": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1034-up-fish-creek": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1037-the-cascade-cabin": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1039-la-pinata-that-s-amore": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1040-enchanted-cabin-in-the-woods": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/1041-homier-than-home": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIHEKE_ISLAND",
+"region_name": "Waiheke Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1042-the-mountains-are-calling": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1043-springtime-at-the-stugan": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1045-storybook-mountain-house": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1047-rainshadow-retreat": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1048-mid-week-on-waiheke": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIHEKE_ISLAND",
+"region_name": "Waiheke Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1050-laid-back-stay-on-the-shipwreck-coast": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1051-sweet-joy-in-johanna": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1052-enchanting-cabin-stay": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1053-so-close-so-far-away": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1057-finding-gippsland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1058-getting-back-to-basics": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1059-serenity-in-the-valleys": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1060-a-quiet-escape-in-high-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1063-relax-and-recharge": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1064-cozy-in-camas": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1065-rural-treehouse-hideaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1066-relax-at-repentance-creek": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1067-ashlar-on-hilltop-road": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1068-mountains-lakes-and-countryside-living": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TAUP",
+"region_name": "Taup\u014d",
+"parser": 5
+},
+"https://www.riparide.com/stories/1069-a-solo-party-on-the-peninsula": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1070-little-farm-stay-in-the-olympics": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1071-restored-country-church-charm": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1073-daydreaming-at-daysy-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1074-a-squirrel-s-nest-treehouse-adventure": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1075-westsound-solitude": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1076-hideaway-amongst-the-trees-in-bellingham": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1079-a-rustic-ranch-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1081-super-cozy-cabin-near-the-creek": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1116-x-marks-the-spot": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1119-wanderlust-mountain-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1120-sister-sirens-visit-the-seaside": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1121-ocean-views-in-olympia": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1122-relaxing-tiny-home-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1123-perfect-sea-horse-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1127-nearly-private-island-life": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1128-a-special-place-to-nestle": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1129-the-mountain-is-calling": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/1130-relaxing-retreat-near-the-mountains-of-leavenworth": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1131-exploring-the-secrets-of-moparrabah": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1133-waiheke-hidden-gem-tree-house": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1137-coastal-getaway-at-kinoie": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1138-mountain-magic-at-rock-retreat": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1139-a-cozy-island-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1140-charming-woodshed-by-the-dunes": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1142-a-pnw-forest-cabin-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1143-48-hours-of-ultimate-relaxation-on-san-juan-island": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1144-comfy-cozy-ashford-cabin": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1146-the-humpy-a-cosy-winter-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1180-karangahake-cabin-season": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1182-tranquil-tiny-home-caramel": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1184-homey-hideaway-among-the-trees": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1185-an-autumn-weekend-amongst-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1188-basecamp-for-nature-and-nurture-adventures": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1190-river-hikes-and-hot-tub-nights": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1191-if-i-could-turn-back-time": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1192-untangling-at-tanglewood": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1193-a-water-and-woods-wonderland": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1195-groovy-getaway-in-glenaire": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1196-slice-of-heaven-with-farm-views": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1197-valley-views": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1198-shoulder-season-snowies": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1200-an-ironbark-escape-into-the-woods": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1201-port-campbell-wonders": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1202-unwinding-at-dash-point": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1207-a-charming-cottage-with-soul": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1208-life-on-the-farmstead": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1209-a-cosy-autumnal-cabin-in-the-southern-highlands": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1212-escape-to-forest-island": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_PORTLAND_REGION",
+"region_name": "Portland Region",
+"parser": 5
+},
+"https://www.riparide.com/stories/1213-peaceful-cabin-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1214-experiencing-an-1860s-australian-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1218-a-cabin-reset-at-the-base-of-mt-hood": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_MT_HOOD_RIVER_GORGE",
+"region_name": "Mt Hood & River Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1219-cozy-hillside-cabin-in-packwood": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1220-hummingbird-hill-haven": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1221-unique-chapel-stay-in-the-olive-groves": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1222-the-peninsula-redefined": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1223-360-degree-views-to-live-for": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1224-a-peaceful-nordic-cabin-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1225-you-ll-never-want-to-leave": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1226-a-classic-pnw-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1227-seabirds-on-the-ocean-breeze": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1228-cosy-little-bush-shack": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1230-forest-and-beach-the-best-of-both-worlds": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1232-glamping-on-the-mini-farm": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1233-a-grounding-retreat-in-the-forest": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1235-little-bush-haven": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1239-cozy-escape-to-a-frame-heaven": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1240-cosy-weekend-at-the-surfstables": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1241-the-coba-escape-by-the-water": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1243-beautiful-countryside-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1244-cabin-getaway-on-san-juan-island": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1247-farm-fresh-freedom": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1249-humble-hobbit-home": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1250-classic-pnw-experience-awaits-you": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1251-a-birthday-a-beach-and-a-boat": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1254-cozy-wine-wagon-in-the-woods": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_PORTLAND_REGION",
+"region_name": "Portland Region",
+"parser": 5
+},
+"https://www.riparide.com/stories/1256-misty-mornings-in-waukivory": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1259-family-fun-at-rainier": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1260-slow-moments-at-burrowes-rest": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1262-serenity-over-the-sound": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1263-a-weekend-filled-with-waterfalls": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1264-slow-days-and-peninsula-sunsets": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1265-a-traveller-s-journal": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1268-rainbow-season-at-wilsons-prom": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1269-switch-off-and-reconnect-in-the-red-woods-cabin": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1270-the-beautiful-cape-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1271-tiny-forest-cabin-in-cle-elum": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1273-hecta-beach-getaway": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1274-home-away-from-home": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1275-classic-pnw-vibes-at-mount-baker": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1276-oregon-coast-getaway": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1277-south-coast-serenity": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1278-rest-relax-and-reconnect-in-raglan": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1279-finding-bliss-at-bangalow-bails": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1280-a-beautiful-forest-stay-close-to-the-beach": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1281-forest-bathing-on-the-mountain": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_MT_HOOD_RIVER_GORGE",
+"region_name": "Mt Hood & River Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1282-relax-in-the-countryside-at-kookaburra-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1287-adventurous-cozy-moments-in-rainier-cabin": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1289-luxury-nature-escape-to-relax": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/1291-rest-recharge-at-saltwater-farm": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1292-seaside-yurt-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1293-retro-a-frame-for-family-fun": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1295-a-secluded-cabin-by-the-lake": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1296-the-perfect-place-to-reset": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1297-peaceful-riverfront-escape-on-the-mckenzie": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1298-hygge-in-the-high-desert": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_OREGON",
+"region_name": "Central Oregon",
+"parser": 5
+},
+"https://www.riparide.com/stories/1299-a-quiet-escape": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1303-family-adventures-in-the-country": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1304-a-whimsical-warburton-winter": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1305-charming-vashon-getaway": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1307-a-weekend-in-washington": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1308-two-nights-in-a-moroccan-inspired-tent": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1310-modern-stay-for-friends-family": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1311-garden-sanctuary-on-the-island": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1312-blown-away-on-chumstick-mountain": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1314-tiny-home-forest-escape": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1316-rustic-cabin-escape-near-mt-hood": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_MT_HOOD_RIVER_GORGE",
+"region_name": "Mt Hood & River Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1321-location-that-will-take-your-breath-away": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_CENTRAL_WASHINGTON",
+"region_name": "Central Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1324-the-great-foodie-adventure": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1327-riverside-hideaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_MANAWAT_WHANGANUI",
+"region_name": "Manawat\u016b-Whanganui",
+"parser": 5
+},
+"https://www.riparide.com/stories/1328-historic-stay-on-the-south-coast": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1329-getaway-amongst-the-gum-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/1330-winter-never-felt-so-good": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1334-stay-at-the-mt-rainier-np-entrance": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1335-countryside-haven-with-hot-tub-and-horses": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1336-charming-cottage-on-the-coast": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/1337-cosy-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1340-luxury-at-lakeside": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1342-serene-forest-bathing-at-nature-domes": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1346-artist-s-studio-on-bainbridge-island": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1347-peaceful-puggle-hut-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1348-southern-highlands-back-in-time": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1350-secret-getaway-in-the-mountains": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1353-secluded-spa-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1355-relaxing-beachside-escape": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1357-a-winter-countryside-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1358-absolute-waterfront-luxury": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1361-a-sweet-retreat": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1363-the-crest-of-an-eagle": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1365-qii-tiny-house-kokoro": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1370-cozy-creekside-cottage-escape": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1371-our-chalet-getaway-at-mount-hood": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_MT_HOOD_RIVER_GORGE",
+"region_name": "Mt Hood & River Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1373-magic-on-puget-island": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1374-chic-stay-in-the-hunter-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1376-byron-hinterland-and-coastal-adventures": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1377-an-inspiring-hinterland-dream": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1378-a-cozy-base-to-explore-wilderness-rim": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1380-two-story-treehouse-and-fire-lookout-adventures": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1381-feeding-highland-cows-at-a-container-home-farmstay": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1382-luxury-hideout-in-macedon-ranges": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1383-tiny-house-with-a-big-view": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1418-farm-retreat-in-walla-walla": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_WINE_COUNTRY",
+"region_name": "Wine Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1420-a-peaceful-rustic-country-log-cabin": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIRARAPA",
+"region_name": "Wairarapa",
+"parser": 5
+},
+"https://www.riparide.com/stories/1422-a-time-capsule-on-the-oregon-coast": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1426-groundedness-in-the-snowy-mountains": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1428-luxury-glamping-seascape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1429-sunset-valley": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1430-warming-up-in-the-woods": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1432-beyond-the-vines": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1433-paradise-in-taradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/1434-sea-folk-slow-down": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1435-escape-to-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1436-a-tranquil-coastal-escape": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1437-the-pearl-of-gippsland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1438-relaxing-times-at-tui-ridge": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1439-relax-and-unwind": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_WINE_COUNTRY",
+"region_name": "Wine Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1441-maxo-relaxo": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1443-cozy-secluded-home-away-from-home": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_GREATER_SEATTLE",
+"region_name": "Greater Seattle",
+"parser": 5
+},
+"https://www.riparide.com/stories/1444-tales-of-tintenbar": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1445-woodsy-treehouse-adventure": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_COLUMBIA_GORGE",
+"region_name": "Columbia Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1447-villa-on-forgotten-world-highway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/1449-a-country-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1450-luxury-and-seclusion-behind-bells-beach": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1452-the-sundrenched-school-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1459-coromandel-dreaming": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_THE_COROMANDEL",
+"region_name": "The Coromandel",
+"parser": 5
+},
+"https://www.riparide.com/stories/1461-what-to-do-with-weather-this-fowl": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1463-off-grid-on-the-creek": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_SOUTHWEST_WASHINGTON",
+"region_name": "Southwest Washington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1464-unwind-in-the-hinterland": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1466-the-royal-sydney-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1467-rustic-cabin-at-monga-mountain-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1468-romantic-retreat-in-matakana": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1469-canadian-cabin-in-the-woods-and-wombats": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1470-romantic-couples-stay-in-a-hobbit-dome": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1475-hidden-away-on-the-great-ocean-road": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1477-a-modern-sanctuary": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1478-cosy-coastal-hut-at-pahoia-beach": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/1480-you-ve-got-a-friend-in-me": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1483-cosy-seaside-details": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1486-cottagecore-dream-retreat-in-hawkes-bay": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/1487-easy-like-a-natural-sunday": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1489-working-from-walkerville": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1490-serenity-on-the-lower-columbia": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_PORTLAND_REGION",
+"region_name": "Portland Region",
+"parser": 5
+},
+"https://www.riparide.com/stories/1491-lakehouse-retreat-on-the-oregon-coast": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_SOUTH_COAST_OR",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1493-the-last-church-in-apiti": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_MANAWAT_WHANGANUI",
+"region_name": "Manawat\u016b-Whanganui",
+"parser": 5
+},
+"https://www.riparide.com/stories/1494-glamping-in-molalla": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_PORTLAND_REGION",
+"region_name": "Portland Region",
+"parser": 5
+},
+"https://www.riparide.com/stories/1495-tortoise-mode-in-the-treehouse": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1497-how-to-relax-just-add-water": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1499-the-perfect-puhoi-escape": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1500-privacy-in-paradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1501-family-friendly-beach-house": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1502-cozy-cabin-weekend-in-sisters-oregon": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_OREGON",
+"region_name": "Central Oregon",
+"parser": 5
+},
+"https://www.riparide.com/stories/1503-the-reset": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1505-peaceful-stay-on-the-mckenzie-river": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_WILLAMETTE_VALLEY",
+"region_name": "Willamette Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1506-you-can-sit-with-us": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1510-folk-inspired-cottage-in-skagit-valley": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1512-getaway-high-in-the-loft": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1513-a-relaxed-yet-exciting-time": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1514-adsum-farmhouse-s-to-your-bucket-list": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1515-sanctuary-by-the-city": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1517-farmland-retreat-with-unbeatable-views": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1519-northland-s-hidden-glamping-getaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1521-wonderous-beach-getaway": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_CENTRAL_COAST_OR",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1522-a-breath-of-fresh-glenaire": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1523-private-cabin-on-the-lake": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_PENINSULAS",
+"region_name": "Peninsulas",
+"parser": 5
+},
+"https://www.riparide.com/stories/1526-treehouse-at-tanglewood": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1527-retreat-to-airey-s": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1531-branch-out-and-stay-at-the-treehouse": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1532-rejuvenate-and-reconnect-in-a-tranquil-cabin": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_MOUNT_RAINIER",
+"region_name": "Mount Rainier",
+"parser": 5
+},
+"https://www.riparide.com/stories/1569-woodstock-dreamers-bus": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1571-the-woody-by-the-waves": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1572-the-ultimate-bus-life-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1574-a-nostalgic-summer-getaway-at-sommarhus": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1575-an-orcas-island-waterfront-cottage": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_THE_ISLANDS",
+"region_name": "The Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1576-the-royale-of-bundeena": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1578-back-to-nature": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1579-perfect-family-getaway": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1581-dreamy-belgravia-bungalow": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1582-two-seasons-mountain-getaway": {
+"country": "GEO_US",
+"state": "GEO_OR",
+"region": "REG_MT_HOOD_RIVER_GORGE",
+"region_name": "Mt Hood & River Gorge",
+"parser": 5
+},
+"https://www.riparide.com/stories/1584-lost-near-lothlorien": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1585-cozy-snowy-escape-to-snowline": {
+"country": "GEO_US",
+"state": "GEO_WA",
+"region": "REG_NORTH_CASCADES",
+"region_name": "North Cascades",
+"parser": 5
+},
+"https://www.riparide.com/stories/1586-full-reconnection-at-mittagong-talia": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1587-cave-life": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1590-paradise-on-the-great-ocean-road": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1591-a-seafarer-s-dream": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1593-a-hygge-little-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1594-a-peaceful-getaway-in-the-heart-of-west-gippsland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1595-tiger-house-tranquility": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/1596-little-church-bay": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/1598-a-hidden-tranquil-paradise": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1600-quiet-serenity-at-ellerslie-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1601-refreshing-stay-on-the-rangitikei": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_MANAWAT_WHANGANUI",
+"region_name": "Manawat\u016b-Whanganui",
+"parser": 5
+},
+"https://www.riparide.com/stories/1603-grand-living-in-an-eclectically-designed-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1606-the-kelly-gang-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1607-king-valley-dreaming": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1611-the-quintessential-kiwi-beach-escape": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1612-hideaway-amongst-the-trees": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1613-a-countryside-romance": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1616-the-perfect-off-grid-ranch": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1651-waterfront-bliss-on-the-hawkesbury-river": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1654-pahoia-paradise-beach-stay": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/1657-escape-to-a-hinterland-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1658-off-grid-hillside-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1660-on-cloud-nine": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1661-cooper-s-cabin": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1663-hot-spring-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1665-glamorous-geodesic-glamping": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1667-mountain-magic": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/1668-outdoor-livin": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1669-high-country-huts-horses": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1670-rainforest-dream": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1671-soulfulness-in-the-vines": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1672-love-at-larnook": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1673-river-cabin-magic": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1708-ground-yourself-in-nature": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1709-among-the-gum-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1711-place-beyond-the-pines": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1712-in-the-canopy": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1713-charming-countryside-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1714-starry-nights-vintage-delights": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1715-feelin-fresh-in-the-high-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1717-grand-glamping-getaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MURRAY_RIVER",
+"region_name": "Murray River",
+"parser": 5
+},
+"https://www.riparide.com/stories/1718-playful-sophisticated-alpine-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1719-amongst-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1721-charming-cottage-with-cedar-hot-tub": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1722-unwind-and-reconnect-a-perfect-weekend-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1723-slow-weekend-in-the-wagon": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1724-wanderlust-wheels-rediscovering-adventure-in-style": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1728-blissful-boutique-barn": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1729-retreat-yourself": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1730-cozy-cabin-seaside-getaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1733-wanderlust-wheels": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1734-coastal-luxe-st-andrews-beach": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1735-cosy-house-hideout": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1736-eco-house-made-with-heart": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1738-quaint-stone-cottage-in-the-bush": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1741-tiny-coastal-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1742-avo-inn": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/1743-cosy-home-by-the-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1745-ocean-view-sanctuary": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1748-leafy-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1749-eco-luxe-living-in-byron-s-charming-hinterland": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1750-hit-the-go-slow-in-mokau": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1751-under-the-spell-of-nightcap-exchange": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1752-a-winter-escape-in-victoria-s-high-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1753-highland-bliss-at-the-vale": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1754-western-wilderness": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1755-history-luxury-nature": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1757-zest-for-life-at-zulu-land": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1758-hilltop-haven": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1791-karekare-cabin-in-the-heart-of-west-coast": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1792-relaxing-seaside-nature-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1794-mountains-of-contentment": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1795-kickin-back-at-kirwood-coastal": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1797-kangaroo-valley-living-up-to-its-name": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1800-a-blissful-escape-at-golden-emperor-cicada-luxury-camping": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1801-great-mountain-escape-in-the-grampians": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/1802-camping-in-style-cicada-luxury-camping": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1803-rocky-treehouse-haven": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/1805-nestled-away-in-wye-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1806-a-tiny-treasure-in-wonderland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1808-a-relaxing-hinterland-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1810-epic-ocean-sanctuary": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1811-hobby-farm-haven": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1812-big-things-come-in-small-packages": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1813-glamping-experience-on-a-retro-bus": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1814-riverside-cabin": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1816-unwind-in-charming-portarlington": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1817-goulburn-river-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1818-on-board-oh-buoy": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1819-a-charming-hideaway-in-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1820-atop-hills-of-green-gold": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1821-hideaway-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1822-slow-and-seaside-at-the-little-black-shack": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1823-milsons-passage-riverside-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1824-historic-waterfront-boatshed": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1825-wild-island": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1826-freedom-space-a-coastal-farm-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1827-goin-with-the-flo": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MURRAY_RIVER",
+"region_name": "Murray River",
+"parser": 5
+},
+"https://www.riparide.com/stories/1828-tiny-house-tremendous-views": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1830-beachfront-bliss": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1863-luxury-in-hahei-heights": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_THE_COROMANDEL",
+"region_name": "The Coromandel",
+"parser": 5
+},
+"https://www.riparide.com/stories/1864-tranquil-talulah": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1865-retreat-by-the-beachside": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/1866-i-see-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1867-melodies-of-wallaringa-farm": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1869-the-farmhouse-on-the-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1872-tranquil-trentham-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1873-beauty-at-banksia": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1874-hacienda-on-the-hill": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1875-chillout-at-the-riverhouse": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1876-rainforest-escape-in-the-otways": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1877-great-ocean-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1879-holiday-at-highgate": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1880-a-cosy-cottage-in-kangaroo-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1881-somewhere-in-the-woods": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1882-mediterranean-sun-in-melbourne": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1883-local-warmth-on-the-coast": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WELLINGTON",
+"region_name": "Wellington",
+"parser": 5
+},
+"https://www.riparide.com/stories/1885-riverside-vibes": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1886-tranquil-cottage-life": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1887-tree-house-in-the-otways": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1920-down-by-the-riverlea": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1921-yellow-mellow-seaside-getaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1922-camp-otway-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1923-cozy-cottage-on-the-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1924-villa-merlot": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1926-a-frame-retreat-nestled-in-the-clouds": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MELBOURNE",
+"region_name": "Melbourne",
+"parser": 5
+},
+"https://www.riparide.com/stories/1927-otways-moonlight-cottage-delight": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1928-queens-of-the-castle": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1929-serenity-with-a-view": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1930-down-right-darlin-at-dolly-s": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1931-kiama-waterfront-luxury": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1933-a-hunter-valley-haven": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1934-windows-to-the-otways": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1935-the-quiet-side-of-byron": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1937-the-perfect-beach-town-escape": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1939-delightful-dairy-at-port-fairy": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1940-safari-serenity-a-luxe-retreat-in-the-wilderness-of-waihi": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1941-take-the-alternative-road": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1942-barn-bliss-a-weekend-in-heaven": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/1943-off-the-grid": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1944-bushfield-bliss": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/1945-glamping-in-the-blue-mountains": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1947-valley-of-luxury": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/1948-bliss-in-the-bay-of-islands": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/1949-mellow-in-bello": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1951-a-golden-delight": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1952-sunrise-paradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/1953-soulful-she-shed": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1954-drifting-into-a-dream": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1956-avion-retreat-mountain-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1957-fogo-beachfront-bliss-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1958-unique-a-frame-nestled-in-the-pine-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/1961-a-truck-retreat-in-native-bushland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/1963-historic-church-turned-cozy-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/1964-hidden-guesthouse-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1965-living-it-up-lakeside": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1968-elsewhere-eco-pod-getaway-by-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1969-munbilla-walkerville": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/1970-luxury-paradise-at-sunvale": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/1971-water-at-your-door-casa-pacifica-aka-encanto-house": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/1972-window-to-wonderland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/1973-off-grid-glory": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/1974-lovely-lakeside-luxury": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2007-endless-views-at-macmasters": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2008-sunsets-amongst-the-gumtrees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2011-a-humble-abode-amongst-the-food-forest": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_MANAWAT_WHANGANUI",
+"region_name": "Manawat\u016b-Whanganui",
+"parser": 5
+},
+"https://www.riparide.com/stories/2014-soaring-high-at-ruru-cabin": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/2015-bubble-baths-and-starry-skies": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2017-tiny-house-tranquility": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2018-beachfront-living-at-the-pad": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2019-making-memories-by-the-mountains": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_RUAPEHU",
+"region_name": "Ruapehu",
+"parser": 5
+},
+"https://www.riparide.com/stories/2020-mesmerised-at-the-bach": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2021-the-atelier-s-cottage": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2022-olive-cottage-dreaming": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2023-mornington-peninsula-paradise": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2024-ayala-yurt": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2025-caught-in-a-fairy-tale": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2026-luxury-in-nature": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2027-autumn-getaway-in-a-cosy-log-cabin": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2029-a-cosy-home-in-misty-robertson": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2030-escape-to-the-palms-a-rainforest-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2032-cosy-glamping-at-the-canopy": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2033-an-oceanview-oasis": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2037-the-horse-of-course": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2040-wood-cabin-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2073-snowy-mountains-luxury-cabin-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2074-snowy-mountains-tiny-home": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2075-a-mansfield-scenic-cottage-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2076-an-immersive-luxury-farm-stay-experience": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2077-all-kinds-of-cosy": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2078-getaway-at-glenmore-springs": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2079-the-sensational-snowgum-spa-chalet": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2080-winter-retreat-at-hide-seek": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2083-heart-filling-stay-away": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2084-solo-self-love-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2085-forest-bathing-at-the-vale": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2086-hideaway-cabin-by-the-river": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/2087-for-the-curious-hearts": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2090-coast-and-connection": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2091-tranquil-off-grid-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2092-luxury-tiny-home-with-valley-views": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2093-enchanted-tiny-tree-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2094-sanctum-for-your-senses": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2095-sinning-winning-in-the-church-of-love": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2096-mountain-retreat-cosy-escape-with-incredible-views": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_RUAPEHU",
+"region_name": "Ruapehu",
+"parser": 5
+},
+"https://www.riparide.com/stories/2097-log-cabin-lovin": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2099-blissful-luxury-glamping-at-paperbark-camp-in-jervis-bay": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2101-where-mother-nature-calls": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2102-earthing-byron-hinterland-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2103-blossoms-and-baths-orchard-cottage": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2104-charming-cottage-on-the-green": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2106-submerged-in-the-otways": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2108-wildlife-cabin-an-escape-in-the-grampians": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/2110-outdoor-bath-bliss": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2111-hilltop-secret-place-with-incredible-views": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2112-cozy-cottage-for-the-colourful-kings-queens": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2113-drift-away": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2114-mountain-view-farm-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2115-enchantment-tucked-away-by-the-lake": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2116-two-story-two-dogs-twenty-years-in-between": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2117-wild-and-seek": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2119-blissful-barn-at-the-farm": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2120-luxe-villa-salt-sand-sea": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2121-lavish-life-at-the-loft": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2123-cozy-cottage-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2124-a-charming-cottage-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2125-mansfield-house-on-the-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2128-dog-friendly-abode-with-vintage-charm": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2129-the-blackwood-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2130-marvelous-landscapes-wine-and-everything-devine": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2132-hilltop-haven-forest-meets-ocean": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2133-floating-and-forests-a-tiny-adventure-in-the-yarra-valley": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2135-truck-stop-in-torquay": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2136-serene-escape-in-nature": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/2170-hideout-by-the-water-s-edge-heart-filling-adventures": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2171-solo-hide-seek": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2172-cozy-stay-full-of-heart-country-air": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2173-wonderful-views-at-wye-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2174-luxe-sydney-escape-berowra-s-hidden-gem": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2175-from-sunrise-to-sault-a-musksee": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2176-boat-abode-on-the-pond": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2177-wonderful-stay-at-the-barn": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2178-sugar-beach-sugar-babes": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2179-bathtubs-and-birdcall": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2180-rose-cottage-dreaming": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2181-escape-to-haven-tropicana": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2183-relaxing-getaway-at-braelee-bower": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2184-escape-to-french-island-a-weekend-to-reconnect": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2185-petite-stay-with-some-diary-queens-by-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2186-handcrafted-cottage-made-with-heart": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2187-jacuzzi-times-crackin-sunsets": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2188-the-fruits-of-life-rollin-solo": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2190-a-romantic-and-adventurous-escape-by-the-takou-river": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2191-charming-two-stories-on-the-edge-of-glory": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2192-summer-daze-vintage-stayz": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2193-hillplains-off-grid-luxury": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2194-how-s-the-serenity-at-daisy-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2195-unwind-and-reconnect-on-the-coast": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2196-spring-creek-love-shack": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2198-deja-view": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2199-mountain-view-yurt-with-private-spa": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2200-country-lux-and-truffles": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2233-carls-hut": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2234-hilltop-stillness": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2235-rainforest-living-in-the-heart-of-mur-bah": {},
+"https://www.riparide.com/stories/2236-laidback-banksia": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2237-bella-amore": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2238-scenic-cabin-with-stunning-views": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2239-hill-top-hot-tub-sauna": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2240-pocket-of-paradise": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2241-unwind-at-butterfly-lane": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2242-cozy-cottage-stay-in-kangaroo-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2243-the-girly-pops-escape-the-hustle": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2244-kingfisher-cottage-your-tranquil-escape-in-nature-s-embrace": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/2245-all-aboard-the-waterfront-carriage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MURRAY_RIVER",
+"region_name": "Murray River",
+"parser": 5
+},
+"https://www.riparide.com/stories/2246-a-balinese-retreat-in-the-heart-of-hunter-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2247-the-art-of-slow-living-a-retreat-in-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2248-golden-glamping-wildnest-farmstay-kookaburra": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2249-vinyl-waves-sea-whispers": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2251-the-jewel-between-the-pagodas": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2253-treetop-beach-house": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2254-horsing-around-in-gembrook": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2255-epic-nature-retreat-amongst-the-ferns": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/2256-light-airy-in-aireys": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2257-rock-pools-hot-springs-and-full-hearts": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2290-dive-into-rockpool-luxury": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2291-cosy-cabin-campfires-magical-caves": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2292-la-baracca": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2293-tiny-maple-big-adventures": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2294-clay-mugs-warm-hugs-sandy-toes": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2295-livin-life-in-our-own-bubble": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2296-slow-n-rusty": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2300-secluded-blue-mountains-cottage": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2301-warmth-and-wilderness-in-healesville": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2302-birthday-love-in-the-high-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2303-peaceful-escape-to-clunes": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2304-cosy-a-frame-escape-in-raetihi": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_MANAWAT_WHANGANUI",
+"region_name": "Manawat\u016b-Whanganui",
+"parser": 5
+},
+"https://www.riparide.com/stories/2305-views-vistas-and-a-warm-soak": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TAUP",
+"region_name": "Taup\u014d",
+"parser": 5
+},
+"https://www.riparide.com/stories/2306-tiny-treasure-with-river-frontage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2308-old-world-charmer-meets-modern-luxe": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2310-goats-and-espressos": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2311-stillness-by-the-sea-at-great-mackerel-beach": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2312-bootmakers-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2313-solstice-at-omina": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2314-tiny-escape-with-a-big-view": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2315-slowing-down-at-the-honey-barn": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2316-a-cottage-dream-in-gourmet-heaven": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2317-cosy-abode-campfire-swings-by-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/2318-time-stands-still-at-highlands": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2319-island-hideaway-filled-with-hidden-gems": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/2320-the-whirlwind-who-breathed-with-ease": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2353-a-home-away-from-home": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2354-rolling-hills-whale-tails": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2355-riverside-reset": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2356-unplugged-recharged-at-muckleford-forest-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2358-island-yoga-sunset-saunas": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/2359-snowy-peaks-sunset-soaks": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_RUAPEHU",
+"region_name": "Ruapehu",
+"parser": 5
+},
+"https://www.riparide.com/stories/2360-rustic-retreat-at-the-shearers-quarters": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2361-cosy-cottage-charm-curious-alpacas": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2362-lush-waterfall-way-paradise": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2363-celestial-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2364-peaceful-escape-in-the-hills": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2365-relax-reset-and-restore-at-zoarii": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/2366-platypus-spotting-at-a-highlands-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2367-forest-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2369-anchored-currarong-south-coast-couples-beach-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2370-cosy-stays-coastal-days": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2372-forest-baths-fireside-nights-at-the-treehouse": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2373-luxe-retreat-with-double-trouble-bubbles": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2374-surf-barn-smiths-lake": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2375-the-barn-between-vines-and-sea": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIRARAPA",
+"region_name": "Wairarapa",
+"parser": 5
+},
+"https://www.riparide.com/stories/2377-tiny-cabin-big-views-wild-weather": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2378-charming-b-b-with-paddock-friends": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2379-slowing-down-in-nature-s-arms": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2380-sunrise-spa-and-seclusion-bliss": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2382-sannyside-tiny-house-heritage-meets-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_PHILLIP_ISLAND",
+"region_name": "Phillip Island",
+"parser": 5
+},
+"https://www.riparide.com/stories/2383-finding-stillness-at-gabarraa": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2384-a-kaleidescope-of-colour": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2417-nature-s-quiet-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2419-perfect-otways-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2420-good-old-fashioned-romance-rest": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2421-rejuvenate-recharge-at-17-pounds-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2422-hidden-lane-and-endless-magic": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2423-slow-days-in-the-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2424-quiet-retreat-amongst-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2425-historic-post-office-now-boutique-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2426-sips-skips-scenic-dips": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2427-soulful-escape-in-nature-s-embrace": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2428-a-tranquil-weekend-at-the-lake-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2429-pink-velvet-skies-in-bushland-whispers": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2430-tinopai-treasure-a-very-good-place-indeed": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2431-a-little-nest-for-nurture-and-rest": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2432-wangat-river-sanctuary": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2433-big-views-big-vibes": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2434-country-style-and-hot-tub-bliss": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2435-a-cozy-hideaway-where-time-slows-down": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2436-the-hidden-heart-of-carawirry-forest": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2437-escape-from-the-city": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2438-bec-bath-beyond": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2439-tranquil-tiny-house-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2440-simple-livin-by-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2441-serene-stay-at-scribbly-farm": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2442-watching-brumbies-from-the-hot-tub": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2443-four-seasons-in-a-weekend": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2444-jan-juc-weekend-reset": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2445-big-lodge-big-games-bigger-memories": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2446-unwinding-lakeside-at-teulu-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2447-tallowwood-cabin-hidden-in-the-rainforest": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2448-pine-cabin-dreaming": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2449-bushland-hideaway-with-cinematic-outdoor-living": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2450-where-hinterland-magic-meets-luxury": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2451-rustic-retreat-at-rebel-hill": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2452-rollin-with-the-waves": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2453-retro-roots-forest-feels": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2454-the-bus-stop": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2455-peaceful-ranges": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2456-a-peaceful-reset-in-the-murray-river-country": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MURRAY_RIVER",
+"region_name": "Murray River",
+"parser": 5
+},
+"https://www.riparide.com/stories/2457-weekend-at-wobbly-boot": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2458-kaitake-coastal-oasis": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TARANAKI",
+"region_name": "Taranaki",
+"parser": 5
+},
+"https://www.riparide.com/stories/2459-fairy-wren-byron-treetop-sanctuary": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2460-spacious-forest-retreat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2461-gentle-vibes-in-the-countryside": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2462-secluded-forest-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2463-mid-century-magic-in-milton": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2464-moments-of-calm-at-lakeside-barn": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2465-valley-views-for-days-in-a-luxury-studio": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2498-yutori-space-to-breathe": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2499-fairytale-retreat-on-wild-dog-creek": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2500-beyond-the-last-turn-koutu-cove": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2501-rekindle-where-the-forest-holds-you": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2502-jolly-jumbuck-stillness-in-kangaroo-valley": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2503-threads-of-the-farm-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2505-where-coastline-calm-meets-cottage-charm": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2506-soakin-in-stillness-nature": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2507-pocket-paradise-a-backyard-treat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2509-a-weekend-in-paradise": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_BAY_OF_PLENTY",
+"region_name": "Bay of Plenty",
+"parser": 5
+},
+"https://www.riparide.com/stories/2510-stephy-me-by-the-sea": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2513-a-charming-cottage-timeless-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2514-ukiyo-the-floating-world": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2515-tiny-house-nestled-in-nature": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2516-betty-boopin-in-byron": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2517-diving-into-the-weekend-like": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MELBOURNE",
+"region_name": "Melbourne",
+"parser": 5
+},
+"https://www.riparide.com/stories/2518-tiny-stay-built-with-heart": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2519-a-petite-stay-beneath-starry-skies": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2520-outdoor-baths-beach-shack-bliss": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2521-off-grid-cabin-with-dreamy-stargazing-roof": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2522-rockbank-where-time-slows": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2523-a-serene-stay-among-the-treetops": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_DANDENONG_RANGES",
+"region_name": "Dandenong Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2525-the-great-alpine-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2527-a-tiny-haven-between-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2528-rockpool-paradise": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2529-calm-within-the-storm": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2562-where-bees-hum-lovers-bloom": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2564-riverside-stay-in-valerie-the-vintage-van": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2565-off-grid-magic-at-little-red-bedford": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2566-a-reflective-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2567-spa-sauna-serenity-a-hidden-kiwi-gem": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/2568-glamping-where-the-river-whispers": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_WAIKATO",
+"region_name": "Waikato",
+"parser": 5
+},
+"https://www.riparide.com/stories/2569-a-cosy-hideaway-nestled-in-nature": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2570-wander-unplug-steam-repeat": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2571-embracing-off-grid-glory": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2572-riverfront-haven-above-the-hawkesbury-river": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2573-hidden-treehouse-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2574-cozy-cottage-escape-in-the-blue-mountains": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2575-where-glamping-meets-the-stars": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2576-a-tiny-house-escape-near-sydney": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2577-rolling-hills-slow-moments": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2578-secluded-riverfront-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2579-dusky-skies-sweet-country-air": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/2580-echoes-of-the-wool-shed": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/2581-hidden-country-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2582-drifting-mountain-rivers": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2583-cozy-cabin-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2584-timeless-cottage-escape-in-castlemaine": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2585-a-sunset-villa-where-romance-blooms": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2586-luxury-in-the-countryside": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2587-bunkerin-down": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SYDNEY",
+"region_name": "Sydney",
+"parser": 5
+},
+"https://www.riparide.com/stories/2588-bell-tent-diaries-by-the-creek": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2589-off-grid-held-by-nature": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2590-ida-s-hideaway": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2591-parachilna-at-metung": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2593-embracing-the-yin-yang": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2594-humble-hut-with-mountain-views": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2595-immersive-escape-b-farm-estate": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2596-silent-night-tram-alight": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2597-between-the-sauna-and-the-stars": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2598-an-escape-into-stillness": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2599-cottage-by-the-river": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2600-slow-romantic-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2601-rustic-cabin-rockpool-dreaming": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2602-a-coastal-retreat-with-lush-tropical-charm": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2603-a-solo-autumn-reset": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2604-peaceful-tiny-house-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2606-the-queen-who-found-her-kingdom": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2607-the-warmth-of-simplicity": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2608-twin-tubs-in-the-treetops": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2641-the-charming-carriage-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MURRAY_RIVER",
+"region_name": "Murray River",
+"parser": 5
+},
+"https://www.riparide.com/stories/2642-eco-escape-into-nature": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2643-perfect-cabin-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GRAMPIANS",
+"region_name": "Grampians",
+"parser": 5
+},
+"https://www.riparide.com/stories/2644-unique-ship-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2645-inhaling-autumn-at-the-sauna-chalet": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2646-dreamy-escape-above-lake-eildon": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2647-slowing-down-at-buckland-studio": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2648-best-farm-stay-near-mt-buller": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2649-where-luxury-meets-the-wilderness": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2650-big-dreamer-in-wanderlust": {},
+"https://www.riparide.com/stories/2651-a-country-escape-with-good-mates": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2652-romantic-escape-at-the-a-frame": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2654-an-autumn-pause": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2656-a-cottage-me-in-the-misty-mountains": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2690": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2691-sunrise-soaks-and-wagging-tails": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_HUNTER_VALLEY",
+"region_name": "Hunter Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2692-hidden-glamping-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2693-an-ocean-view-oasis": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2694-luxury-living-in-the-snowies": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SNOWY_MOUNTAINS",
+"region_name": "Snowy Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2695-hide-seek-river-house": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2696-cabin-wrapped-in-the-wilderness": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2697-a-charming-cottage-retreat": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2698-a-coastal-wellbeing-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2699-open-minds-open-doors": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2700-a-stay-above-the-clouds": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2701-a-love-letter-to-sol-itude": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2702-rillivan": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2703-torquay-s-little-secret": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2704-a-farm-stay-worth-slowing-down-for": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_BELLARINE_PENINSULA",
+"region_name": "Bellarine Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2705-a-bay-of-islands-modern-oasis": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_NORTHLAND_BAY_OF_ISLANDS",
+"region_name": "Northland & Bay of Islands",
+"parser": 5
+},
+"https://www.riparide.com/stories/2706-givin-permission-to-pause": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2707-seclusions-a-cozy-cabin-stay-in-seven-valleys": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2708-quite-simply-divine": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2709-luxury-oceanfront-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2710-peace-and-quiet-in-metcalfe": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2711-dreamy-vineyard-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2712-silo-sanctuary-a-cosy-farm-stay": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2713-paradise-at-the-end-of-the-street-a-boomerang-beach-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2714-the-beauty-of-winter": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_HIGH_COUNTRY",
+"region_name": "High Country",
+"parser": 5
+},
+"https://www.riparide.com/stories/2715-a-design-led-southern-highlands-escape": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2716-snow-angels-the-milky-way": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MELBOURNE",
+"region_name": "Melbourne",
+"parser": 5
+},
+"https://www.riparide.com/stories/2717-hidden-between-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_BLUE_MOUNTAINS",
+"region_name": "Blue Mountains",
+"parser": 5
+},
+"https://www.riparide.com/stories/2718-gem-s-soulful-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2719-a-safari-stay-to-remember": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GOLDFIELDS",
+"region_name": "Goldfields",
+"parser": 5
+},
+"https://www.riparide.com/stories/2720-cabin-retreat-for-star-gazers-dreamers": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_COUNTRY_NSW",
+"region_name": "Country NSW",
+"parser": 5
+},
+"https://www.riparide.com/stories/2721-slice-of-serenity": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2722-cosy-mid-winter-cottage-escape": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/2723-beachfront-escape-steps-from-the-sand": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_SOUTH_COAST_NSW",
+"region_name": "South Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2724-slow-winter-weekend-at-wariin-cottage": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2725-completely-charmed-made-with-heart": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MELBOURNE",
+"region_name": "Melbourne",
+"parser": 5
+},
+"https://www.riparide.com/stories/2726-a-home-away-from-home": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_YARRA_VALLEY",
+"region_name": "Yarra Valley",
+"parser": 5
+},
+"https://www.riparide.com/stories/2727-a-cosy-hideaway-muddy-boots": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2728-confirmed-the-grass-is-greener-in-gippsland": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2729-a-countryside-winter-warmer": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_TAUP",
+"region_name": "Taup\u014d",
+"parser": 5
+},
+"https://www.riparide.com/stories/2730-birdsong-bikes-outdoor-baths": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/2731-perfect-farm-escape": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MACEDON_RANGES",
+"region_name": "Macedon Ranges",
+"parser": 5
+},
+"https://www.riparide.com/stories/2732-lakeside-getaway": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_CENTRAL_COAST_NSW",
+"region_name": "Central Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2733-a-rustic-escape-in-hawke-s-bay": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_HAWKE_S_BAY",
+"region_name": "Hawke's Bay",
+"parser": 5
+},
+"https://www.riparide.com/stories/2734-treehouse-tranquillity-by-the-water": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2735-a-tiny-secret-between-the-trees": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2736": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GREAT_OCEAN_ROAD",
+"region_name": "Great Ocean Road",
+"parser": 5
+},
+"https://www.riparide.com/stories/2739-cosy-escape-to-cape-schanck": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_MORNINGTON_PENINSULA",
+"region_name": "Mornington Peninsula",
+"parser": 5
+},
+"https://www.riparide.com/stories/2740-a-canopy-escape-at-birdcloud": {
+"country": "GEO_AU",
+"state": "GEO_NSW",
+"region": "REG_NORTH_COAST_NSW",
+"region_name": "North Coast",
+"parser": 5
+},
+"https://www.riparide.com/stories/2741-a-taste-of-ranch-life": {
+"country": "GEO_AU",
+"state": "GEO_VIC",
+"region": "REG_GIPPSLAND",
+"region_name": "Gippsland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2743-countryside-and-comfort-in-matakana": {
+"country": "GEO_NZ",
+"state": "",
+"region": "REG_AUCKLAND",
+"region_name": "Auckland",
+"parser": 5
+},
+"https://www.riparide.com/stories/2745-find-your-way-to-applegarth": {
 "country": "GEO_AU",
 "state": "GEO_NSW",
 "region": "REG_BLUE_MOUNTAINS",
