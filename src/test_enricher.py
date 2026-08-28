@@ -4,9 +4,15 @@
 The four example titles here are copied verbatim from the module's own
 docstring, which records them as verified against the live site.
 """
+import json
+import os
+import shutil
+import tempfile
 import unittest
+from unittest import mock
 
 import enricher
+import fetcher
 
 
 class ParseTitleTests(unittest.TestCase):
@@ -121,6 +127,61 @@ class CleanRegionTests(unittest.TestCase):
     def test_blank_input_is_refused(self):
         self.assertEqual(enricher.clean_region(""), "")
         self.assertEqual(enricher.clean_region(None), "")
+
+
+class EnrichCacheStalenessTests(unittest.TestCase):
+    """Reproduces a real production bug found in the committed cache: a
+    region clean_region() can *salvage* (e.g. "North Cove 0920" -> "North
+    Cove") rather than reject outright never got re-read, because the old
+    staleness check only fired when clean_region() returned "". The dirty,
+    untrimmed value sat in the cache indefinitely, still producing
+    REG_NORTH_COVE_0920 in the feed forever. Fixed by comparing the cleaned
+    form against the stored form instead of checking for outright rejection.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.cache_path = os.path.join(self.tmp, "location-cache.json")
+        self._orig_get = fetcher.get
+
+    def tearDown(self):
+        fetcher.get = self._orig_get
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _write_cache(self, entry):
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({"https://www.riparide.com/listings/x": entry}, f)
+
+    def test_a_salvageable_dirty_region_is_re_read_not_left_stale(self):
+        self._write_cache({
+            "country": "GEO_NZ", "state": "", "region": "REG_NORTH_COVE_0920",
+            "region_name": "North Cove 0920", "stay": "TYPE_LODGE", "parser": 4,
+        })
+        fetcher.get = lambda url, retries=None: (
+            "<title>Bach at North Cove - Lodge for Rent in North Cove, Auckland, NZ</title>")
+
+        rows = [{"url": "https://www.riparide.com/listings/x", "page_type": "PAGE_LISTING",
+                 "country": "", "state": "", "region": "", "stay": ""}]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+
+        self.assertEqual(rows[0]["region"], "REG_AUCKLAND")
+        with open(self.cache_path, encoding="utf-8") as f:
+            saved = json.load(f)
+        self.assertEqual(saved["https://www.riparide.com/listings/x"]["parser"], enricher.PARSER_VERSION)
+
+    def test_an_already_clean_region_is_left_alone(self):
+        self._write_cache({
+            "country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+            "region_name": "High Country", "stay": "TYPE_CABIN", "parser": 4,
+        })
+        fetcher.get = mock.Mock(side_effect=AssertionError("should not re-fetch a clean cached entry"))
+
+        rows = [{"url": "https://www.riparide.com/listings/x", "page_type": "PAGE_LISTING",
+                 "country": "", "state": "", "region": "", "stay": ""}]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+
+        self.assertEqual(rows[0]["region"], "REG_HIGH_COUNTRY")
+        fetcher.get.assert_not_called()
 
 
 if __name__ == "__main__":

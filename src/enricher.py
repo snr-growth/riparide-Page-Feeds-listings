@@ -186,13 +186,18 @@ def enrich(rows, limit=None, log=print, cache_path=None):
 
     # A cached entry may have been parsed before a parser fix. Two kinds are
     # re-read: one that recorded an unmapped stay-type wording, and one whose
-    # stored region no longer passes the region check, which is how the titles
-    # that were split in the wrong place get repaired. Both are cheap, and
-    # they are the only entries a parser change can alter.
+    # stored region clean_region() would now change - either reject outright,
+    # or silently trim (e.g. a stored "North Cove 0920" that clean_region can
+    # salvage down to "North Cove" without erroring never used to get
+    # re-read, since the old check only fired on outright rejection, not on
+    # "the cleaned form differs from what's stored" - so an entry cached
+    # before a trim rule existed could sit dirty forever with a passing
+    # re-read never triggered). Comparing the cleaned form against the stored
+    # form catches both. Cheap, and the only entries a parser change can alter.
     stale = [u for u, loc in cache.items()
              if ((loc or {}).get("stay_wording_unmapped")
                  or ((loc or {}).get("region_name")
-                     and not clean_region(loc["region_name"])))
+                     and clean_region(loc["region_name"]) != loc["region_name"]))
              and not (loc or {}).get("parser", 0) >= PARSER_VERSION]
     for u in stale:
         cache.pop(u, None)
