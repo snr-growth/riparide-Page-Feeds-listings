@@ -175,6 +175,33 @@ def fetch_location(url):
     return out
 
 
+def region_is_stale(loc):
+    """True if a cached entry's region_name or saved REG_ label would come
+    out differently if the page were parsed again right now.
+
+    Two things are checked, not one: region_name against what clean_region()
+    would make of it (catches a stored "North Cove 0920" that clean_region
+    can *salvage* to "North Cove" without erroring - the old check only
+    fired on outright rejection, so a salvageable dirty value could sit
+    forever), and the saved region label against what freshly deriving it
+    from region_name would produce right now. That second check matters on
+    its own: region_name looking clean is only a proxy for the label being
+    right - if the disambiguation rule in labeller.region_label() (or
+    cfg.AMBIGUOUS_REGION_SLUGS) ever changes after a page was cached, its
+    region_name can still look perfectly clean while the saved label is the
+    old one, and checking region_name alone would never notice.
+    """
+    loc = loc or {}
+    rn = loc.get("region_name")
+    if not rn:
+        return False
+    if clean_region(rn) != rn:
+        return True
+    slug = re.sub(r"[^a-z0-9]+", "-", rn.lower()).strip("-")
+    expected = labeller.region_label(slug, loc.get("country", ""), loc.get("state", ""))
+    return loc.get("region") != expected
+
+
 def enrich(rows, limit=None, log=print, cache_path=None):
     """Fill location on listing and story rows.
 
@@ -184,20 +211,12 @@ def enrich(rows, limit=None, log=print, cache_path=None):
     targets = [r for r in rows
                if r["page_type"] in ("PAGE_LISTING", "PAGE_STORY") and not r["country"]]
 
-    # A cached entry may have been parsed before a parser fix. Two kinds are
-    # re-read: one that recorded an unmapped stay-type wording, and one whose
-    # stored region clean_region() would now change - either reject outright,
-    # or silently trim (e.g. a stored "North Cove 0920" that clean_region can
-    # salvage down to "North Cove" without erroring never used to get
-    # re-read, since the old check only fired on outright rejection, not on
-    # "the cleaned form differs from what's stored" - so an entry cached
-    # before a trim rule existed could sit dirty forever with a passing
-    # re-read never triggered). Comparing the cleaned form against the stored
-    # form catches both. Cheap, and the only entries a parser change can alter.
+    # A cached entry may have been parsed before a parser fix. Re-read one
+    # that recorded an unmapped stay-type wording, or one region_is_stale()
+    # flags. Both are cheap, and are the only entries a parser or
+    # region-labelling change can alter.
     stale = [u for u, loc in cache.items()
-             if ((loc or {}).get("stay_wording_unmapped")
-                 or ((loc or {}).get("region_name")
-                     and clean_region(loc["region_name"]) != loc["region_name"]))
+             if ((loc or {}).get("stay_wording_unmapped") or region_is_stale(loc))
              and not (loc or {}).get("parser", 0) >= PARSER_VERSION]
     for u in stale:
         cache.pop(u, None)

@@ -129,6 +129,41 @@ class CleanRegionTests(unittest.TestCase):
         self.assertEqual(enricher.clean_region(None), "")
 
 
+class RegionIsStaleTests(unittest.TestCase):
+    """Direct coverage for the check enrich() uses to decide whether a
+    cached entry needs re-reading. The label case (not just region_name's
+    own cleanliness) is what catches a saved REG_ label going stale because
+    labeller.region_label()'s disambiguation rule changed after a page was
+    cached, even though region_name itself still looks perfectly clean.
+    """
+
+    def test_clean_entry_is_not_stale(self):
+        self.assertFalse(enricher.region_is_stale({
+            "country": "GEO_AU", "state": "GEO_VIC", "region_name": "High Country",
+            "region": "REG_HIGH_COUNTRY",
+        }))
+
+    def test_dirty_region_name_is_stale(self):
+        self.assertTrue(enricher.region_is_stale({
+            "country": "GEO_NZ", "state": "", "region_name": "North Cove 0920",
+            "region": "REG_NORTH_COVE_0920",
+        }))
+
+    def test_clean_region_name_with_a_stale_saved_label_is_stale(self):
+        # region_name itself passes clean_region() unchanged, but the saved
+        # label doesn't match what deriving it fresh from region_name would
+        # produce right now - e.g. a disambiguation suffix rule that didn't
+        # exist yet when this entry was cached.
+        self.assertTrue(enricher.region_is_stale({
+            "country": "GEO_AU", "state": "GEO_NSW", "region_name": "North Coast",
+            "region": "REG_NORTH_COAST",  # real current label is REG_NORTH_COAST_NSW
+        }))
+
+    def test_no_region_name_is_not_stale(self):
+        self.assertFalse(enricher.region_is_stale({"country": "GEO_AU"}))
+        self.assertFalse(enricher.region_is_stale(None))
+
+
 class EnrichCacheStalenessTests(unittest.TestCase):
     """Reproduces a real production bug found in the committed cache: a
     region clean_region() can *salvage* (e.g. "North Cove 0920" -> "North
