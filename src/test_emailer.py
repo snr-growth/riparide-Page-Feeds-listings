@@ -34,6 +34,20 @@ class SendTests(unittest.TestCase):
             sent, detail = emailer.send("subject", "body", [], log=lambda *a: None)
         self.assertTrue(sent)
         self.assertIn("sent over the email API", detail)
+        req = m.call_args[0][0]
+        self.assertTrue(req.has_header("User-agent"))
+
+    def test_resend_request_never_uses_the_default_urllib_user_agent(self):
+        # Cloudflare fronts api.resend.com and blocks the default
+        # "Python-urllib/3.x" signature outright (error code 1010) before
+        # Resend's own app ever sees the request - reproduced against the
+        # real API. A request built without an explicit User-Agent would
+        # silently regress back into that block.
+        with mock.patch("urllib.request.urlopen") as m:
+            m.return_value.__enter__.return_value = mock.Mock()
+            emailer.send("subject", "body", [], log=lambda *a: None)
+        req = m.call_args[0][0]
+        self.assertNotIn("urllib", req.get_header("User-agent", "").lower())
 
     def test_resend_failure_surfaces_the_response_body_not_just_the_status(self):
         # Reproduces a real production failure: Resend returns 403 with a

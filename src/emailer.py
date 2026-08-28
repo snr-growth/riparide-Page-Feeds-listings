@@ -63,7 +63,12 @@ def _send_resend(subject, body, attachments):
         "https://api.resend.com/emails",
         data=json.dumps(payload).encode("utf-8"),
         headers={"Authorization": "Bearer " + cfg.RESEND_API_KEY,
-                 "Content-Type": "application/json"},
+                 "Content-Type": "application/json",
+                 # Cloudflare (Resend's API is behind it) blocks the default
+                 # "Python-urllib/3.x" user agent as a bot signature - error
+                 # code 1010, no mention of Resend at all - independent of
+                 # whether the API key or from-address are otherwise fine.
+                 "User-Agent": "riparide-page-feed/1.0"},
         method="POST")
     try:
         urllib.request.urlopen(req, timeout=60)
