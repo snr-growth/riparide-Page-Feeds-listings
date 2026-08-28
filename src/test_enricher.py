@@ -76,6 +76,52 @@ class ParseTitleTests(unittest.TestCase):
             "Pebble Point - Glamping for Rent in Princetown, Great Ocean Road, VIC, AU | Riparide")
         self.assertEqual(out["stay"], "TYPE_GLAMPING")
 
+    def test_own_name_containing_in_does_not_get_read_as_the_region(self):
+        # The listing's own name has " in " in it; the real location comes
+        # after the LAST " in ", not the first.
+        out = enricher.parse_title(
+            "Cozy Cabin in Brownsbay - Cabin for Rent in Byron Bay, Northern Rivers, NSW, AU")
+        self.assertEqual(out["region"], "REG_NORTHERN_RIVERS")
+
+    def test_postcode_as_its_own_comma_segment_is_dropped(self):
+        out = enricher.parse_title(
+            "Karekare Cabin in the Heart of West Coast - Cabin for Rent in "
+            "Karekare, Waiheke Island, 1971, NZ")
+        self.assertEqual(out["region"], "REG_WAIHEKE_ISLAND")
+
+    def test_trailing_postcode_on_the_region_itself_is_trimmed(self):
+        out = enricher.parse_title(
+            "Bach at North Cove - Cabin for Rent in North Cove 0920, Auckland, NZ")
+        self.assertEqual(out["region"], "REG_AUCKLAND")
+
+
+class CleanRegionTests(unittest.TestCase):
+    """clean_region() is the last line of defence: even if the title split
+    lands in the wrong place, a candidate that cannot be a real place name
+    is refused rather than shipped as a wrong label.
+    """
+
+    def test_normal_region_name_passes_through(self):
+        self.assertEqual(enricher.clean_region("Great Ocean Road"), "Great Ocean Road")
+
+    def test_a_bare_number_is_refused(self):
+        self.assertEqual(enricher.clean_region("1971"), "")
+
+    def test_a_trailing_postcode_is_trimmed_not_refused(self):
+        self.assertEqual(enricher.clean_region("North Cove 0920"), "North Cove")
+
+    def test_a_candidate_containing_in_is_refused(self):
+        self.assertEqual(
+            enricher.clean_region("the trees. With a sensational view. - House for Rent in Sydney"),
+            "")
+
+    def test_a_candidate_over_five_words_is_refused(self):
+        self.assertEqual(enricher.clean_region("one two three four five six"), "")
+
+    def test_blank_input_is_refused(self):
+        self.assertEqual(enricher.clean_region(""), "")
+        self.assertEqual(enricher.clean_region(None), "")
+
 
 if __name__ == "__main__":
     unittest.main()
