@@ -46,6 +46,7 @@ def _send_smtp(subject, body, attachments):
 
 def _send_resend(subject, body, attachments):
     import json
+    import urllib.error
     import urllib.request
     payload = {
         "from": cfg.EMAIL_FROM,
@@ -64,9 +65,15 @@ def _send_resend(subject, body, attachments):
         headers={"Authorization": "Bearer " + cfg.RESEND_API_KEY,
                  "Content-Type": "application/json"},
         method="POST")
-    with urllib.request.urlopen(req, timeout=60) as r:
-        if r.status >= 300:
-            raise RuntimeError("email API returned %d" % r.status)
+    try:
+        urllib.request.urlopen(req, timeout=60)
+    except urllib.error.HTTPError as e:
+        # urlopen raises on any 4xx/5xx before returning a response, and the
+        # body it raises with is Resend's actual error message (e.g. "domain
+        # is not verified") - without reading it, a failure only ever shows
+        # up as a bare status code with no way to tell what to fix.
+        detail = e.read().decode("utf-8", "replace")[:300]
+        raise RuntimeError("email API returned %d: %s" % (e.code, detail)) from e
     return "sent over the email API to %d recipient(s)" % len(cfg.EMAIL_TO)
 
 
@@ -95,7 +102,7 @@ def send(subject, body, attachments=None, log=print):
         log("email: " + detail)
         return True, detail
     except Exception as e:
-        detail = "delivery failed: %s: %s" % (type(e).__name__, str(e)[:200])
+        detail = "delivery failed: %s: %s" % (type(e).__name__, str(e)[:400])
         log("email: " + detail)
         return False, detail
 
