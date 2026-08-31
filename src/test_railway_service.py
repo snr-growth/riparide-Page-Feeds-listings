@@ -199,6 +199,27 @@ class HTTPServerTests(unittest.TestCase):
             urllib.request.urlopen(req, timeout=5)
         self.assertEqual(ctx.exception.code, 403)
 
+    def test_run_endpoint_with_a_body_does_not_hang_or_crash(self):
+        # BaseHTTPRequestHandler doesn't read a POST body on its own; an
+        # unread body left on a would-be-reused connection corrupts the
+        # next request on it. This isn't easy to observe through urlopen
+        # (which doesn't reuse connections by default), so this test only
+        # confirms the drain code path itself doesn't hang or error.
+        body = b'{"unused": "payload"}'
+        req = urllib.request.Request(
+            "http://127.0.0.1:%d/run?token=wrong" % self.port, data=body, method="POST")
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            urllib.request.urlopen(req, timeout=5)
+        self.assertEqual(ctx.exception.code, 403)
+
+    def test_run_endpoint_with_a_malformed_content_length_does_not_crash(self):
+        req = urllib.request.Request(
+            "http://127.0.0.1:%d/run?token=wrong" % self.port, method="POST")
+        req.add_header("Content-Length", "not-a-number")
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            urllib.request.urlopen(req, timeout=5)
+        self.assertEqual(ctx.exception.code, 403)
+
     def test_run_endpoint_accepts_the_right_token_and_returns_immediately(self):
         with mock.patch.object(svc, "run_pipeline") as m:
             req = urllib.request.Request(
@@ -212,6 +233,44 @@ class HTTPServerTests(unittest.TestCase):
                 break
             time.sleep(0.05)
         self.assertTrue(m.called)
+
+
+class EphemeralStateWarningTests(unittest.TestCase):
+    """Reproduces, as a regression test, the exact mistake made once
+    already during this migration's own build: running without
+    FEED_DATA_DIR/FEED_REPORT_DIR set silently falls back to config.py's
+    ephemeral relative-path defaults instead of the mounted volume. The
+    service starts up looking completely healthy either way - only a log
+    line distinguishes "persisting correctly" from "about to lose
+    everything on the next restart."
+    """
+
+    def setUp(self):
+        self._env = dict(os.environ)
+        for var in ("FEED_DATA_DIR", "FEED_REPORT_DIR", "RUN_TRIGGER_TOKEN"):
+            os.environ.pop(var, None)
+
+    def tearDown(self):
+        os.environ.clear()
+        os.environ.update(self._env)
+
+    def test_warns_when_none_of_the_variables_are_set(self):
+        messages = []
+        with mock.patch.object(svc, "log", messages.append):
+            svc._warn_if_state_looks_ephemeral()
+        joined = "\n".join(messages)
+        self.assertIn("FEED_DATA_DIR", joined)
+        self.assertIn("FEED_REPORT_DIR", joined)
+        self.assertIn("RUN_TRIGGER_TOKEN", joined)
+
+    def test_no_warning_once_everything_is_configured(self):
+        os.environ["FEED_DATA_DIR"] = "/data"
+        os.environ["FEED_REPORT_DIR"] = "/data/reports"
+        os.environ["RUN_TRIGGER_TOKEN"] = "secret"
+        messages = []
+        with mock.patch.object(svc, "log", messages.append):
+            svc._warn_if_state_looks_ephemeral()
+        self.assertEqual(messages, [])
 
 
 if __name__ == "__main__":

@@ -30,6 +30,7 @@ that guarantee already lives in run.py itself (the CSVs/xlsx are only
 written after validate() passes), so this service adds no extra logic for
 it - it just never deletes anything on disk itself.
 """
+import hmac
 import json
 import os
 import subprocess
@@ -200,6 +201,24 @@ class Handler(BaseHTTPRequestHandler):
         self._handle_get_or_head(write_body=False)
 
     def do_POST(self):
+        # Drain any request body before responding, even on a rejected
+        # request. BaseHTTPRequestHandler doesn't read the body on its own,
+        # and an unread body left on a keep-alive connection gets
+        # misinterpreted as the start of the client's next request line,
+        # corrupting the connection - harmless with curl's short-lived
+        # connections, but a real risk against a client that reuses them.
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = 0
+        # A negative or absurd value can't be a real body length - reading
+        # it (self.rfile.read(-1) reads until EOF) could hang the request
+        # thread on a connection the client never closes. Nothing this
+        # endpoint does needs a body at all, so just skip draining rather
+        # than trust an obviously-wrong header.
+        if 0 < length <= 1_000_000:
+            self.rfile.read(length)
+
         path = urlparse(self.path).path
         if path != "/run":
             self._send_json(404, {"error": "not found"})
@@ -207,7 +226,10 @@ class Handler(BaseHTTPRequestHandler):
         qs = parse_qs(urlparse(self.path).query)
         token = (qs.get("token") or [""])[0]
         expected = os.environ.get("RUN_TRIGGER_TOKEN", "")
-        if not expected or token != expected:
+        # Constant-time comparison: a plain `!=` short-circuits on the first
+        # differing byte, which in principle leaks how many leading
+        # characters of a guess were correct.
+        if not expected or not hmac.compare_digest(token, expected):
             self._send_json(403, {"error": "invalid or missing token"})
             return
         full_status = (qs.get("full_status") or ["false"])[0] == "true"
@@ -217,7 +239,35 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(202, {"status": "run started"})
 
 
+def _warn_if_state_looks_ephemeral():
+    """Loud, impossible-to-miss startup warning for the exact mistake this
+    migration's own build hit once already (see DECISIONS.md D15): running
+    without FEED_DATA_DIR/FEED_REPORT_DIR pointed at the mounted volume
+    silently falls back to config.py's plain relative defaults ("data",
+    "reports"), which live on the container's ephemeral filesystem. The
+    service comes up looking completely healthy either way - nothing
+    errors - it just quietly loses every run's state on the next redeploy
+    or restart, which defeats the entire reason for using Railway's volume.
+    """
+    if not os.environ.get("FEED_DATA_DIR"):
+        log("WARNING: FEED_DATA_DIR is not set - state (snapshot, location "
+            "cache, output CSVs) will be written to '%s', which is NOT the "
+            "Railway volume and will be lost on the next restart or "
+            "redeploy. Set FEED_DATA_DIR to the volume's mount path."
+            % cfg.DATA_DIR)
+    if not os.environ.get("FEED_REPORT_DIR"):
+        log("WARNING: FEED_REPORT_DIR is not set - the xlsx report will be "
+            "written to '%s', which is NOT the Railway volume (config.py's "
+            "default is not nested under FEED_DATA_DIR) and will be lost "
+            "on the next restart or redeploy." % cfg.REPORT_DIR)
+    if not os.environ.get("RUN_TRIGGER_TOKEN"):
+        log("WARNING: RUN_TRIGGER_TOKEN is not set - POST /run will reject "
+            "every request (by design: no token configured means no "
+            "manual trigger is possible, not an open one).")
+
+
 def main():
+    _warn_if_state_looks_ephemeral()
     port = int(os.environ.get("PORT", "8080"))
     stop_event = threading.Event()
     t = threading.Thread(target=scheduler_loop, args=(1800, stop_event), daemon=True)
