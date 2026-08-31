@@ -156,6 +156,15 @@ class HTTPServerTests(unittest.TestCase):
             self._get("/riparide-page-feed-core.csv")
         self.assertEqual(ctx.exception.code, 404)
 
+    def test_a_404_is_never_cacheable(self):
+        # Reproduces a real issue found live behind Railway's edge proxy: a
+        # "not generated yet" 404 with no cache directive at all kept being
+        # returned after the file had already started existing. Every
+        # response needs an explicit no-store, not just the success path.
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            self._get("/riparide-page-feed-core.csv")
+        self.assertEqual(ctx.exception.headers["Cache-Control"], "no-store")
+
     def test_csv_is_served_once_written(self):
         with open(os.path.join(self.output_dir, "riparide-page-feed-core.csv"), "w") as f:
             f.write("Page URL,Custom label\nhttps://x,PAGE_LISTING\n")

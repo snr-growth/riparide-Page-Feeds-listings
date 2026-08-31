@@ -155,6 +155,16 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
+        # Explicit on every response, not just the file-serving success
+        # path: observed live behind Railway's own edge proxy, a "not
+        # generated yet" 404 with no cache directive at all kept being
+        # returned for a real file that had already started existing -
+        # most likely the edge holding onto the negative response, since
+        # every response the app itself sends without this header is fair
+        # game for an intermediary to cache. `no-store` (stronger than
+        # `no-cache`, which still permits a cache to keep and revalidate a
+        # copy) on every response removes that as a possibility entirely.
+        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         if write_body:
             self.wfile.write(body)
@@ -182,7 +192,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", CONTENT_TYPES.get(ext, "application/octet-stream"))
             self.send_header("Content-Length", str(size))
-            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Cache-Control", "no-store")
             self.end_headers()
             if write_body:
                 with open(file_path, "rb") as f:
