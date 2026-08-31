@@ -163,6 +163,8 @@ A second finding, from a residential/office IP on 27 August 2026: the exact same
 
 Runs on GitHub Actions (`.github/workflows/monthly-refresh.yml`), not Railway. See DECISIONS.md D12 for why.
 
+**A Railway migration is built on the `railway-migration` branch (`src/railway_service.py`, DECISIONS.md D15) but is not yet live** — it needs a Railway account to actually deploy and test against, which this environment doesn't have. `main` and GitHub Actions remain the production pipeline until that migration is verified end-to-end and merged deliberately. The pre-migration state is tagged `pre-railway-migration-github-actions-stable`.
+
 | Item | Value |
 |---|---|
 | Schedule | `0 3 1 * *`, 03:00 UTC on the 1st of each month, plus manual dispatch any time |
@@ -184,6 +186,27 @@ None of this can be done from inside this repo — it needs a Google account wit
 5. Optional: also share the sheet as "Anyone with the link can view" if other people should be able to open it without being individually added. Not required for steps 2–4 to work.
 
 After that, every monthly run keeps the sheet's `Page Feed - Core` tab (pinned as the first tab, since Google Ads only reads the first one) and `Page Feed - Adventures` tab up to date automatically — no more manual uploads.
+
+### Deploying the Railway service (railway-migration branch, not yet live)
+
+Requires a Railway account with an active Hobby or Pro plan (needed for volumes). None of this can be done from inside this repo:
+
+1. Create a new Railway project from this repo, `railway-migration` branch. `railway.json` at the repo root configures the build/start commands and health check automatically.
+2. Add a **Volume**, mounted at `/data` (Railway's dashboard, not `railway.json` — volumes aren't configurable as code). This is where `snapshot.json`, `location-cache.json`, the output CSVs, and the xlsx report all persist between runs and redeploys.
+3. Set these service variables:
+   - `FEED_DATA_DIR` = `/data`
+   - `FEED_REPORT_DIR` = `/data/reports`
+   - `RUN_TRIGGER_TOKEN` = a random secret, used to authorize `POST /run` (manual trigger, equivalent to `workflow_dispatch`)
+   - The same email/Sheets secrets as the GitHub Actions setup above (`EMAIL_FROM`, `EMAIL_TO`, `RESEND_API_KEY` or `SMTP_*`, `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEETS_SPREADSHEET_ID`) if those delivery channels are still wanted — the underlying `run.py` is unchanged and reads them exactly the same way.
+   - Optionally `RAILWAY_RUN_DAY` / `RAILWAY_RUN_HOUR` to change the schedule from its default (1st of the month, 03:00 UTC).
+4. Once deployed, Railway assigns a public domain (or attach a custom one). The feed files are then available at:
+   - `https://<your-railway-domain>/riparide-page-feed-core.csv`
+   - `https://<your-railway-domain>/riparide-page-feed-adventures.csv`
+   - `https://<your-railway-domain>/riparide-page-feed-report.xlsx`
+
+   Point Google Ads' page feed source at the two CSV URLs directly (Business Data → Page feed → HTTP/HTTPS URL) instead of the Google Sheets connection, if delivering that way instead of/alongside Sheets.
+5. Check `GET /` for the last run's status, and `GET /healthz` for the health check Railway itself polls.
+6. To trigger a run immediately rather than waiting for the schedule: `curl -X POST "https://<your-railway-domain>/run?token=<RUN_TRIGGER_TOKEN>"`.
 
 ### Every run's outputs and email attachments
 

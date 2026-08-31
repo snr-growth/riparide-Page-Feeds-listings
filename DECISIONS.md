@@ -304,3 +304,49 @@ None of the following can be done from here — no Google Cloud or Google Ads ac
 3. Paste the full service-account JSON as the `GOOGLE_SERVICE_ACCOUNT_JSON` GitHub Actions secret, and the sheet's ID as `GOOGLE_SHEETS_SPREADSHEET_ID`.
 4. In Google Ads, connect that same Sheet as the page feed's source (Business Data → Page feed → Google Sheets), using whichever Google account manages the Ads account and has (or is given) Editor access to the sheet.
 5. Decide whether to also share the sheet as "Anyone with the link" for broader viewing — optional, not required for the above to work.
+
+---
+
+## D15. Migrated compute + file hosting from GitHub Actions to a single Railway service
+
+**Date:** 31 August 2026
+**Status:** Built and tested as far as possible without Railway account access. Not yet live. GitHub Actions is untouched and still production.
+
+### The ask
+
+The client raised two concerns about the D14 Google Sheets integration in the same conversation: it introduces two independent failure modes (the Sheets API sync, and the service account's access to the sheet — both of which had already failed at least once during this project's own testing), and if the SNR/client relationship ever ends, handing over a Google Cloud project and service account is a heavier, more technical process than handing over a Railway project. Separately, the client asked directly whether to go back to Railway, in the specific context of hosting the feed files rather than syncing to Sheets. Given the client (X) also has a downstream client of their own (Y), a second-hand transfer was explicitly part of the ask, not hypothetical.
+
+### What was verified before building, and why it shaped the design
+
+Two Railway-specific claims were checked live rather than assumed, since getting either wrong would mean designing around a limitation that doesn't exist, or missing one that does:
+
+- **Railway does not support sharing a volume between two services in the same project** ([Railway Central Station](https://station.railway.com/feedback/shared-volumes-a4053215)) — still an open, upvoted feature request as of this check. This rules out the natural-looking split of "one Railway service runs the monthly job and writes to a volume, a second Railway service serves files from that same volume" - that architecture would simply not work.
+- **A Railway service supports exactly one volume, and volumes see downtime during that service's own redeploys** ([Railway Docs](https://docs.railway.com/volumes/reference)); automated/manual backups exist on paid plans, which is a real improvement over the completely unverified volume this project relied on before D12.
+- **Project ownership genuinely transfers in one native flow**: add the recipient as a project member, "Transfer Ownership," they accept within 24 hours ([Railway Docs](https://docs.railway.com/projects)) — both accounts need an active paid plan. This is materially simpler than a GCP project/service-account handover, which needs `gcloud` CLI commands, a billing-admin role, and an org-level migration wizard ([Google Cloud docs](https://docs.cloud.google.com/resource-manager/docs/organization-setup)) - confirming the client's stated concern was accurate, not just a feeling.
+- **`railway.json`'s config-as-code schema** (`build`/`deploy` keys, `RAILPACK` builder, `healthcheckPath`, `restartPolicyType`) was checked against Railway's own current docs rather than guessed, since a wrong field name fails silently rather than erroring.
+
+### What was built
+
+Because of the no-shared-volume constraint, the split that GitHub Actions + a separate host would have given for free had to become **one service**: `src/railway_service.py`, an always-on process that does two things without touching any of the existing pipeline logic:
+
+- Serves `riparide-page-feed-core.csv`, `riparide-page-feed-adventures.csv`, and `riparide-page-feed-report.xlsx` from disk over plain HTTP, at stable paths off the service's Railway-assigned domain. Supports both `GET` and `HEAD` (found missing during a live smoke test - the stdlib `BaseHTTPRequestHandler` returns a bare 501 for `HEAD` unless a handler is defined for it, and a GET-only test would never have caught it; a HEAD-before-GET probe from a real client, potentially Google Ads' own fetcher, is common enough to matter).
+- Runs an internal scheduler thread (`should_auto_run`) that checks every 30 minutes whether it's on/after the configured day-of-month and hour (`RAILWAY_RUN_DAY`/`RAILWAY_RUN_HOUR`, defaulting to the 1st at 03:00 UTC - the same schedule `monthly-refresh.yml` uses) and hasn't already run this calendar month, tracked in a small `railway-service-state.json` on the volume. A `POST /run?token=...` endpoint (guarded by the `RUN_TRIGGER_TOKEN` secret) gives the same manual-trigger capability `workflow_dispatch` provides.
+- Either path invokes `python src/run.py` as a fresh subprocess - **the exact same script and command GitHub Actions runs**, not a reimplementation - so every processing step (fetch, label, enrich, validate, write, report, Sheets, email) is unchanged and behaves identically on either platform. `config.py`'s existing `FEED_DATA_DIR`/`FEED_REPORT_DIR` environment-variable overrides (already present for testing, see `test_run.py`) are reused to point everything at the Railway volume; no code in the pipeline itself needed to change.
+- A run that fails can never remove or overwrite a previously-good file, because that guarantee already lives in `run.py` itself (D-series design: the CSVs/xlsx are written only after `validator.validate()` passes) - the service adds no separate logic for this and doesn't need to.
+- `railway.json` configures the Railpack builder, the start command, and an `ON_FAILURE` restart policy with a health check at `/healthz`.
+
+### What was verified, and how
+
+No Railway account, CLI, or API token exists in this environment (confirmed: no `railway` CLI installed, no `RAILWAY_TOKEN`, nothing in the credential manager for `railway.app`, unlike `github.com` which resolves fine) - so nothing above has been deployed or tested against real Railway infrastructure. Everything that could be verified without that access was:
+
+- 17 new unit tests (`test_railway_service.py`): the scheduling decision across day/hour/month boundaries, that a failed or crashing subprocess is recorded in state rather than raised, that a run already in progress isn't started twice, the file server's behaviour before/after a file exists, correct content-type per file, and the `/run` token check (missing, wrong, and correct).
+- A live smoke test of the actual entrypoint process (`python src/railway_service.py`, not just the unit-test harness's in-process server): confirmed `/healthz`, `/`, and the 404/403 paths over real HTTP, and let a real scheduled run fire on startup (correct behaviour for a service with no run recorded yet) - it hit this dev machine's already-known Cloudflare block on riparide.com (D3/D7/D12) and failed exactly as expected, while the HTTP server stayed fully responsive throughout and recorded the failure cleanly with no crash and no partial files written. The same was repeated for the manual `/run` trigger.
+- File serving was separately verified against the real committed production snapshot (10,215 URLs): regenerated the real CSVs/xlsx locally (`run.py --offline-snapshot data/snapshot.json --skip-status --dry-run`), pointed a service instance at them, and confirmed both CSVs downloaded byte-identical (4,840 and 5,492 data rows, matching exactly) and the xlsx served with the correct content-type.
+
+### What is NOT verified, and why
+
+The parts of the Definition of Done that require an actual Railway deployment - a real scheduled execution, a real public stable URL, real Railway-runner reachability of riparide.com (this project has never actually confirmed Railway's specific network path works, only Railway's *pre-D12* incarnation and GitHub Actions' runners separately), a real volume surviving a real redeploy, and a side-by-side output comparison against a live GitHub Actions run - cannot be done from this environment. This needs one of: a `RAILWAY_TOKEN` for an existing or new Railway project, or direct access to the Railway dashboard to create the project/volume/env vars and share the resulting service URL back for verification.
+
+### Rollback
+
+`main` and `.github/workflows/monthly-refresh.yml` are untouched - GitHub Actions remains the sole production pipeline throughout. The pre-migration state is tagged `pre-railway-migration-github-actions-stable` on `main`, and this work lives entirely on the `railway-migration` branch until Railway access allows it to be tested for real and merged deliberately, not by default.
