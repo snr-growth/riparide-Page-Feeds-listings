@@ -13,10 +13,16 @@ formats — the **client-shared format** (two CSVs + a reviewable `.xlsx`
 report, emailed, structurally unchanged since first built) and the
 **Google-Ads-facing format** (`sheets.py` writes the same data into a
 client-owned Google Sheet that Google Ads reads from directly, D14).
-Deployed on **GitHub Actions** (`.github/workflows/monthly-refresh.yml`) as a
-scheduled job, independent of the actual Riparide site build. It used to run
-on Railway — see DECISIONS.md D12 for why it moved and D7 for the one thing
-about that move that still needs a live-run confirmation.
+Deployed as a single always-on **Railway service** (`src/railway_service.py` +
+`railway.json`), independent of the actual Riparide site build. It previously
+ran on GitHub Actions, and before that on Railway in a different shape — see
+DECISIONS.md D12 for the first move and D15/D16 for the move back and why.
+**As of this writing the Railway service has never actually been deployed to
+live Railway infrastructure** — no Railway account/CLI/token exists in the
+environment that built it, so it's tested as far as possible short of that
+(see D15/D16) but genuinely unproven on real Railway hardware. GitHub Actions
+was removed from the codebase entirely on 31 August 2026; the exact rollback
+point is tagged `pre-railway-migration-github-actions-stable` on `main`.
 
 This repo is **deliberately separate** from `../escape-wizard` (the live
 Escape Wizard quiz app — Next.js/Fastify monorepo, Vercel + Railway) and from
@@ -137,22 +143,25 @@ insurance).
 
 Open items:
 
-1. **The GitHub Actions migration's core network assumption is unverified**
-   (D7, D12). Nothing has actually proven a GitHub-hosted runner can reach
-   riparide.com — it's inferred from the old `build-feed.yml` having a
-   reachability check, not demonstrated. **Run `monthly-refresh.yml` via
-   `workflow_dispatch` once, for real, before trusting the schedule.** If the
-   "Check the site answers" step fails, the whole migration needs rethinking.
-2. **Verify GitHub Actions repository secrets are actually set**
-   (`EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*`
-   quartet). Missing config fails open (run completes, report says "email not
-   sent") rather than failing the job.
+1. **The Railway service has never been deployed to real Railway
+   infrastructure** (D15, D16) — no Railway account/CLI/token exists in the
+   environment that built it. It's tested as far as possible short of that
+   (17 unit tests, a live smoke test of the actual entrypoint process
+   including a genuine failed-run scenario), but a real deployment, a real
+   scheduled fire, and real Railway-runner reachability of riparide.com are
+   all still unverified. **This is the single most important thing to do
+   next**: deploy it (steps in `README.md`) and watch the first real run.
+2. **No failure-notification channel exists on Railway.** GitHub Actions
+   used to email repo watchers automatically on any failed run (D11/D12) —
+   nothing replaces that yet. A failed run is only visible by checking the
+   service's `GET /` status yourself. Worth closing before this is trusted
+   unattended.
 3. **The Google Sheets integration needs client-side setup before it does
    anything** (D14) — a Google Cloud service account, a Sheet shared with
    it, and `GOOGLE_SERVICE_ACCOUNT_JSON`/`GOOGLE_SHEETS_SPREADSHEET_ID` as
-   GitHub secrets. None of that is possible from this environment. Until
-   it's done, the run just reports "not configured" and skips it, same as
-   email does when unconfigured.
+   Railway service variables. None of that is possible from this
+   environment. Until it's done, the run just reports "not configured" and
+   skips it, same as email does when unconfigured.
 4. **`data/listing-attributes.csv` doesn't exist yet.** Given `enricher.py`
    already covers most location needs from page titles, confirm with the
    client/SNR whether this file is still needed, and if so, whoever supplies
@@ -160,13 +169,11 @@ Open items:
    platform-level file access.
 5. **`config.SEARCH_HEAD_TYPES` is an unconfirmed inference** (D8) — needs an
    explicit answer from SNR/the client before the Option A/B split goes live.
-6. **No live production run has happened yet.** All URL-count figures in
-   `config.py`/`DECISIONS.md` are from manual verification on 25 Aug 2026, not
-   a real scheduled run.
-7. **The old Railway cron service still needs to be paused/deleted by hand**
-   once the GitHub Actions run is confirmed working, so the job doesn't run
-   twice a month from two platforms. This repo has no access to Railway's
-   dashboard to do that itself.
+6. **Past months' `.xlsx` reports are no longer kept in git history.** Under
+   GitHub Actions every month's report was committed to `reports/`, giving a
+   browsable history; on Railway's volume only the current report is being
+   served/kept. If historical reports matter, this needs a deliberate fix
+   (e.g. writing dated copies to the volume, or committing them somewhere).
 8. **If you add a new label/dimension to `config.py`, update `report.py`'s
    Label Taxonomy sheet too if it's not already generated generically** —
    most of that sheet is built by iterating `config` constants directly, but

@@ -161,17 +161,26 @@ A second finding, from a residential/office IP on 27 August 2026: the exact same
 
 ## Deployment
 
-Runs on GitHub Actions (`.github/workflows/monthly-refresh.yml`), not Railway. See DECISIONS.md D12 for why.
+Runs as a single always-on Railway service (`src/railway_service.py` + `railway.json`), not GitHub Actions. See DECISIONS.md D12 for why it was on GitHub Actions before, and D15/D16 for the move to Railway and why.
 
-**A Railway migration is built on the `railway-migration` branch (`src/railway_service.py`, DECISIONS.md D15) but is not yet live** — it needs a Railway account to actually deploy and test against, which this environment doesn't have. `main` and GitHub Actions remain the production pipeline until that migration is verified end-to-end and merged deliberately. The pre-migration state is tagged `pre-railway-migration-github-actions-stable`.
+**GitHub Actions has been fully removed** (`.github/workflows/` deleted on 31 August 2026) — see "Rolling back to GitHub Actions" below if this ever needs to be undone.
+
+**Not yet actually deployed on live Railway infrastructure as of this removal** — no Railway account/CLI/token exists in the environment that built this, so nothing here has run against real Railway hardware yet. See "Deploying the Railway service" below for the exact steps needed once someone with Railway account access does this.
 
 | Item | Value |
 |---|---|
-| Schedule | `0 3 1 * *`, 03:00 UTC on the 1st of each month, plus manual dispatch any time |
-| State persistence | `data/snapshot.json`, `data/snapshot.json.previous`, `data/location-cache.json`, and `reports/riparide-page-feed-report.xlsx` are committed back into this repo by the workflow after a successful run — no external volume |
-| Concurrency | one refresh at a time (`concurrency: group: monthly-page-feed-refresh`), so a manual run can't race the scheduled one |
-| Secrets required | `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet for email; `GOOGLE_SERVICE_ACCOUNT_JSON` and `GOOGLE_SHEETS_SPREADSHEET_ID` for the Google Sheets update — all as GitHub Actions repository secrets |
-| Failure visibility | a failed run exits non-zero, which GitHub marks as a failed workflow run and emails repo watchers by default — independent of this project's own email delivery |
+| Schedule | internal scheduler thread, checks every 30 minutes, fires on/after the 1st of the month at 03:00 UTC by default (`RAILWAY_RUN_DAY`/`RAILWAY_RUN_HOUR`), plus `POST /run?token=...` any time |
+| State persistence | `data/snapshot.json`, `data/snapshot.json.previous`, `data/location-cache.json`, the output CSVs, and `reports/riparide-page-feed-report.xlsx` all live on a Railway volume (`FEED_DATA_DIR`) — no git commit-back, unlike the old GitHub Actions setup |
+| Concurrency | a single in-process lock (`railway_service._lock`) refuses to start a second run while one is in progress, whether triggered by the schedule or manually |
+| Secrets required | `RUN_TRIGGER_TOKEN` to authorize the manual trigger; `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet for email; `GOOGLE_SERVICE_ACCOUNT_JSON` and `GOOGLE_SHEETS_SPREADSHEET_ID` for the Google Sheets update — all as Railway service variables |
+| Failure visibility | a failed run is recorded in `railway-service-state.json` and visible at `GET /`; unlike GitHub Actions, nothing currently emails anyone automatically on a pipeline failure — this is a real gap versus the old setup, see D16 |
+
+### Rolling back to GitHub Actions
+
+Everything GitHub-Actions-based is fully recoverable from git history, not kept side-by-side in the live codebase:
+
+- Tag `pre-railway-migration-github-actions-stable` marks the last commit where GitHub Actions was the complete, working, tested production pipeline (31 August 2026, before this removal).
+- To restore it: check out that tag, or restore just `.github/workflows/monthly-refresh.yml` and `.github/workflows/proof.yml` from it into the current branch.
 
 ### Setting up the Google Sheet (one-time, client-side)
 

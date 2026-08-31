@@ -1,6 +1,6 @@
 # Riparide Page Feed — Project Status
 
-**Last updated:** 27 August 2026 (post scope-cross-check fixes, GitHub Actions migration, xlsx report, the push to GitHub, and the Google Sheets integration)
+**Last updated:** 31 August 2026 (moved off GitHub Actions onto a single Railway service — see 4.4, the deployment section, for the current, more complicated truth: the new setup is built and tested as far as possible, but not yet actually deployed on live Railway infrastructure)
 **Purpose of this document:** a plain-language, accurate snapshot of this project for a client status update (Loom recording). Covers what was asked for, what's been built, how it runs today, and what's still open.
 
 ---
@@ -103,33 +103,39 @@ flowchart LR
 | **`.xlsx` report** (Summary, QA Checks, Label Taxonomy, both feeds as real sheets) | ✅ **New this session** — committed to the repo every run (`reports/`) and emailed, per your request |
 | Email report with CSVs + xlsx + snapshot attached | ✅ Built — kept as plain text by your choice (reviewed, judged not worth the polish for an ops-facing report); supports Resend API or SMTP, fails safely if unconfigured |
 | Unit test suite (115+ tests) + CI | ✅ Covers labelling, validation, attributes, location parsing, the robots.txt check, the xlsx report, and the Google Sheets integration (mocked, no live credentials needed) |
-| Scheduled + manual run via GitHub Actions | ✅ Built — replaces Railway entirely (see 4.4) |
+| Scheduled + manual run | ⚠️ Built on Railway (`railway_service.py`), replacing GitHub Actions — but not yet deployed on real Railway infrastructure (see 4.4) |
 | Pushed to `github.com/snr-growth/riparide-Page-Feeds-listings` | ✅ Done — on top of the real existing history, not a fresh/orphaned one |
 | **Google Sheets integration** (the Google-Ads-facing feed) | ✅ **New this session**, per your decision — writes the same feed data into a client-owned Sheet every run, auto-creates its tabs, keeps the Core tab pinned first (see §4.6). Code is done and tested; **needs your one-time setup before it does anything live** (§4.6). |
 
 ### 4.4 How it currently runs (deployment, today)
 
+**GitHub Actions has been removed from the codebase entirely** (31 August 2026) in favour of a single always-on Railway service, at your explicit direction — driven by two concerns you raised about the Google Sheets integration (two independent failure modes; a heavier handover if this project's ownership ever transfers) that a Railway-hosted setup avoids. The rollback path is a git tag, not a second copy of the old codebase sitting unused — see below.
+
 ```mermaid
 flowchart LR
-    subgraph GHA["GitHub Actions (monthly-refresh.yml)"]
-        CRON["Cron: 0 3 1 * *\n(3am UTC, 1st of month)\n+ manual dispatch anytime"] --> CHECK["Check the site answers\n(fail fast if blocked)"]
-        CHECK --> JOB["python src/run.py"]
-        JOB --> COMMIT["Commit snapshot +\nlocation cache back to repo\n(git = the persistence layer)"]
-        SECRETS[("Repo secrets:\nEMAIL_FROM / EMAIL_TO /\nRESEND_API_KEY or SMTP_*")] --> JOB
+    subgraph RW["Railway service (railway_service.py)"]
+        SCHED["Internal scheduler:\nchecks every 30 min,\nfires 1st of month 3am UTC\n+ POST /run any time"] --> JOB["python src/run.py\n(unchanged)"]
+        JOB --> VOL[("Railway volume:\nsnapshot, location cache,\nCSVs, xlsx report")]
+        VARS[("Service variables:\nEMAIL_* / RESEND_API_KEY or SMTP_* /\nGOOGLE_* / RUN_TRIGGER_TOKEN")] --> JOB
+        VOL --> SERVE["HTTP file server\n(GET/HEAD, stable URLs)"]
     end
     JOB --> SITE["riparide.com\n(6 sitemaps + page reads)"]
     JOB --> EMAIL["Report email\n+ 2 CSVs + snapshot attached"]
-    JOB --> ARTIFACT["Workflow artifact\n(90-day retention)"]
+    SERVE --> ADS["Google Ads\n(HTTP page-feed source, optional)"]
 ```
 
-**Railway is no longer used.** `railway.json` has been removed and the state that used to live on its volume now lives as ordinary git commits made by the workflow itself — reviewable in the repo's history like any other change. This also means a run failure shows up as a red GitHub Actions run, which GitHub emails repo watchers about automatically, on top of this project's own report email.
+**Not yet deployed on real Railway infrastructure.** Everything above is built and tested as far as possible without a Railway account: 17 new unit tests, a live smoke test of the actual entrypoint process (including a real failed run and a real HEAD-request bug found and fixed), and file-serving verified byte-identical against the real production snapshot. What it has **not** been tested against is an actual Railway deployment — no account, CLI, or token exists in the environment that built this. That needs someone with Railway account access to create the project, attach a volume, and set the service variables (exact steps in `README.md`).
 
-**One thing this hasn't proven yet:** whether GitHub's own runner network can actually reach riparide.com. The site's block turned out to be based on more than just which HTTP client is used (see §6) — a normal residential/office connection got blocked outright during this review, which is new information the original design didn't account for. The workflow's first step exists specifically to fail loudly and immediately if this doesn't hold, but **the very first real run needs to be watched** to confirm it, rather than assumed safe because it worked from Railway.
+**One thing that was proven under GitHub Actions but is now an open question again:** whether Railway's specific runner network can reach riparide.com — this was true of GitHub Actions (5 confirmed live runs) and was true of Railway before the original 27 August migration away from it, but hasn't been re-confirmed for *this* new Railway setup specifically. The first real deploy needs to be watched to confirm it.
+
+**A real gap this move opens, not yet closed:** GitHub Actions gave a free, independent failure-notification email whenever a run failed — nothing on the Railway side replaces that yet. A failed run is recorded and visible at the service's `/` status endpoint, but nothing currently pushes a notification anywhere if nobody thinks to check.
+
+**Rolling back:** the exact commit where GitHub Actions was the complete, working, tested pipeline is tagged `pre-railway-migration-github-actions-stable` (commit `dbb6c934`, 28 August 2026, 14:29 UTC) — pushed to GitHub, so it's recoverable independent of anyone's local checkout.
 
 ### 4.5 Where the files actually live — CSVs, the report, and email
 
-- **The two raw CSVs** are regenerated fresh every run, are not stored in git (they're fully derived from the snapshot, so keeping old copies would just be noise), and reach you two ways: attached to the report email, and as a GitHub Actions build artifact (90-day retention). This is the **client-shared format** — for manual reference/backup, not the primary path into Google Ads anymore.
-- **The `.xlsx` report is stored in GitHub** — every month's version is committed to `reports/riparide-page-feed-report.xlsx`, so the full history of past reports is browsable in the repo, not just whatever's still in an inbox. Also attached to the same email as the CSVs.
+- **The two raw CSVs** are regenerated fresh every run and live on the Railway volume, served at stable URLs directly off the service (see 4.4), and also attached to the report email when one is configured. This is the **client-shared format** — for manual reference/backup, not the primary path into Google Ads anymore.
+- **The `.xlsx` report** also lives on the Railway volume and is served the same way, plus attached to the report email. Unlike the old GitHub Actions setup, past months' reports are no longer automatically kept in git history — only the current one is being served at any time, since Railway's volume isn't git-backed.
 - **The email itself stays plain text**, by your choice — it's a complete, accurate ops report (every check, every count), just not a styled HTML template.
 
 ### 4.6 The Google Sheet — the actual answer to "can we just give Google Ads a URL"
@@ -143,7 +149,7 @@ This is new since the last update, and directly replaces the earlier "no live Go
 **What's left before this does anything live** (all client-side, listed precisely in `README.md`):
 1. Create a Google Cloud service account, enable the Sheets API, download its key.
 2. Create the Sheet, share Editor access with that service account's email.
-3. Add the key + the Sheet's ID as two GitHub Actions secrets.
+3. Add the key + the Sheet's ID as two Railway service variables.
 4. Connect that same Sheet in Google Ads (Business Data → Page feed → Google Sheets), using the Ads-managing Google account.
 
 Until that's done, the run simply reports "not configured" and skips this step — exactly like it already does for email — so there's no risk in this being live in the code before the setup is complete.

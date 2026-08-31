@@ -350,3 +350,32 @@ The parts of the Definition of Done that require an actual Railway deployment - 
 ### Rollback
 
 `main` and `.github/workflows/monthly-refresh.yml` are untouched - GitHub Actions remains the sole production pipeline throughout. The pre-migration state is tagged `pre-railway-migration-github-actions-stable` on `main`, and this work lives entirely on the `railway-migration` branch until Railway access allows it to be tested for real and merged deliberately, not by default.
+
+---
+
+## D16. GitHub Actions removed from the codebase entirely
+
+**Date:** 31 August 2026, 10:32 UTC
+**Status:** Done. Railway is now the only pipeline defined in this codebase - and is still not deployed anywhere live (see D15's "What is NOT verified" - nothing about that changed by this removal).
+
+### What changed
+
+`.github/workflows/monthly-refresh.yml` and `.github/workflows/proof.yml` (the CI test-runner, a separate concern from the production pipeline but removed together per the instruction to remove the GitHub Actions setup entirely) are deleted from the working tree. The `railway-migration` branch (D15) was merged into `main` first, so `main` now contains the Railway service code as the only defined pipeline.
+
+### Why this was done before Railway has actually been deployed or tested live
+
+This was an explicit, informed instruction, not an oversight: rather than keeping the old GitHub Actions codebase sitting in the repo as a live fallback until Railway is proven, the rollback path is a git commit reference instead - cheaper to keep, and just as usable, provided it's recorded precisely (below).
+
+**The real consequence, stated plainly so it isn't lost**: as of this commit, there is no automated pipeline actually running anywhere. GitHub Actions' schedule is gone; the Railway service (D15) has never been deployed to real Railway infrastructure from this environment (no account/CLI/token access existed at any point in this migration). The monthly feed will not refresh on its own until Railway is actually set up by someone with account access, using the steps in README.md's "Deploying the Railway service" section.
+
+### Exact rollback reference
+
+- **Tag:** `pre-railway-migration-github-actions-stable`
+- **Commit:** `dbb6c9347dcb19f81b9b21b43c616aed3403d7f5`
+- **Commit timestamp:** 2026-08-28T14:29:54Z
+- **What that commit is:** the last state where GitHub Actions was the complete, tested, working production pipeline - 5 live `workflow_dispatch` runs verified against real production data (10,215 URLs), 147 tests passing, email delivery fully debugged (the Cloudflare User-Agent fix and Resend error-surfacing from the same day).
+- **To restore:** check out the tag directly, or restore just the two files under `.github/workflows/` from it into the current branch. The tag is pushed to `origin`, so it survives independently of any local checkout.
+
+### One gap this removal opens, not yet closed
+
+GitHub Actions gave a free, independent failure-notification email on any non-zero exit (D11/D12) - it marked the run failed and emailed repo watchers, on top of this project's own report email. Nothing on the Railway side replaces that yet: `railway_service.py` records a failed run in its own state file (visible at `GET /`), but nothing pushes a notification anywhere. Until this is addressed, a failed monthly run is silent unless someone actively checks the service's status.
