@@ -1,14 +1,18 @@
-# Page Feed Label Reference
+# Understanding Your Page Feed Labels
 
-A plain-language guide to every label the feed can produce. Each page gets a
-handful of these stitched together with semicolons — for example:
+Every month, each page on riparide.com gets tagged with a set of labels that
+tell Google Ads what the page is, where it is, and how it should be
+advertised. Here's what those labels mean.
+
+A page's labels are joined together like this:
 
 ```
 PAGE_LISTING;GEO_AU;GEO_VIC;REG_GREAT_OCEAN_ROAD;TYPE_GLAMPING;PMAX_LONGTAIL
 ```
 
-reads as: a property listing, in Australia, in Victoria, in the Great Ocean
-Road area, a glamping stay, with no restriction on where it can advertise.
+which reads as: a property listing, in Australia, in Victoria, in the Great
+Ocean Road area, a glamping stay, with no restriction on where it can
+advertise.
 
 ---
 
@@ -19,26 +23,26 @@ Road area, a glamping stay, with no restriction on where it can advertise.
 | Listing | An individual property |
 | Story | An editorial piece about a stay |
 | Adventure | A "things to do" page, not a bookable stay |
-| Country / State / Region page | A hub page, e.g. the Australia, Victoria, or Great Ocean Road page |
+| Country / State / Region page | A hub page — e.g. the Australia, Victoria, or Great Ocean Road page |
 | Collection | A themed or destination-based grouping of properties |
-| Filtered search page | An auto-generated page like "all glamping stays in Victoria," so a search can land on the right filtered results instead of one listing |
+| Filtered search page | An auto-generated page such as "all glamping stays in Victoria," so a search lands on the right filtered results instead of one listing |
 | Brand/info page | About, Contact, etc. — left out of the feed entirely |
 
 ## Location — country, state, region
 
 Every page carries a country (Australia, New Zealand, United States), a
 state where relevant (Victoria, New South Wales, Washington, Oregon), and
-usually a specific region (e.g. Yarra Valley, High Country) generated
+usually a specific region (Yarra Valley, High Country, and so on), taken
 directly from the area's real name.
 
 ## Stay type — what kind of place it is
 
 Cabin, glamping, cottage, treehouse, tiny house, and 18 others — the same 22
-categories your own site's search filters already use. A handful of
-listings describe themselves in ways that don't fit those 22 (beach house,
-houseboat, converted train carriage) and get their own honest label instead
-of being forced into the nearest match. Anything genuinely new gets flagged
-for review rather than guessed at.
+categories your own site's search filters already use. A few listings
+describe themselves in ways that don't fit those 22 (beach house, houseboat,
+converted train carriage) and get their own honest label rather than being
+forced into the nearest match. Anything genuinely new gets flagged for
+review rather than guessed at.
 
 ## Intent — what kind of trip it is
 
@@ -50,18 +54,13 @@ page's own title or URL.
 
 | Label | Meaning |
 |---|---|
-| Standard (no restriction) | Performance Max's normal, proven territory |
+| Standard | No restriction — Performance Max's normal territory |
 | Search-priority | Romantic, off-grid, pet-friendly, and getaway-themed pages, where Search has been outperforming Performance Max |
-| New Zealand — held back | Not currently running in paid campaigns |
-| United States — held back | Not currently a paid market |
-| Adventure — held back | Editorial content, not something to run ads against |
+| New Zealand | Held back from paid campaigns |
+| United States | Held back — not currently a paid market |
+| Adventure | Held back — editorial content, not something to run ads against |
 
-**Note on the New Zealand and US holds**: I could not find a documented,
-sourced reason for these in this project's records — worth confirming with
-whoever set this rule originally before repeating a specific justification
-to the client. Happy to add it here once confirmed.
-
-## Which feed it lands in
+## Where each page ends up
 
 Everything goes into the **main feed**, except adventure pages (their own
 **separate feed**) and brand/info pages (**left out entirely**).
