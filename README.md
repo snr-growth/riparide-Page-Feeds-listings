@@ -48,6 +48,7 @@ src/
   test_*.py      unit tests for the individual modules (see below)
 DECISIONS.md     every decision, with its reason and evidence
 PROJECT_STATUS.md  plain-language status snapshot for non-technical readers
+LABELS.md        plain-English reference for every label the feed can produce
 reports/         the monthly .xlsx report, committed here (see Deployment)
 ```
 
