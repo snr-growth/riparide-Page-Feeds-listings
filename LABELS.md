@@ -84,9 +84,9 @@ This is the tag that actually controls which campaign a page can appear in:
 |---|---|
 | `PMAX_LONGTAIL` | No restriction — this is Performance Max's normal, default territory. Most pages carry this one. |
 | `SEARCH_HEAD` | Romantic, off-grid, pet-friendly, and getaway-themed pages, where Search has been outperforming Performance Max |
-| `NZ_REVIEW` | New Zealand — held back from paid campaigns |
-| `US_HOLD` | United States — held back, not currently a paid market |
-| `ADV_HOLD` | Adventure pages — held back, editorial content rather than something to advertise directly |
+| `NZ_REVIEW` | New Zealand |
+| `US_HOLD` | United States |
+| `ADV_HOLD` | Adventure pages |
 
 ## Where each page ends up
 
