@@ -2,7 +2,7 @@
 
 Every month, each page on riparide.com gets tagged with a set of labels that
 tell Google Ads what the page is, where it is, and how it should be
-advertised. Here's what those labels mean.
+advertised. Below is what every code you'll see in the feed actually means.
 
 A page's labels are joined together like this:
 
@@ -18,47 +18,75 @@ advertise.
 
 ## Page type — what the page is
 
-| Label | Meaning |
+| Code | Meaning |
 |---|---|
-| Listing | An individual property |
-| Story | An editorial piece about a stay |
-| Adventure | A "things to do" page, not a bookable stay |
-| Country / State / Region page | A hub page — e.g. the Australia, Victoria, or Great Ocean Road page |
-| Collection | A themed or destination-based grouping of properties |
-| Filtered search page | An auto-generated page such as "all glamping stays in Victoria," so a search lands on the right filtered results instead of one listing |
-| Brand/info page | About, Contact, etc. — left out of the feed entirely |
+| `PAGE_LISTING` | An individual property |
+| `PAGE_STORY` | An editorial piece about a stay |
+| `PAGE_ADVENTURE` | A "things to do" page, not a bookable stay |
+| `PAGE_COUNTRY` | A country hub page — e.g. the Australia page |
+| `PAGE_STATE` | A state hub page — e.g. the Victoria page |
+| `PAGE_REGION` | A region hub page — e.g. the Great Ocean Road page |
+| `PAGE_COLLECTION` | A themed or destination-based grouping of properties |
+| `PAGE_COLLECTION_HUB` | The index page listing all collections for a country/state |
+| `PAGE_FACET_TYPE` | An auto-generated page such as "all glamping stays in Victoria," so a search lands on the right filtered results instead of one listing |
+| `PAGE_CORE` | A brand/info page — About, Contact, etc. — left out of the feed entirely |
 
 ## Location — country, state, region
 
-Every page carries a country (Australia, New Zealand, United States), a
-state where relevant (Victoria, New South Wales, Washington, Oregon), and
-usually a specific region (Yarra Valley, High Country, and so on), taken
-directly from the area's real name.
+| Code | Meaning |
+|---|---|
+| `GEO_AU` | Australia |
+| `GEO_NZ` | New Zealand |
+| `GEO_US` | United States |
+| `GEO_VIC` | Victoria |
+| `GEO_NSW` | New South Wales |
+| `GEO_WA` | Washington State |
+| `GEO_OR` | Oregon |
+| `REG_...` | The specific region, e.g. `REG_YARRA_VALLEY`, `REG_HIGH_COUNTRY` — named directly after the real area, one for every region on the site |
 
 ## Stay type — what kind of place it is
 
-Cabin, glamping, cottage, treehouse, tiny house, and 18 others — the same 22
-categories your own site's search filters already use. A few listings
-describe themselves in ways that don't fit those 22 (beach house, houseboat,
-converted train carriage) and get their own honest label rather than being
-forced into the nearest match. Anything genuinely new gets flagged for
+| Code | Meaning |
+|---|---|
+| `TYPE_CABIN` | Cabin |
+| `TYPE_GLAMPING` | Glamping |
+| `TYPE_COTTAGE` | Cottage |
+| `TYPE_TREEHOUSE` | Treehouse |
+| `TYPE_TINY_HOUSE` | Tiny house |
+| `TYPE_...` | Plus 17 more of your site's own filter categories (barn, farm, lodge, villa, yurt, and so on) |
+| `TYPE_BEACH_HOUSE`, `TYPE_HOUSEBOAT`, etc. | A handful of stay types that don't match your 22 standard categories get their own honest label instead of being forced into the nearest match |
+
+Anything genuinely new that doesn't match an existing label gets flagged for
 review rather than guessed at.
 
 ## Intent — what kind of trip it is
 
-Romantic, off-grid, pet-friendly, farm stay, hot tub, sauna, group-friendly,
-luxury, general getaway — pulled from the wording already used in the
-page's own title or URL.
+This is the tag that captures *why* someone wants this specific stay, pulled
+from the wording already used in the page's own title or URL:
+
+| Code | Meaning |
+|---|---|
+| `INT_ROMANTIC` | Romantic getaway |
+| `INT_OFFGRID` | Off-grid stay |
+| `INT_PET_FRIENDLY` | Pet/dog-friendly |
+| `INT_FARM_STAY` | Farm stay |
+| `INT_HOT_TUB` | Has a hot tub |
+| `INT_SAUNA` | Has a sauna |
+| `INT_GROUPS` | Suited to groups |
+| `INT_LUXURY` | Positioned as luxury |
+| `INT_GETAWAY` | General weekend-getaway framing |
 
 ## Boundary — where it's allowed to advertise
 
-| Label | Meaning |
+This is the tag that actually controls which campaign a page can appear in:
+
+| Code | Meaning |
 |---|---|
-| Standard | No restriction — Performance Max's normal territory |
-| Search-priority | Romantic, off-grid, pet-friendly, and getaway-themed pages, where Search has been outperforming Performance Max |
-| New Zealand | Held back from paid campaigns |
-| United States | Held back — not currently a paid market |
-| Adventure | Held back — editorial content, not something to run ads against |
+| `PMAX_LONGTAIL` | No restriction — this is Performance Max's normal, default territory. Most pages carry this one. |
+| `SEARCH_HEAD` | Romantic, off-grid, pet-friendly, and getaway-themed pages, where Search has been outperforming Performance Max |
+| `NZ_REVIEW` | New Zealand — held back from paid campaigns |
+| `US_HOLD` | United States — held back, not currently a paid market |
+| `ADV_HOLD` | Adventure pages — held back, editorial content rather than something to advertise directly |
 
 ## Where each page ends up
 
