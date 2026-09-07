@@ -2,7 +2,16 @@
 
 Rebuilds the Riparide Performance Max page feed every month so it stays accurate without anyone maintaining it by hand.
 
-Runs on a schedule and produces the feed in two parallel formats: two CSVs plus a reviewable `.xlsx` report as the **client-shared format** (emailed, human-facing, unchanged structurally since first built), and a Google Sheet as the **Google-Ads-facing format** (what Google Ads actually reads from, see DECISIONS.md D14). Both come from the exact same labelled data every run.
+Runs on a schedule (currently: a Railway service, see Deployment below) and
+produces two CSVs plus a reviewable `.xlsx` report every run. The CSVs are
+hosted at stable URLs Google Ads can pull directly (Business Data → Page
+feed → HTTP/HTTPS source) — this is the confirmed, live delivery path as of
+1 September 2026, which is when the very first fully automatic scheduled
+run succeeded with no one watching it. A Google Sheets delivery path also
+exists in the code (`sheets.py`, DECISIONS.md D14) as an alternative, but
+it was deprioritized in favour of the Railway-hosted CSVs and is not
+currently configured — see "Setting up the Google Sheet" below only if you
+specifically want that path instead.
 
 ---
 
@@ -17,14 +26,14 @@ Runs on a schedule and produces the feed in two parallel formats: two CSVs plus 
 | 5 | Merge an optional supplied attributes file |
 | 6 | Status check the changed URLs and drop anything that is not 200 |
 | 7 | Run the validation checks |
-| 8 | Write both CSV files, then the `.xlsx` report (client-shared format) |
-| 8c | Update the Google Sheet Google Ads reads from (Google-Ads-facing format) |
+| 8 | Write both CSV files, then the `.xlsx` report — these get served directly at stable URLs by the Railway service (see Deployment) |
+| 8c | Update the Google Sheet, only if the Sheets delivery path is configured (it currently isn't — see the intro above) |
 | 9 | Save the new snapshot |
 | 10 | Email the report with the CSVs, the `.xlsx` report, and the snapshot attached |
 
 If any validation check fails the run stops before writing anything. A broken feed is worse than a stale one. A Sheets-update failure (step 8c) is the one exception to "nothing else happens" — the CSVs/xlsx/email still complete, since a good feed must never be lost over one delivery channel's hiccup, but the run still exits non-zero so it's never silently missed.
 
-Once the Google Sheet is connected as the page feed's source in Google Ads (a one-time setup, see DECISIONS.md D14), there is no manual upload step left at all. Until then, the CSVs remain uploadable by hand under Tools, Business data, Page feed.
+Once Google Ads is pointed at the Railway-hosted CSV URLs as the page feed's source (Tools → Business data → Page feed → HTTP/HTTPS source, a one-time setup — confirm with whoever manages the Ads account whether this step has actually been done), there is no manual upload step left at all.
 
 ---
 
@@ -49,7 +58,7 @@ src/
 DECISIONS.md     every decision, with its reason and evidence
 PROJECT_STATUS.md  plain-language status snapshot for non-technical readers
 LABELS.md        plain-English reference for every label the feed can produce
-reports/         the monthly .xlsx report, committed here (see Deployment)
+reports/         local dev output only — in production this lives on the Railway volume, not git (see Deployment). The copy committed here is a frozen snapshot from the last GitHub Actions run (28 Aug 2026) and won't update.
 ```
 
 No third party packages are used anywhere that talks to riparide.com — see
@@ -166,15 +175,15 @@ Runs as a single always-on Railway service (`src/railway_service.py` + `railway.
 
 **GitHub Actions has been fully removed** (`.github/workflows/` deleted on 31 August 2026) — see "Rolling back to GitHub Actions" below if this ever needs to be undone.
 
-**Not yet actually deployed on live Railway infrastructure as of this removal** — no Railway account/CLI/token exists in the environment that built this, so nothing here has run against real Railway hardware yet. See "Deploying the Railway service" below for the exact steps needed once someone with Railway account access does this.
+**Confirmed live in production.** The first fully automatic scheduled run (no one triggering it manually) succeeded on 1 September 2026 — see "Deploying the Railway service" below if you need to redeploy this from scratch (e.g. moving it to a new Railway account as part of a handover).
 
 | Item | Value |
 |---|---|
 | Schedule | internal scheduler thread, checks every 30 minutes, fires on/after the 1st of the month at 03:00 UTC by default (`RAILWAY_RUN_DAY`/`RAILWAY_RUN_HOUR`), plus `POST /run?token=...` any time |
 | State persistence | `data/snapshot.json`, `data/snapshot.json.previous`, `data/location-cache.json`, the output CSVs, and `reports/riparide-page-feed-report.xlsx` all live on a Railway volume (`FEED_DATA_DIR`) — no git commit-back, unlike the old GitHub Actions setup |
 | Concurrency | a single in-process lock (`railway_service._lock`) refuses to start a second run while one is in progress, whether triggered by the schedule or manually |
-| Secrets required | `RUN_TRIGGER_TOKEN` to authorize the manual trigger; `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet for email; `GOOGLE_SERVICE_ACCOUNT_JSON` and `GOOGLE_SHEETS_SPREADSHEET_ID` for the Google Sheets update — all as Railway service variables |
-| Failure visibility | a failed run is recorded in `railway-service-state.json` and visible at `GET /`; unlike GitHub Actions, nothing currently emails anyone automatically on a pipeline failure — this is a real gap versus the old setup, see D16 |
+| Secrets required | `RUN_TRIGGER_TOKEN` to authorize the manual trigger; `EMAIL_FROM`, `EMAIL_TO`, and either `RESEND_API_KEY` or the `SMTP_*` quartet for email. `GOOGLE_SERVICE_ACCOUNT_JSON`/`GOOGLE_SHEETS_SPREADSHEET_ID` only if using the optional Sheets path instead of/alongside the CSV URLs — not currently set. All as Railway service variables. |
+| Failure visibility | a failed run is recorded in `railway-service-state.json` and visible at `GET /`; unlike GitHub Actions, nothing currently emails anyone automatically on a pipeline failure — this is a real gap versus the old setup, see D16. **Check `GET /` yourself after the 1st of each month** until this is closed. |
 
 ### Rolling back to GitHub Actions
 
@@ -183,40 +192,39 @@ Everything GitHub-Actions-based is fully recoverable from git history, not kept 
 - Tag `pre-railway-migration-github-actions-stable` marks the last commit where GitHub Actions was the complete, working, tested production pipeline (31 August 2026, before this removal).
 - To restore it: check out that tag, or restore just `.github/workflows/monthly-refresh.yml` and `.github/workflows/proof.yml` from it into the current branch.
 
-### Setting up the Google Sheet (one-time, client-side)
+### Deploying the Railway service (this is the live, confirmed path)
 
-None of this can be done from inside this repo — it needs a Google account with access to Google Cloud and to the Google Ads account.
+Requires a Railway account with an active Hobby or Pro plan (needed for volumes). None of this can be done from inside this repo — it needs Railway dashboard access.
 
-1. In Google Cloud Console, create (or reuse) a project, enable the **Google Sheets API**, and create a **service account**. Generate a JSON key for it and download the file.
-2. Create the Google Sheet (or use an existing one you want to become the feed). Share it with **Editor** access to the service account's email address (it looks like `something@project-id.iam.gserviceaccount.com` — found in the downloaded JSON as `client_email`).
-3. In this repo's GitHub settings → Secrets and variables → Actions, add:
-   - `GOOGLE_SERVICE_ACCOUNT_JSON` — paste the **entire contents** of the downloaded JSON file, unmodified.
-   - `GOOGLE_SHEETS_SPREADSHEET_ID` — the long ID in the sheet's URL, between `/d/` and `/edit`.
-4. In Google Ads, go to Tools → Business data → Page feed, and connect **that same Sheet** as the source (using whichever Google account manages Ads — it needs Editor access too, either because it owns the sheet or because you've shared it with that account as well).
-5. Optional: also share the sheet as "Anyone with the link can view" if other people should be able to open it without being individually added. Not required for steps 2–4 to work.
-
-After that, every monthly run keeps the sheet's `Page Feed - Core` tab (pinned as the first tab, since Google Ads only reads the first one) and `Page Feed - Adventures` tab up to date automatically — no more manual uploads.
-
-### Deploying the Railway service (railway-migration branch, not yet live)
-
-Requires a Railway account with an active Hobby or Pro plan (needed for volumes). None of this can be done from inside this repo:
-
-1. Create a new Railway project from this repo, `railway-migration` branch. `railway.json` at the repo root configures the build/start commands and health check automatically.
+1. Create a new Railway project from this repo, **`main` branch** (not `railway-migration` — that branch was merged into `main` on 31 August 2026 and can be deleted). `railway.json` at the repo root configures the build/start commands and health check automatically.
 2. Add a **Volume**, mounted at `/data` (Railway's dashboard, not `railway.json` — volumes aren't configurable as code). This is where `snapshot.json`, `location-cache.json`, the output CSVs, and the xlsx report all persist between runs and redeploys.
 3. Set these service variables:
    - `FEED_DATA_DIR` = `/data`
    - `FEED_REPORT_DIR` = `/data/reports`
-   - `RUN_TRIGGER_TOKEN` = a random secret, used to authorize `POST /run` (manual trigger, equivalent to `workflow_dispatch`)
-   - The same email/Sheets secrets as the GitHub Actions setup above (`EMAIL_FROM`, `EMAIL_TO`, `RESEND_API_KEY` or `SMTP_*`, `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEETS_SPREADSHEET_ID`) if those delivery channels are still wanted — the underlying `run.py` is unchanged and reads them exactly the same way.
-   - Optionally `RAILWAY_RUN_DAY` / `RAILWAY_RUN_HOUR` to change the schedule from its default (1st of the month, 03:00 UTC).
-4. Once deployed, Railway assigns a public domain (or attach a custom one). The feed files are then available at:
+   - `RUN_TRIGGER_TOKEN` = a random secret, used to authorize `POST /run` (manual trigger)
+   - `EMAIL_FROM`, `EMAIL_TO`, `RESEND_API_KEY` for the report email (currently configured on the live service)
+   - Optionally `RAILWAY_RUN_DAY` / `RAILWAY_RUN_HOUR` to change the schedule from its default (1st of the month, 03:00 UTC)
+   - Add `GOOGLE_SERVICE_ACCOUNT_JSON`/`GOOGLE_SHEETS_SPREADSHEET_ID` only if you also want the optional Sheets path below — not required for the CSV URLs to work
+4. Once deployed, Railway assigns a public domain (or attach a custom one). The feed files are then available at, for example:
    - `https://<your-railway-domain>/riparide-page-feed-core.csv`
    - `https://<your-railway-domain>/riparide-page-feed-adventures.csv`
    - `https://<your-railway-domain>/riparide-page-feed-report.xlsx`
 
-   Point Google Ads' page feed source at the two CSV URLs directly (Business Data → Page feed → HTTP/HTTPS URL) instead of the Google Sheets connection, if delivering that way instead of/alongside Sheets.
+   Point Google Ads' page feed source at the two CSV URLs directly (Business Data → Page feed → HTTP/HTTPS URL). **Confirm with whoever manages the Ads account whether this connection has actually been made** — the feed being live doesn't guarantee Ads has been pointed at it yet.
 5. Check `GET /` for the last run's status, and `GET /healthz` for the health check Railway itself polls.
 6. To trigger a run immediately rather than waiting for the schedule: `curl -X POST "https://<your-railway-domain>/run?token=<RUN_TRIGGER_TOKEN>"`.
+
+### Setting up the Google Sheet instead (optional, not currently used)
+
+The feed also supports writing into a Google Sheet as an alternative or additional delivery path (`sheets.py`, DECISIONS.md D14) — not currently configured, since the Railway-hosted CSV URLs above are the path actually in use. Only follow this if you specifically want Sheets instead of (or alongside) the CSV URLs. None of this can be done from inside this repo — it needs a Google account with access to Google Cloud and to the Google Ads account.
+
+1. In Google Cloud Console, create (or reuse) a project, enable the **Google Sheets API**, and create a **service account**. Generate a JSON key for it and download the file.
+2. Create the Google Sheet (or use an existing one you want to become the feed). Share it with **Editor** access to the service account's email address (it looks like `something@project-id.iam.gserviceaccount.com` — found in the downloaded JSON as `client_email`).
+3. Set `GOOGLE_SERVICE_ACCOUNT_JSON` (the entire contents of the downloaded JSON file, unmodified) and `GOOGLE_SHEETS_SPREADSHEET_ID` (the long ID in the sheet's URL, between `/d/` and `/edit`) as Railway service variables.
+4. In Google Ads, go to Tools → Business data → Page feed, and connect **that same Sheet** as the source (using whichever Google account manages Ads — it needs Editor access too, either because it owns the sheet or because you've shared it with that account as well).
+5. Optional: also share the sheet as "Anyone with the link can view" if other people should be able to open it without being individually added. Not required for steps 2–4 to work.
+
+After that, every monthly run keeps the sheet's `Page Feed - Core` tab (pinned as the first tab, since Google Ads only reads the first one) and `Page Feed - Adventures` tab up to date automatically.
 
 ### Every run's outputs and email attachments
 

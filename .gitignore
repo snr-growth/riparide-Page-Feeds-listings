@@ -7,8 +7,10 @@ __pycache__/
 *.pyc
 .env
 
-# data/snapshot.json, data/snapshot.json.previous and
-# data/location-cache.json are DELIBERATELY NOT ignored: since the move off
-# Railway (DECISIONS.md D11), these are the run's persistent state and are
-# committed back to the repo by .github/workflows/monthly-refresh.yml. Do
-# not add them back here.
+# data/snapshot.json, data/snapshot.json.previous and data/location-cache.json
+# are DELIBERATELY NOT ignored, for local dev convenience - but as of the
+# Railway migration (DECISIONS.md D15/D16) they are NOT what production
+# actually reads or writes: the live service keeps its own copies on a
+# Railway volume (FEED_DATA_DIR), and nothing commits them back to git
+# anymore. The versions checked into this repo are a frozen snapshot from
+# the last GitHub Actions run (28 Aug 2026) and will not update on their own.
