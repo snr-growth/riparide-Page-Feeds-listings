@@ -205,14 +205,16 @@ Requires a Railway account with an active Hobby or Pro plan (needed for volumes)
    - `EMAIL_FROM`, `EMAIL_TO`, `RESEND_API_KEY` for the report email (currently configured on the live service)
    - Optionally `RAILWAY_RUN_DAY` / `RAILWAY_RUN_HOUR` to change the schedule from its default (1st of the month, 03:00 UTC)
    - Add `GOOGLE_SERVICE_ACCOUNT_JSON`/`GOOGLE_SHEETS_SPREADSHEET_ID` only if you also want the optional Sheets path below — not required for the CSV URLs to work
-4. Once deployed, Railway assigns a public domain (or attach a custom one). The feed files are then available at, for example:
-   - `https://<your-railway-domain>/riparide-page-feed-core.csv`
-   - `https://<your-railway-domain>/riparide-page-feed-adventures.csv`
-   - `https://<your-railway-domain>/riparide-page-feed-report.xlsx`
+4. Once deployed, Railway assigns a public domain (or attach a custom one). The live service's domain is **`https://feed-refresh-production.up.railway.app`** (Railway-generated; confirmed by SNR, 19 Oct 2026), so the feed files are at:
+   - `https://feed-refresh-production.up.railway.app/riparide-page-feed-core.csv`
+   - `https://feed-refresh-production.up.railway.app/riparide-page-feed-adventures.csv`
+   - `https://feed-refresh-production.up.railway.app/riparide-page-feed-report.xlsx`
+
+   If the service is ever redeployed under a new project/domain, update these URLs here and in Google Ads' page feed source.
 
    Point Google Ads' page feed source at the two CSV URLs directly (Business Data → Page feed → HTTP/HTTPS URL). **Confirm with whoever manages the Ads account whether this connection has actually been made** — the feed being live doesn't guarantee Ads has been pointed at it yet.
-5. Check `GET /` for the last run's status, and `GET /healthz` for the health check Railway itself polls.
-6. To trigger a run immediately rather than waiting for the schedule: `curl -X POST "https://<your-railway-domain>/run?token=<RUN_TRIGGER_TOKEN>"`.
+5. Check `GET /` (`https://feed-refresh-production.up.railway.app/`) for the last run's status, and `GET /healthz` for the health check Railway itself polls.
+6. To trigger a run immediately rather than waiting for the schedule: `curl -X POST "https://feed-refresh-production.up.railway.app/run?token=<RUN_TRIGGER_TOKEN>"`.
 
 ### Setting up the Google Sheet instead (optional, not currently used)
 

@@ -312,6 +312,8 @@ None of the following can be done from here — no Google Cloud or Google Ads ac
 **Date:** 31 August 2026
 **Status:** Built and tested as far as possible without Railway account access. Not yet live. GitHub Actions is untouched and still production.
 
+**Update (19 Oct 2026):** Now live. Deployed at `https://feed-refresh-production.up.railway.app`; first unattended scheduled run succeeded 1 Sep 2026 (see commits `61ec9a3`, `0916ae2`). The "not deployed" statements below and in D16 describe the state at the time they were written.
+
 ### The ask
 
 The client raised two concerns about the D14 Google Sheets integration in the same conversation: it introduces two independent failure modes (the Sheets API sync, and the service account's access to the sheet — both of which had already failed at least once during this project's own testing), and if the SNR/client relationship ever ends, handing over a Google Cloud project and service account is a heavier, more technical process than handing over a Railway project. Separately, the client asked directly whether to go back to Railway, in the specific context of hosting the feed files rather than syncing to Sheets. Given the client (X) also has a downstream client of their own (Y), a second-hand transfer was explicitly part of the ask, not hypothetical.
@@ -356,7 +358,7 @@ The parts of the Definition of Done that require an actual Railway deployment - 
 ## D16. GitHub Actions removed from the codebase entirely
 
 **Date:** 31 August 2026, 10:32 UTC
-**Status:** Done. Railway is now the only pipeline defined in this codebase - and is still not deployed anywhere live (see D15's "What is NOT verified" - nothing about that changed by this removal).
+**Status:** Done. Railway is now the only pipeline defined in this codebase - and is still not deployed anywhere live (see D15's "What is NOT verified" - nothing about that changed by this removal). *(Superseded: the Railway service has since been deployed and is live - see D15's 19 Oct 2026 update.)*
 
 ### What changed
 

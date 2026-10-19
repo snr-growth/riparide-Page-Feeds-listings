@@ -17,10 +17,13 @@ Deployed as a single always-on **Railway service** (`src/railway_service.py` +
 `railway.json`), independent of the actual Riparide site build. It previously
 ran on GitHub Actions, and before that on Railway in a different shape — see
 DECISIONS.md D12 for the first move and D15/D16 for the move back and why.
-**As of this writing the Railway service has never actually been deployed to
-live Railway infrastructure** — no Railway account/CLI/token exists in the
-environment that built it, so it's tested as far as possible short of that
-(see D15/D16) but genuinely unproven on real Railway hardware. GitHub Actions
+**The Railway service is live** at `https://feed-refresh-production.up.railway.app` (domain confirmed by
+SNR, 19 Oct 2026); its first unattended scheduled run succeeded on 1 Sep 2026
+(`last_run_ok: true`, per commit `0916ae2`). Feed URLs are that domain plus
+`/riparide-page-feed-core.csv`, `/riparide-page-feed-adventures.csv` and
+`/riparide-page-feed-report.xlsx`; `GET /` shows the last run's status. Cloud
+sessions may have Railway hosts blocked by their network policy, so a failed
+fetch from there says nothing about the service itself. GitHub Actions
 was removed from the codebase entirely on 31 August 2026; the exact rollback
 point is tagged `pre-railway-migration-github-actions-stable` on `main`.
 
@@ -143,14 +146,11 @@ insurance).
 
 Open items:
 
-1. **The Railway service has never been deployed to real Railway
-   infrastructure** (D15, D16) — no Railway account/CLI/token exists in the
-   environment that built it. It's tested as far as possible short of that
-   (17 unit tests, a live smoke test of the actual entrypoint process
-   including a genuine failed-run scenario), but a real deployment, a real
-   scheduled fire, and real Railway-runner reachability of riparide.com are
-   all still unverified. **This is the single most important thing to do
-   next**: deploy it (steps in `README.md`) and watch the first real run.
+1. **Confirm Google Ads is actually pointed at the Railway CSV URLs**
+   (`https://feed-refresh-production.up.railway.app/riparide-page-feed-core.csv` and `-adventures.csv`).
+   The service is deployed and ran successfully on 1 Sep 2026, but whether
+   the Ads account's page feed source has been switched to these URLs has
+   not been confirmed in this repo.
 2. **No failure-notification channel exists on Railway.** GitHub Actions
    used to email repo watchers automatically on any failed run (D11/D12) —
    nothing replaces that yet. A failed run is only visible by checking the

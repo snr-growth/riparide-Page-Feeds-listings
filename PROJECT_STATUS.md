@@ -1,6 +1,6 @@
 # Riparide Page Feed — Project Status
 
-**Last updated:** 31 August 2026 (moved off GitHub Actions onto a single Railway service — see 4.4, the deployment section, for the current, more complicated truth: the new setup is built and tested as far as possible, but not yet actually deployed on live Railway infrastructure)
+**Last updated:** 19 October 2026 (the Railway service is live at `https://feed-refresh-production.up.railway.app`; see 4.4). Previous update 31 August 2026: moved off GitHub Actions onto a single Railway service.
 **Purpose of this document:** a plain-language, accurate snapshot of this project for a client status update (Loom recording). Covers what was asked for, what's been built, how it runs today, and what's still open.
 
 ---
@@ -103,7 +103,7 @@ flowchart LR
 | **`.xlsx` report** (Summary, QA Checks, Label Taxonomy, both feeds as real sheets) | ✅ **New this session** — committed to the repo every run (`reports/`) and emailed, per your request |
 | Email report with CSVs + xlsx + snapshot attached | ✅ Built — kept as plain text by your choice (reviewed, judged not worth the polish for an ops-facing report); supports Resend API or SMTP, fails safely if unconfigured |
 | Unit test suite (115+ tests) + CI | ✅ Covers labelling, validation, attributes, location parsing, the robots.txt check, the xlsx report, and the Google Sheets integration (mocked, no live credentials needed) |
-| Scheduled + manual run | ⚠️ Built on Railway (`railway_service.py`), replacing GitHub Actions — but not yet deployed on real Railway infrastructure (see 4.4) |
+| Scheduled + manual run | ✅ Live on Railway (`railway_service.py`), replacing GitHub Actions — first unattended scheduled run succeeded 1 Sep 2026 (see 4.4) |
 | Pushed to `github.com/snr-growth/riparide-Page-Feeds-listings` | ✅ Done — on top of the real existing history, not a fresh/orphaned one |
 | **Google Sheets integration** (the Google-Ads-facing feed) | ✅ **New this session**, per your decision — writes the same feed data into a client-owned Sheet every run, auto-creates its tabs, keeps the Core tab pinned first (see §4.6). Code is done and tested; **needs your one-time setup before it does anything live** (§4.6). |
 
@@ -124,7 +124,15 @@ flowchart LR
     SERVE --> ADS["Google Ads\n(HTTP page-feed source, optional)"]
 ```
 
-**Not yet deployed on real Railway infrastructure.** Everything above is built and tested as far as possible without a Railway account: 17 new unit tests, a live smoke test of the actual entrypoint process (including a real failed run and a real HEAD-request bug found and fixed), and file-serving verified byte-identical against the real production snapshot. What it has **not** been tested against is an actual Railway deployment — no account, CLI, or token exists in the environment that built this. That needs someone with Railway account access to create the project, attach a volume, and set the service variables (exact steps in `README.md`).
+**Live on Railway (update, 19 Oct 2026).** The service is deployed at `https://feed-refresh-production.up.railway.app`, and its first unattended scheduled run succeeded on 1 September 2026. The feed files are at:
+
+- `https://feed-refresh-production.up.railway.app/riparide-page-feed-core.csv`
+- `https://feed-refresh-production.up.railway.app/riparide-page-feed-adventures.csv`
+- `https://feed-refresh-production.up.railway.app/riparide-page-feed-report.xlsx`
+
+Still to confirm: that Google Ads' page feed source has actually been pointed at the two CSV URLs. The paragraphs below describe the position before deployment and are kept for history.
+
+*Before deployment (31 August 2026):* Everything above is built and tested as far as possible without a Railway account: 17 new unit tests, a live smoke test of the actual entrypoint process (including a real failed run and a real HEAD-request bug found and fixed), and file-serving verified byte-identical against the real production snapshot. What it has **not** been tested against is an actual Railway deployment — no account, CLI, or token exists in the environment that built this. That needs someone with Railway account access to create the project, attach a volume, and set the service variables (exact steps in `README.md`).
 
 **One thing that was proven under GitHub Actions but is now an open question again:** whether Railway's specific runner network can reach riparide.com — this was true of GitHub Actions (5 confirmed live runs) and was true of Railway before the original 27 August migration away from it, but hasn't been re-confirmed for *this* new Railway setup specifically. The first real deploy needs to be watched to confirm it.
 
