@@ -78,6 +78,54 @@ class ParseTests(unittest.TestCase):
         self.assertTrue(rep["problems"])
 
 
+# The live feed's exact header (GitHub runner, 19 Oct 2026), with rows shaped
+# like the real ones seen there.
+LIVE_HEADER = ("id,title,description,availability,condition,product_type,price,price_in_dollars,"
+               "link,image_link,portrait_image_link,video_link,brand,location,additional_image_link,"
+               "custom_label_0,custom_label_1,custom_label_4,sale_price,sale_price_effective_date,"
+               "applink.ios_url,applink.ios_app_store_id,applink.ios_app_name")
+
+
+def _live_row(sid, slug, location, labels):
+    return ('story_%s,T,"A long, multi-line\ndescription, with commas",in stock,new,Story,150.0 AUD,'
+            '150.0,https://www.riparide.com/stories/%s-%s,,,,Authentic explorer,"%s",,'
+            'authentic_explorer,attractive,%s,,,https://www.riparide.com/stories/%s-%s,6471192765,Riparide'
+            % (sid, sid, slug, location, labels, sid, slug))
+
+
+LIVE_FEED = "\n".join([
+    LIVE_HEADER,
+    _live_row("62", "summer-heights", "Howqua, High Country, Victoria ",
+              "Space Out|Cozy Cabins|Pet Friendly Escapes|Soak It Up|By the Fireside"),
+    _live_row("47", "the-willows", "Anglers Rest, Victoria", "Latest Stories"),
+    _live_row("111", "hidden-valley", "Grose Vale Hawkesbury, Blue Mountains, New South Wales",
+              "Romantic Retreats|Outdoor Baths"),
+]) + "\n"
+
+
+class LiveShapeTests(unittest.TestCase):
+    def setUp(self):
+        self.by_id, self.rep = catalog.parse(LIVE_FEED, "VIC")
+
+    def test_live_header_is_recognised(self):
+        self.assertEqual(self.rep["problems"], [])
+        self.assertEqual(self.rep["usable"], 3)
+        self.assertEqual(self.rep["columns"]["collections"], "custom_label_4")
+        self.assertEqual(self.rep["columns"]["url"], "link")
+
+    def test_collections_give_intents(self):
+        self.assertEqual(self.by_id["62"]["intents"], ["INT_PET_FRIENDLY", "INT_OUTDOOR_BATH"])
+        self.assertEqual(self.by_id["111"]["intents"], ["INT_ROMANTIC", "INT_OUTDOOR_BATH"])
+        self.assertNotIn("intents", self.by_id["47"])
+
+    def test_region_from_three_part_location_only(self):
+        self.assertEqual(self.by_id["62"]["region"], "REG_HIGH_COUNTRY")
+        self.assertNotIn("region", self.by_id["47"])           # "Town, State" has no region
+
+    def test_no_stay_type_from_this_feed(self):
+        self.assertTrue(all("stay" not in r for r in self.by_id.values()))
+
+
 class LoadTests(unittest.TestCase):
     def setUp(self):
         self._orig = fetcher.get

@@ -145,6 +145,7 @@ def main(argv=None):
             loc = summary["location"]
             log("location: %d row(s) filled, %d cached, %d still without"
                 % (loc["applied"], loc["cached_total"], loc["still_without_location"]))
+            log("stories linked to their featured listing: %d" % loc.get("stories_linked", 0))
             if loc.get("unmapped_stay_wordings"):
                 log("stay-type wordings seen in titles but not in the subcategory list: %s"
                     % ", ".join("%s (%d)" % (k, v)

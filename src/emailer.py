@@ -158,6 +158,7 @@ def build_report(summary):
         if loc.get("deferred"):
             L.append("  Deferred to next run: %d (above the per-run cap)" % loc["deferred"])
         L.append("  Still without location: %d" % loc.get("still_without_location", 0))
+        L.append("  Stories given their featured listing's stay type: %d" % loc.get("stories_linked", 0))
         um = loc.get("unmapped_stay_wordings") or {}
         if um:
             L.append("  Stay-type wordings seen in titles that are not in the")

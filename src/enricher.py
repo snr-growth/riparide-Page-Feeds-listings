@@ -44,6 +44,20 @@ COUNTRY_TOKENS = {"AU": "GEO_AU", "NZ": "GEO_NZ", "US": "GEO_US"}
 STATE_TOKENS = {"VIC": "GEO_VIC", "NSW": "GEO_NSW", "WA": "GEO_WA", "OR": "GEO_OR"}
 
 _TITLE = re.compile(r"<title>(.*?)</title>", re.S | re.I)
+
+# A story page features exactly one listing, the stay the story is about: its
+# "View Listing" button and the page's embedded data ("listing":{"id":N)
+# both name it. Checked on six live story pages from a GitHub runner on
+# 19 Oct 2026. Every other /listings/ link on the page is a "more stays"
+# suggestion that appears once, so neither pattern can pick one of those.
+_FEATURED_LISTING = re.compile(r'"listing":\{"id":(\d+)')
+_VIEW_LISTING = re.compile(r'href="/listings/(\d+)-[^"]*"[^>]*>View Listing<')
+
+
+def featured_listing_id(body):
+    """The id of the listing a story page is about, or None."""
+    m = _FEATURED_LISTING.search(body or "") or _VIEW_LISTING.search(body or "")
+    return m.group(1) if m else None
 # " - <Stay type> for Rent in " or " - Adventure by <name> in ". The prefix is
 # matched greedily so this lands on the LAST " in " in the title. A listing is
 # free to have " in " inside its own name, as "Cozy Cabin in Brownsbay" and
@@ -170,6 +184,14 @@ def fetch_location(url):
         return {}
     m = _TITLE.search(body)
     out = parse_title(m.group(1)) if m else {}
+    if "/stories/" in url:
+        # Recorded even when no listing is found, so a story without one is
+        # not re-read every run. A failed fetch returns {} above instead,
+        # which leaves it to be tried again next run.
+        out["story_link_checked"] = True
+        lid = featured_listing_id(body)
+        if lid:
+            out["listing_id"] = lid
     if out:
         out["parser"] = PARSER_VERSION
     return out
@@ -221,6 +243,37 @@ def heal_regions(cache):
     return n
 
 
+def link_stories(rows, cache):
+    """Give each story the stay type of the listing it features.
+
+    A story's URL is a headline and its title has no "X for Rent", so the
+    featured listing's own category is the only stay type the site gives it.
+    That replaces any slug guess. The listing's intents and location only
+    fill blanks, then the boundary is recomputed. Returns the number linked.
+    """
+    by_id = {labeller.listing_id(r["url"]): r for r in rows if r["page_type"] == "PAGE_LISTING"}
+    linked = 0
+    for r in rows:
+        if r["page_type"] != "PAGE_STORY":
+            continue
+        listing = by_id.get((cache.get(r["url"]) or {}).get("listing_id"))
+        if not listing:
+            continue
+        r["stay"] = listing["stay"] or r["stay"]
+        for k in ("country", "state", "region"):
+            r[k] = r[k] or listing[k]
+        for lab in (listing["intent1"], listing["intent2"]):
+            if not lab or lab in (r["intent1"], r["intent2"]):
+                continue
+            if not r["intent1"]:
+                r["intent1"] = lab
+            elif not r["intent2"]:
+                r["intent2"] = lab
+        r["boundary"] = labeller.boundary_for(r)
+        linked += 1
+    return linked
+
+
 def enrich(rows, limit=None, log=print, cache_path=None):
     """Fill location on listing and story rows.
 
@@ -247,6 +300,13 @@ def enrich(rows, limit=None, log=print, cache_path=None):
         log("re-reading %d page(s) whose stay type or region needs a fresh parse" % len(stale))
 
     todo = [r["url"] for r in targets if r["url"] not in cache]
+    # Stories cached before the featured-listing link was recorded are read
+    # once more. Their cached location is kept if that read fails.
+    relink = [r["url"] for r in targets if r["page_type"] == "PAGE_STORY"
+              and r["url"] in cache and not (cache[r["url"]] or {}).get("story_link_checked")]
+    if relink:
+        log("re-reading %d story page(s) to record the listing each one features" % len(relink))
+    todo += relink
 
     capped = 0
     if limit is not None and len(todo) > limit:
@@ -264,7 +324,8 @@ def enrich(rows, limit=None, log=print, cache_path=None):
         done = 0
         with ThreadPoolExecutor(max_workers=cfg.STATUS_CHECK_WORKERS) as pool:
             for u, loc in pool.map(work, todo):
-                cache[u] = loc
+                if loc or u not in cache:
+                    cache[u] = loc
                 done += 1
                 if done % 250 == 0:
                     log("  read %d/%d" % (done, len(todo)))
@@ -296,9 +357,12 @@ def enrich(rows, limit=None, log=print, cache_path=None):
         r["notes"] = "location read from the page"
         applied += 1
 
+    linked = link_stories(rows, cache)
+
     still = sum(1 for r in rows
                 if r["page_type"] in ("PAGE_LISTING", "PAGE_STORY") and not r["country"])
     return {"targets": len(targets), "fetched": len(todo), "applied": applied,
+            "stories_linked": linked,
             "deferred": capped, "cached_total": len(cache),
             "still_without_location": still,
             "unmapped_stay_wordings": dict(sorted(unmapped.items(), key=lambda x: -x[1])[:15])}

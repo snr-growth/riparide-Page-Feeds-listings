@@ -268,6 +268,67 @@ class EnrichCacheStalenessTests(unittest.TestCase):
         enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
         self.assertEqual(rows[0]["stay"], "TYPE_COTTAGE")
 
+    # Trimmed from the live /stories/47-the-willows page, 19 Oct 2026.
+    STORY_HTML = (
+        '<title>The Willows | Riparide</title>'
+        '<a href="/listings/220-the-willows-cattlemen-s-log-hut?story_id=47" class="B">View Listing</a>'
+        '<a href="/conversations?listing_id=220">Ask a Question</a>'
+        '<a href="/listings/490-bushies-love-shack">more</a><a href="/listings/13613-x">more</a>'
+        '"listing":{"id":220,"title":"The Willows - Cattlemen\'s Log Hut"')
+
+    def test_featured_listing_id_is_the_story_listing_not_a_suggestion(self):
+        self.assertEqual(enricher.featured_listing_id(self.STORY_HTML), "220")
+        button_only = self.STORY_HTML.split('"listing":')[0]
+        self.assertEqual(enricher.featured_listing_id(button_only), "220")
+        self.assertIsNone(enricher.featured_listing_id('<a href="/listings/490-x">more</a>'))
+
+    def test_story_takes_featured_listing_stay_type_and_intents(self):
+        story = "https://www.riparide.com/stories/47-the-willows"
+        listing = "https://www.riparide.com/listings/220-the-willows-romantic-log-hut"
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({
+                story: {"country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+                        "story_link_checked": True, "listing_id": "220",
+                        "parser": enricher.PARSER_VERSION},
+                listing: {"country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+                          "stay": "TYPE_CABIN", "parser": enricher.PARSER_VERSION}}, f)
+        fetcher.get = mock.Mock(side_effect=AssertionError("all cached, must not fetch"))
+        rows = [labeller.label_url(story, "stories"), labeller.label_url(listing, "listings")]
+        out = enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+        self.assertEqual(rows[0]["stay"], "TYPE_CABIN")
+        self.assertEqual(rows[0]["intent1"], "INT_ROMANTIC")       # from the listing's slug
+        self.assertEqual(rows[0]["boundary"], "SEARCH_HEAD")
+        self.assertEqual(out["stories_linked"], 1)
+
+    def test_old_story_cache_entry_is_re_read_once_for_its_link(self):
+        story = "https://www.riparide.com/stories/47-the-willows"
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({story: {"country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+                               "parser": enricher.PARSER_VERSION}}, f)
+        fetcher.get = mock.Mock(return_value=self.STORY_HTML)
+        rows = [labeller.label_url(story, "stories")]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+        self.assertEqual(fetcher.get.call_count, 1)
+        with open(self.cache_path, encoding="utf-8") as f:
+            saved = json.load(f)[story]
+        self.assertEqual((saved["listing_id"], saved["story_link_checked"]), ("220", True))
+        # Second run: already checked, so no fetch.
+        fetcher.get = mock.Mock(side_effect=AssertionError("must not re-read"))
+        enricher.enrich([labeller.label_url(story, "stories")], log=lambda *a: None,
+                        cache_path=self.cache_path)
+
+    def test_failed_re_read_keeps_the_cached_location(self):
+        story = "https://www.riparide.com/stories/47-the-willows"
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({story: {"country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+                               "parser": enricher.PARSER_VERSION}}, f)
+        fetcher.get = mock.Mock(side_effect=fetcher.FetchError("HTTP 403"))
+        rows = [labeller.label_url(story, "stories")]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+        self.assertEqual(rows[0]["region"], "REG_HIGH_COUNTRY")
+        with open(self.cache_path, encoding="utf-8") as f:
+            self.assertEqual(json.load(f)[story]["region"], "REG_HIGH_COUNTRY")
+
     def test_parse_title_gives_the_hub_label_for_a_macron_region(self):
         out = enricher.parse_title("Lakeside Cabin - Cabin for Rent in Taupō, NZ | Riparide")
         self.assertEqual(out["region"], "REG_TAUPO")

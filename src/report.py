@@ -84,6 +84,7 @@ def _summary_sheet(wb, summary):
             ("Pages read this run", loc.get("fetched", 0)),
             ("Cached in total", loc.get("cached_total", 0)),
             ("Still without location", loc.get("still_without_location", 0)),
+            ("Stories linked to their featured listing", loc.get("stories_linked", 0)),
         ])
 
     c = summary.get("catalog") or {}

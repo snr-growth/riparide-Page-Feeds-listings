@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Stay type, region and intent for stories, from Riparide's own stories feed.
+"""Intent and region for stories, from Riparide's own stories feed.
 
-A story's URL is a headline ("cosy-cubby-in-the-hills") and its page title
-carries no "X for Rent" wording, so neither says what kind of stay it is. The
-platform's open stories feed does: stories are products there, each with a
-category, region and pet_friendly flag. See config.CATALOG_STORIES_PATH.
+The live feed (header read from a GitHub runner, 19 Oct 2026) is a catalog
+feed: id ("story_47"), link, location ("Halls Gap, Grampians, Victoria") and
+custom_label_4, the platform's own collections the story belongs to, joined
+with "|" ("Cozy Cabins|Pet Friendly Escapes|By the Fireside"). It has no
+stay-type column. A story's stay type comes from the listing it features
+instead (enricher.link_stories). See config.CATALOG_STORIES_PATH.
 
 Rows are keyed by story id in a table of their own, so a story can never pick
 up a listing's data just because the two share a number.
@@ -30,6 +32,8 @@ ALIASES = {
     "region": ["region", "regionname"],
     "pet_friendly": ["petfriendly", "pets", "petsallowed", "dogfriendly"],
     "amenities": ["amenities", "amenity", "features", "facilities"],
+    "collections": ["customlabel4", "collections"],
+    "location": ["location"],
 }
 
 TRUE_VALUES = {"true", "1", "yes", "y", "t"}
@@ -92,8 +96,9 @@ def parse(text, market):
         report["problems"].append("%s: no story url or id column, saw: %s"
                                   % (market, ", ".join(reader.fieldnames or [])))
         return {}, report
-    if not ({"category", "pet_friendly", "amenities", "region"} & set(cols)):
-        report["problems"].append("%s: no category, region, pet_friendly or amenities column, saw: %s"
+    if not ({"category", "pet_friendly", "amenities", "region", "collections", "location"} & set(cols)):
+        report["problems"].append("%s: no category, region, location, pet_friendly, amenities or "
+                                  "collections column, saw: %s"
                                   % (market, ", ".join(reader.fieldnames or [])))
         return {}, report
 
@@ -115,16 +120,25 @@ def parse(text, market):
                 um = report["unmapped_categories"]
                 um[category] = um.get(category, 0) + 1
 
-        if "region" in cols:
-            rg = (raw.get(cols["region"]) or "").strip()
-            if rg:
-                rec["region"] = labeller.region_label(labeller.region_slug(rg), country, state)
+        rg = (raw.get(cols["region"]) or "").strip() if "region" in cols else ""
+        if not rg and "location" in cols:
+            # "Town, Region, State": the region is the part before the state.
+            # "Town, State" carries no region and is left alone.
+            parts = [p.strip() for p in (raw.get(cols["location"]) or "").split(",") if p.strip()]
+            if len(parts) >= 3:
+                rg = parts[-2]
+        if rg:
+            rec["region"] = labeller.region_label(labeller.region_slug(rg), country, state)
 
         ints = []
         if "pet_friendly" in cols and _norm(raw.get(cols["pet_friendly"])) in TRUE_VALUES:
             ints.append("INT_PET_FRIENDLY")
-        if "amenities" in cols:
-            text_a = (raw.get(cols["amenities"]) or "").lower().replace("-", " ")
+        # Amenities and collection names are both matched on the same intent
+        # keywords as URLs are, so "Pet Friendly Escapes" or "Outdoor Baths"
+        # gives the same label the matching collection page carries.
+        text_a = " | ".join((raw.get(cols[k]) or "") for k in ("amenities", "collections") if k in cols)
+        if text_a:
+            text_a = text_a.lower().replace("-", " ")
             for keyword, label in cfg.INTENT_KEYWORDS:
                 if keyword.replace("-", " ") in text_a and label not in ints:
                     ints.append(label)
