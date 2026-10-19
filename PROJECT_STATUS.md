@@ -179,8 +179,8 @@ The client checked the live feed and raised six points. Each was checked against
 | # | Point raised | Status |
 |---|---|---|
 | 1 | Collections barely tagged | ✅ **Fixed.** 14 town collections now carry their region, checked against the region on every listing in that town. `top-stays-beach-houses` is now a beach house. Outdoor-bath, soak-it-up and under-the-stars collections have intent labels. Most of the other 70+ collections are state-wide themes that correctly have no single region. |
-| 2 | Region search pages missing | ✅ **Added**, 69 search pages: Blue Mountains and every other region, all-VIC and the other scopes, and pet-friendly with and without a state. ⚠️ The exact URL formats still need confirming against real Google Ads landing pages. |
-| 3 | Stories barely labelled | ✅ **Built.** Stories now take their stay type, pet-friendly flag and amenities from Riparide's own stories feed, read on every run. ⚠️ The feed's columns have not been seen yet. The first live run's report will show whether they were recognised. |
+| 2 | Region search pages missing | ✅ **Added and checked on the live site.** 70 search pages: Blue Mountains and every other region, all-VIC and the other scopes, and pet-friendly with and without a state. All return 200. The site honours the filters: the Blue Mountains search is titled "Stays in Blue Mountains, New South Wales", and a made-up region returns no stays. |
+| 3 | Stories barely labelled | ✅ **Fixed and checked on the live site.** Each story page features one listing, and the story now takes that listing's stay type: **1,052 of 1,087 stories (97%) now have one, up from 260**. Intents come from the Riparide collections each story belongs to, such as Pet Friendly Escapes or Outdoor Baths: 605 stories now have one. ⚠️ 334 AU stories are now `SEARCH_HEAD` (pet-friendly, romantic or getaway), up from 55, so under Option B they would leave PMax. |
 | 4 | `SEARCH_HEAD` covers NSW pet and romantic collections | ⚠️ **Decision for the client.** Under Option B these leave PMax. Nothing changed. |
 | 5 | Listing URLs change | ✅ **Already handled.** Matching uses the listing id. |
 | 6 | Duplicate NZ region labels | ✅ **Fixed**, plus five more regions whose listing titles used a different name from their region page. About 160 listings were affected. |
@@ -201,7 +201,7 @@ Riparide's site fingerprints and blocks common tools (`requests`, `curl`) even w
 
 - Confirm whether facet pages should really be tagged `SEARCH_HEAD` by stay type (tiny house, cabin, glamping, cottage) — this wasn't in the spec and needs a yes/no before the Option A/B split goes live.
 - **Decide whether the NSW pet-friendly and romantic collections stay in PMax** (§5b point 4).
-- **Send a few real Google Ads landing-page URLs** for region and pet-friendly searches, so the new search-page formats can be confirmed (§5b point 2).
+- **Decide whether stories should follow the `SEARCH_HEAD` rule.** 334 AU stories are now `SEARCH_HEAD`, including 114 that get "getaway" from the Family Getaways collection (§5b point 3).
 - Confirm whether Adventures pages should have their own feed/asset-group treatment, since this wasn't part of the original spec.
 - Confirm ownership/timing for the still-manual steps: brand negatives, asset-group restructuring around labels, and the URL-expansion account setting — none of these are things this codebase can do.
 - **Watch the first real GitHub Actions run.** Everything above is verified by code and tests running locally; the one thing that can only be confirmed by actually watching a live scheduled or manually-triggered run is whether GitHub's infrastructure can reach riparide.com the way Railway's did.

@@ -389,7 +389,7 @@ Each change below is covered by tests and was checked by an offline run over the
 - **Cached labels heal without a fetch.** `enricher.heal_regions` rewrites a stale cached label from its stored `region_name`. The existing re-read path skipped those entries because their `parser` version was already current.
 - **Stay type precedence is now supplied file > page title > URL slug.** The slug match used to win, and 630 of 3,467 listings carried a slug guess that contradicted the site's own "X for Rent" category. The supplied file overrides only on listings, because it is keyed by listing id and a story or adventure can share the number.
 - **Collection tags.** `beach house` and `train carriage` match as whole words in a slug, so `top-stays-beach-houses` is `TYPE_BEACH_HOUSE`. Bare words like `hotel` or `cave` are left to the title. New intents `INT_OUTDOOR_BATH` (outdoor-bath, soak-it-up) and `INT_STARGAZING` (under-the-stars, stargazing) go last in `INTENT_KEYWORDS`, so they never displace a `SEARCH_HEAD` intent, and they are not `SEARCH_HEAD`.
-- **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Unverified:** a parameter the site ignores still returns 200, so the exact formats need confirming against real landing-page URLs from Google Ads.
+- **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Verified live (D18):** all return 200, and the site honours the parameters, because the page title names the region or "Pet friendly" and a made-up region returns no stays.
 
 ### Still open, needs client input
 - ~~Region labels for the town collections~~ and ~~stay type and intent for stories~~: both done, see D18.
@@ -416,3 +416,26 @@ Collections with a region went from 5 to 19 of 93. The rest are state-wide theme
 - **Markets:** `VIC,NSW` (`FEED_CATALOG_MARKETS`), the only codes seen in the API samples.
 
 **Unverified:** this environment cannot reach riparide.com (DNS fails, and the office IP is Cloudflare-blocked, D7), so the CSV's real header has not been seen. The column matching accepts the API's JSON field names and common variants (`catalog.ALIASES`). A fetch error, an HTML block page or an unrecognised header is recorded under "Stories feed" in the run email and report, and the run carries on with the stories as they were. Tests cover each of those paths. Check the first live run's report.
+
+### D18 update: what the live site showed (19 Oct 2026, GitHub runner dry runs)
+
+The stories-feed design above was built blind and was wrong about the feed's shape. Checked from GitHub runners, which riparide.com does not block, using temporary `verify-live-*` branches that were deleted afterwards:
+
+- **The stories feed is a catalog feed, not the product API.** Its header is `id` ("story_47"), `link`, `location` ("Halls Gap, Grampians, Victoria"), `custom_label_0/1/4` and some others. There is no `category` column. `custom_label_4` lists the platform collections the story belongs to, joined with "|". The first version correctly reported "no category ... column" and changed nothing. `catalog.py` now takes intents from those collections and the region from `location`.
+- **The product API, which does have `category`, needs the client's Bearer token** (401). The "open" JSON endpoints `/public_api/stories` and `/public_api/listings` return 500. Neither was used.
+- **Story stay type comes from the featured listing instead.** Every story page features exactly one listing: its "View Listing" button and its embedded `"listing":{"id":N}` both name it, and the page's other listing links are one-off suggestions. `enricher.fetch_location` records it as `listing_id`, and `enricher.link_stories` gives the story that listing's stay type, which is the site's own category. The listing's intents and location only fill blanks, and the boundary is recomputed. Stories cached before this are re-read once, and a failed re-read keeps the cached location. This is the story-to-listing mapping the client suggested, taken from the site itself.
+
+**Full live dry run** of `main` plus this change: 4,912 core rows, every validation check passing.
+
+| | Before | After |
+|---|---|---|
+| Stories with a stay type | 260 of 1,080 | 1,052 of 1,087 (97%) |
+| Stories with an intent | about 133 | 605 |
+| Stories linked to a featured listing | 0 | 1,041 |
+| Stories feed rows matched | 0 | 856 of 857 |
+| AU stories with `SEARCH_HEAD` | 55 | 334 |
+| Collections with a region | 5 | 19 |
+| Search pages returning 200 | not built | 70 of 70 |
+| Duplicate NZ region labels | 4 pairs | 0 |
+
+Story intents: outdoor bath 200, pet-friendly 188, getaway 114 (mostly the Family Getaways collection), romantic 102, luxury 77. The `SEARCH_HEAD` rise follows the existing rule (pet-friendly, romantic, getaway and off-grid count as `SEARCH_HEAD`). Under Option B it takes 334 stories out of PMax, so it has been raised with the client rather than assumed.

@@ -22,9 +22,9 @@ specifically want that path instead.
 | 1 | Fetch the sitemap index and its six child sitemaps |
 | 2 | Compare against last month's stored snapshot |
 | 3 | Label every URL across the six taxonomy dimensions, then add the built stay-type facet URLs and search-page URLs (`PAGE_SEARCH`: all stays, pet-friendly, one per region) |
-| 4 | Read location from each listing and story page, cached after the first read |
+| 4 | Read location from each listing and story page, cached after the first read. A story page also names the one listing it features, and the story takes that listing's stay type |
 | 5 | Merge an optional supplied attributes file |
-| 5b | Read Riparide's open stories feed (`/public_api/stories.csv`) for each market and take each story's stay type, pet-friendly flag and amenities from it. A failed fetch is reported and the run carries on |
+| 5b | Read Riparide's open stories feed (`/public_api/stories.csv`) for each market and take each story's intents from the platform collections it belongs to (Pet Friendly Escapes, Outdoor Baths and so on). A failed fetch is reported and the run carries on |
 | 6 | Status check the changed URLs plus every facet and search URL, and drop anything that is not 200 |
 | 7 | Run the validation checks |
 | 8 | Write both CSV files, then the `.xlsx` report — these get served directly at stable URLs by the Railway service (see Deployment) |
@@ -47,7 +47,7 @@ src/
   labeller.py    URL to the six taxonomy dimensions
   enricher.py    reads location out of listing and story pages
   attributes.py  optional supplied attributes file
-  catalog.py     stay type and intent for stories, from the platform's stories feed
+  catalog.py     intents and region for stories, from the platform's stories feed
   store.py       snapshot storage and the month to month diff
   validator.py   the pre upload checks
   writer.py      CSV output (client-shared format)

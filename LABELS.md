@@ -57,9 +57,9 @@ advertise.
 | `TYPE_...` | Plus 17 more of your site's own filter categories (barn, farm, lodge, villa, yurt, and so on) |
 | `TYPE_BEACH_HOUSE`, `TYPE_HOUSEBOAT`, etc. | A handful of stay types that don't match your 22 standard categories get their own honest label instead of being forced into the nearest match |
 
-Listings take their stay type from the category on their own page. Stories
-take it from Riparide's own stories data, because a story's headline doesn't
-say what kind of stay it is.
+Listings take their stay type from the category on their own page. A story
+takes the stay type of the listing it is written about, because a story's
+headline doesn't say what kind of stay it is.
 
 Anything genuinely new that doesn't match an existing label gets flagged for
 review rather than guessed at.
@@ -67,7 +67,9 @@ review rather than guessed at.
 ## Intent — what kind of trip it is
 
 This is the tag that captures *why* someone wants this specific stay, pulled
-from the wording already used in the page's own title or URL:
+from the wording already used in the page's own title or URL. Stories also
+get it from the Riparide collections they belong to, so a story in "Pet
+Friendly Escapes" is tagged pet-friendly:
 
 | Code | Meaning |
 |---|---|

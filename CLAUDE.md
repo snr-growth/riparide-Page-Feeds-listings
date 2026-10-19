@@ -185,11 +185,12 @@ Open items:
    Sheet) is not confirmed anywhere in Google's docs** (D14) — check the
    Business Data feed's schedule setting once the connection exists, don't
    assume it matches any figure from this file.
-10. **The stories feed's real CSV header has never been seen** (D18). This
-   environment can't reach riparide.com, so `catalog.py` was built against
-   the product fields in the API's JSON sample. Check the first Railway
-   run's "Stories feed" section: if it says "no story url or id column" or
-   "no category ...", add the real column names to `catalog.ALIASES`.
-11. **`PAGE_SEARCH` URL formats are unconfirmed** (D17). A redirect or
-   error drops a URL, but a parameter the site ignores still returns 200.
-   Confirm against real Google Ads landing-page URLs.
+10. **Live checks run from GitHub runners, not this machine** (D18). This
+   machine can't reach riparide.com. To check something against the live
+   site, push a temporary `verify-live-*` branch carrying a workflow that
+   does a `--dry-run`, read its log with `gh run view --log`, then delete
+   the branch. Never merge such a workflow to `main`: D16 removed Actions.
+11. **If the stories feed changes shape,** the run's "Stories feed" section
+   says "no story url or id column" or "no category, region, location ..."
+   and stories keep their other labels. Add the new column names to
+   `catalog.ALIASES`.

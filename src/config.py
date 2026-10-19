@@ -233,12 +233,14 @@ POI_REGION = {
 
 # ---------------------------------------------------------------- catalog
 # Riparide's open (no-auth) stories feed, documented in the client's Public
-# API Postman collection as /public_api/stories.csv?market={code}. Stories
-# are products there, with the platform's own category (stay type), region
-# and pet_friendly, none of which a story's URL or title carries. Market
-# codes are the ones seen in the API samples (VIC, NSW); others are unknown,
-# and NZ and US are held anyway. A failed fetch or an unrecognised header is
-# reported and the run carries on without it.
+# API Postman collection as /public_api/stories.csv?market={code}. Read live
+# from a GitHub runner on 19 Oct 2026: a catalog feed whose custom_label_4
+# lists the platform's own collections per story (intents) and whose
+# location gives the region. It has no stay-type column; stay type comes
+# from each story's featured listing (enricher.link_stories). Market codes
+# are the ones seen in the API samples (VIC, NSW); NZ and US are held
+# anyway. A failed fetch or an unrecognised header is reported and the run
+# carries on without it.
 CATALOG_STORIES_PATH = "/public_api/stories.csv?market=%s"
 CATALOG_MARKETS = [m.strip() for m in os.environ.get("FEED_CATALOG_MARKETS", "VIC,NSW").split(",")
                    if m.strip()]
