@@ -121,6 +121,12 @@ class ApplyTests(unittest.TestCase):
         attributes.apply([row], {"1": {"stay": "TYPE_CABIN"}})
         self.assertEqual(row["stay"], "TYPE_CABIN")
 
+    def test_new_pet_friendly_intent_moves_listing_to_search_head(self):
+        row = self._row("https://www.riparide.com/listings/1-x")
+        row["boundary"] = "PMAX_LONGTAIL"
+        attributes.apply([row], {"1": {"country": "GEO_AU", "intents": ["INT_PET_FRIENDLY"]}})
+        self.assertEqual(row["boundary"], "SEARCH_HEAD")
+
     def test_listing_id_never_overrides_a_story_stay_type(self):
         # Story 1 and listing 1 are different pages sharing a number.
         row = self._row("https://www.riparide.com/stories/1-x", "PAGE_STORY")

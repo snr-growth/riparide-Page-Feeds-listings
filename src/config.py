@@ -206,7 +206,43 @@ POI_REGION = {
     "kangaroo-valley": "REG_SOUTH_COAST_NSW",
     "mudgee": "REG_COUNTRY_NSW",
     "byron-bay": "REG_NORTH_COAST_NSW",
+    # Town collections added Oct 2026 at the client's request. Each was
+    # checked against the platform's own data: every listing whose URL names
+    # the town carries this region in its own page title (location cache,
+    # count in brackets), and the products API sample has Lorne in Great
+    # Ocean Road. No town had a single listing in any other region.
+    "bellingen": "REG_NORTH_COAST_NSW",        # (9)
+    "jervis-bay": "REG_SOUTH_COAST_NSW",       # (5)
+    "kiama": "REG_SOUTH_COAST_NSW",            # (4)
+    "jindabyne": "REG_SNOWY_MOUNTAINS",        # (1)
+    "katoomba": "REG_BLUE_MOUNTAINS",          # (3)
+    "apollo-bay": "REG_GREAT_OCEAN_ROAD",      # (12)
+    "lorne": "REG_GREAT_OCEAN_ROAD",           # (6)
+    "torquay": "REG_GREAT_OCEAN_ROAD",         # (12)
+    "bright": "REG_HIGH_COUNTRY",              # (7)
+    "sorrento": "REG_MORNINGTON_PENINSULA",    # (11)
+    "wilson-s-prom": "REG_GIPPSLAND",          # (14, listings naming the Prom)
+    # NZ, same check. NZ is held (NZ_REVIEW), so these only matter once it
+    # is released. The other NZ place collections (mangawhai, the falls
+    # collections, gollums-pool-stays) had no listing evidence and are left
+    # blank rather than guessed.
+    "matakana": "REG_AUCKLAND",                # (5)
+    "raglan": "REG_HAMILTON_WAIKATO",          # (5)
+    "lake-rotorua": "REG_ROTORUA",             # the /nz/rotorua hub itself
 }
+
+# ---------------------------------------------------------------- catalog
+# Riparide's open (no-auth) stories feed, documented in the client's Public
+# API Postman collection as /public_api/stories.csv?market={code}. Stories
+# are products there, with the platform's own category (stay type), region
+# and pet_friendly, none of which a story's URL or title carries. Market
+# codes are the ones seen in the API samples (VIC, NSW); others are unknown,
+# and NZ and US are held anyway. A failed fetch or an unrecognised header is
+# reported and the run carries on without it.
+CATALOG_STORIES_PATH = "/public_api/stories.csv?market=%s"
+CATALOG_MARKETS = [m.strip() for m in os.environ.get("FEED_CATALOG_MARKETS", "VIC,NSW").split(",")
+                   if m.strip()]
+CATALOG_MARKET_GEO = {"VIC": ("GEO_AU", "GEO_VIC"), "NSW": ("GEO_AU", "GEO_NSW")}
 
 # ---------------------------------------------------------------- feeds
 FEED_CORE = "CORE"

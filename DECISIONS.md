@@ -392,7 +392,27 @@ Each change below is covered by tests and was checked by an offline run over the
 - **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Unverified:** a parameter the site ignores still returns 200, so the exact formats need confirming against real landing-page URLs from Google Ads.
 
 ### Still open, needs client input
-- Region labels for the town collections (apollo-bay, lorne, katoomba, kiama, jervis-bay, bright, jindabyne, plus bellingen, sorrento, torquay and wilson-s-prom). `POI_REGION` only takes confirmed mappings.
-- Stay type and intent for stories. Their titles carry neither, so this needs a story-to-listing mapping or an attributes file.
+- ~~Region labels for the town collections~~ and ~~stay type and intent for stories~~: both done, see D18.
 - Whether the NSW pet and romantic collections stay in PMax under Option B.
 - The attributes file is keyed by listing id, but stories and adventures are looked up by their own id in the same table. When the file arrives, it needs a page-type column, or the stories and adventures must be left out of it.
+
+## D18. Town collection regions, and story labels from the platform's stories feed (Oct 2026)
+
+**Town collections.** The client asked for the town collections to carry their region. `POI_REGION` only takes mappings the platform's own data confirms, so each town was checked first: every listing whose URL names the town carries that region in its own page title (location cache). No town had a single listing in any other region. The products API sample also has Lorne in Great Ocean Road. The counts are in `config.POI_REGION` next to each entry.
+
+- AU (11): bellingen, jervis-bay, kiama, jindabyne, katoomba, apollo-bay, lorne, torquay, bright, sorrento, wilson-s-prom.
+- NZ (3): matakana (Auckland), raglan (Hamilton Waikato), lake-rotorua (Rotorua). NZ is held, so these only matter once it is released.
+- Left blank, no evidence: mangawhai, gollums-pool-stays and the falls collections (okere, otuihau-whangarei, owharoa, wairere).
+
+Collections with a region went from 5 to 19 of 93. The rest are state-wide themes (cozy cabins, host offers, under $150 and so on) that correctly have no single region.
+
+**Stories.** A story's URL is a headline and its title has no "X for Rent", so 820 of 1,080 stories had no stay type. No mapping was needed. The client's Public API Postman collection documents an open, no-auth stories feed, `/public_api/stories.csv?market={code}`, and the product JSON sample shows stories are products with their own `category` ("Tiny house"), `region` and `pet_friendly`. `catalog.py` reads it on every run (step 5b):
+
+- **Stay type:** from `category`, matched to the facet list or `EXTRA_STAY_WORDINGS`. This replaces the slug guess. An unknown wording is reported, not guessed.
+- **Intent:** `pet_friendly` gives `INT_PET_FRIENDLY`, and the amenities text is matched against `INTENT_KEYWORDS`. Intents go into empty slots only, so slug intents are never displaced.
+- **Location:** fills blanks only, because a story's own page title is already the platform's location.
+- **Boundary:** recomputed by `labeller.boundary_for`, so a story that gains a pet-friendly intent moves to `SEARCH_HEAD` like any other. `attributes.apply` had the same gap (it added intents but never recomputed `SEARCH_HEAD`) and now uses the same function.
+- **Matching:** keyed by story id in its own table, so a story never picks up a listing's data.
+- **Markets:** `VIC,NSW` (`FEED_CATALOG_MARKETS`), the only codes seen in the API samples.
+
+**Unverified:** this environment cannot reach riparide.com (DNS fails, and the office IP is Cloudflare-blocked, D7), so the CSV's real header has not been seen. The column matching accepts the API's JSON field names and common variants (`catalog.ALIASES`). A fetch error, an HTML block page or an unrecognised header is recorded under "Stories feed" in the run email and report, and the run carries on with the stories as they were. Tests cover each of those paths. Check the first live run's report.

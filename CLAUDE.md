@@ -166,7 +166,10 @@ Open items:
    already covers most location needs from page titles, confirm with the
    client/SNR whether this file is still needed, and if so, whoever supplies
    it can now do so as a normal commit/PR to this repo instead of needing
-   platform-level file access.
+   platform-level file access. **Before it is used:** it is keyed by
+   listing id, but `attributes.apply` looks stories and adventures up in the
+   same table by their own id (D17). It needs a page-type column, or the
+   stories and adventures must be left out of it.
 5. **`config.SEARCH_HEAD_TYPES` is an unconfirmed inference** (D8) — needs an
    explicit answer from SNR/the client before the Option A/B split goes live.
 6. **Past months' `.xlsx` reports are no longer kept in git history.** Under
@@ -182,3 +185,11 @@ Open items:
    Sheet) is not confirmed anywhere in Google's docs** (D14) — check the
    Business Data feed's schedule setting once the connection exists, don't
    assume it matches any figure from this file.
+10. **The stories feed's real CSV header has never been seen** (D18). This
+   environment can't reach riparide.com, so `catalog.py` was built against
+   the product fields in the API's JSON sample. Check the first Railway
+   run's "Stories feed" section: if it says "no story url or id column" or
+   "no category ...", add the real column names to `catalog.ALIASES`.
+11. **`PAGE_SEARCH` URL formats are unconfirmed** (D17). A redirect or
+   error drops a URL, but a parameter the site ignores still returns 200.
+   Confirm against real Google Ads landing-page URLs.

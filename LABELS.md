@@ -43,7 +43,7 @@ advertise.
 | `GEO_NSW` | New South Wales |
 | `GEO_WA` | Washington State |
 | `GEO_OR` | Oregon |
-| `REG_...` | The specific region, e.g. `REG_YARRA_VALLEY`, `REG_HIGH_COUNTRY` — named directly after the real area, one for every region on the site |
+| `REG_...` | The specific region, e.g. `REG_YARRA_VALLEY`, `REG_HIGH_COUNTRY` — named directly after the real area, one for every region on the site. Town collections such as Lorne, Katoomba or Kiama carry the region their town belongs to |
 
 ## Stay type — what kind of place it is
 
@@ -56,6 +56,10 @@ advertise.
 | `TYPE_TINY_HOUSE` | Tiny house |
 | `TYPE_...` | Plus 17 more of your site's own filter categories (barn, farm, lodge, villa, yurt, and so on) |
 | `TYPE_BEACH_HOUSE`, `TYPE_HOUSEBOAT`, etc. | A handful of stay types that don't match your 22 standard categories get their own honest label instead of being forced into the nearest match |
+
+Listings take their stay type from the category on their own page. Stories
+take it from Riparide's own stories data, because a story's headline doesn't
+say what kind of stay it is.
 
 Anything genuinely new that doesn't match an existing label gets flagged for
 review rather than guessed at.

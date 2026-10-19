@@ -236,6 +236,31 @@ class CollectionTagTests(unittest.TestCase):
         self.assertEqual(labeller.intents_from("dog-friendly-romantic-under-the-stars")[:2],
                          ["INT_ROMANTIC", "INT_PET_FRIENDLY"])
 
+    def test_town_collections_carry_their_region(self):
+        towns = {"/au/nsw/collections/katoomba": "REG_BLUE_MOUNTAINS",
+                 "/au/nsw/collections/kiama": "REG_SOUTH_COAST_NSW",
+                 "/au/nsw/collections/jervis-bay": "REG_SOUTH_COAST_NSW",
+                 "/au/nsw/collections/jindabyne": "REG_SNOWY_MOUNTAINS",
+                 "/au/nsw/collections/bellingen": "REG_NORTH_COAST_NSW",
+                 "/au/vic/collections/apollo-bay": "REG_GREAT_OCEAN_ROAD",
+                 "/au/vic/collections/lorne": "REG_GREAT_OCEAN_ROAD",
+                 "/au/vic/collections/torquay": "REG_GREAT_OCEAN_ROAD",
+                 "/au/vic/collections/bright": "REG_HIGH_COUNTRY",
+                 "/au/vic/collections/sorrento": "REG_MORNINGTON_PENINSULA",
+                 "/au/vic/collections/wilson-s-prom": "REG_GIPPSLAND"}
+        for path, reg in towns.items():
+            self.assertIn(";%s;" % reg, self._label(path), path)
+
+    def test_every_poi_region_is_a_real_hub_label(self):
+        # Every mapped region must be the label of an actual region hub,
+        # otherwise the collection joins no region asset group.
+        hubs = {"REG_" + s.upper().replace("-", "_") for s in (
+            "north-coast-nsw", "south-coast-nsw", "snowy-mountains", "blue-mountains",
+            "great-ocean-road", "high-country", "mornington-peninsula", "gippsland",
+            "macedon-ranges", "yarra-valley", "country-nsw", "auckland", "hamilton-waikato",
+            "rotorua")}
+        self.assertLessEqual(set(cfg.POI_REGION.values()), hubs)
+
     def test_new_intents_are_not_search_head(self):
         self.assertIn("PMAX_LONGTAIL", self._label("/au/vic/collections/under-the-stars"))
 

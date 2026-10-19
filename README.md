@@ -21,10 +21,11 @@ specifically want that path instead.
 |---|---|
 | 1 | Fetch the sitemap index and its six child sitemaps |
 | 2 | Compare against last month's stored snapshot |
-| 3 | Label every URL across the six taxonomy dimensions |
+| 3 | Label every URL across the six taxonomy dimensions, then add the built stay-type facet URLs and search-page URLs (`PAGE_SEARCH`: all stays, pet-friendly, one per region) |
 | 4 | Read location from each listing and story page, cached after the first read |
 | 5 | Merge an optional supplied attributes file |
-| 6 | Status check the changed URLs and drop anything that is not 200 |
+| 5b | Read Riparide's open stories feed (`/public_api/stories.csv`) for each market and take each story's stay type, pet-friendly flag and amenities from it. A failed fetch is reported and the run carries on |
+| 6 | Status check the changed URLs plus every facet and search URL, and drop anything that is not 200 |
 | 7 | Run the validation checks |
 | 8 | Write both CSV files, then the `.xlsx` report — these get served directly at stable URLs by the Railway service (see Deployment) |
 | 8c | Update the Google Sheet, only if the Sheets delivery path is configured (it currently isn't — see the intro above) |
@@ -46,6 +47,7 @@ src/
   labeller.py    URL to the six taxonomy dimensions
   enricher.py    reads location out of listing and story pages
   attributes.py  optional supplied attributes file
+  catalog.py     stay type and intent for stories, from the platform's stories feed
   store.py       snapshot storage and the month to month diff
   validator.py   the pre upload checks
   writer.py      CSV output (client-shared format)
@@ -84,6 +86,7 @@ Useful flags while testing:
 | `--skip-status` | skip the HTTP status checks |
 | `--full-status` | status check every URL, not only the changed ones |
 | `--skip-location` | skip reading location from pages |
+| `--skip-catalog` | skip the stories feed (step 5b) |
 | `--offline-snapshot PATH` | use a saved URL list instead of fetching |
 
 ---
@@ -128,6 +131,7 @@ All optional except the email settings.
 | `FEED_OUTPUT_DIR` | `data/output` | where the CSV files are written |
 | `FEED_REPORT_DIR` | `reports` | where the `.xlsx` report is written |
 | `FEED_ATTRIBUTES_FILE` | `data/listing-attributes.csv` | optional supplied attributes |
+| `FEED_CATALOG_MARKETS` | `VIC,NSW` | markets read from the stories feed, comma separated |
 | `FEED_MAX_STATUS_CHECKS` | `1500` | per run cap on status checks |
 | `FEED_MAX_LOCATION_FETCHES` | `1200` | per run cap on pages read for location |
 | `FEED_REQUEST_DELAY` | `0.15` | seconds between requests |

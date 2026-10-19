@@ -15,6 +15,7 @@ import fetcher
 import labeller
 import store
 import attributes
+import catalog
 import enricher
 import validator
 import writer
@@ -86,6 +87,8 @@ def main(argv=None):
                          "(happens automatically every 6 months regardless of this flag, see D4)")
     ap.add_argument("--skip-location", action="store_true",
                     help="skip reading location from listing and story pages")
+    ap.add_argument("--skip-catalog", action="store_true",
+                    help="skip the stories feed (story stay type, region and intent)")
     ap.add_argument("--offline-snapshot", default=None,
                     help="use this snapshot json as the current URL list instead of fetching")
     args = ap.parse_args(argv)
@@ -156,6 +159,16 @@ def main(argv=None):
                                 else "%d usable rows" % attr_report["usable"]))
         log("rows given a location: %d, still without: %d"
             % (summary["merge"]["rows_filled"], summary["merge"]["still_without_location"]))
+
+        # 5b. stories feed: the platform's own stay type and intent ----------
+        log(LINE)
+        if args.skip_catalog:
+            log("stories feed skipped by flag")
+            summary["catalog"] = {"skipped": True}
+        else:
+            by_story, cat_report = catalog.load(log=log)
+            cat_report["applied"] = catalog.apply(rows, by_story, log=log)
+            summary["catalog"] = cat_report
 
         # 6. status check ----------------------------------------------------
         log(LINE)

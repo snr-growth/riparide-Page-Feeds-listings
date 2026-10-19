@@ -184,6 +184,25 @@ def build_report(summary):
             L.append("  Still without location: %d" % m.get("still_without_location", 0))
         L.append("")
 
+    c = summary.get("catalog") or {}
+    if c:
+        L.append("Stories feed (stay type, region and intent for stories)")
+        if c.get("skipped"):
+            L.append("  Skipped by flag.")
+        else:
+            ap = c.get("applied") or {}
+            L.append("  Markets read: %s" % (", ".join(c.get("markets", [])) or "none"))
+            L.append("  Rows: %d, usable: %d" % (c.get("rows", 0), c.get("usable", 0)))
+            L.append("  Stories matched: %d of %d" % (ap.get("matched", 0), ap.get("stories", 0)))
+            L.append("  Stay type set: %d, intents added: %d, moved to SEARCH_HEAD: %d"
+                     % (ap.get("stay_set", 0), ap.get("intent_added", 0), ap.get("now_search_head", 0)))
+            L.append("  Stories still without a stay type: %d" % ap.get("stories_without_stay", 0))
+            for k, v in (c.get("unmapped_categories") or {}).items():
+                L.append("  Category not in the stay-type list, left blank: %s (%d)" % (k, v))
+        for p in c.get("problems", []):
+            L.append("  Note: %s" % p)
+        L.append("")
+
     rb = summary.get("robots") or {}
     if rb:
         L.append("robots.txt / AdsBot check")

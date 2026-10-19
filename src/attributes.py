@@ -164,12 +164,8 @@ def apply(rows, by_id, log=print):
                 elif not r["intent2"]:
                     r["intent2"] = lab
 
-        # boundary depends on geo, so recompute once location is known
-        if r["page_type"] != "PAGE_ADVENTURE":
-            if r["country"] == "GEO_NZ":
-                r["boundary"] = "NZ_REVIEW"
-            elif r["country"] == "GEO_US":
-                r["boundary"] = "US_HOLD"
+        # boundary depends on geo and intent, so recompute once both are known
+        r["boundary"] = labeller.boundary_for(r)
 
         if (r["country"], r["state"], r["region"], r["stay"]) != before:
             filled += 1

@@ -86,6 +86,18 @@ def _summary_sheet(wb, summary):
             ("Still without location", loc.get("still_without_location", 0)),
         ])
 
+    c = summary.get("catalog") or {}
+    if c and not c.get("skipped"):
+        ap = c.get("applied") or {}
+        rows = [("Markets read", ", ".join(c.get("markets", [])) or "none"),
+                ("Stories matched", "%d of %d" % (ap.get("matched", 0), ap.get("stories", 0))),
+                ("Stay type set", ap.get("stay_set", 0)),
+                ("Intents added", ap.get("intent_added", 0)),
+                ("Moved to SEARCH_HEAD", ap.get("now_search_head", 0)),
+                ("Still without a stay type", ap.get("stories_without_stay", 0))]
+        rows += [("Problem", p) for p in c.get("problems", [])]
+        _section(ws, "Stories feed", rows)
+
     rb = summary.get("robots") or {}
     if rb:
         if not rb.get("fetched"):

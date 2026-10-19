@@ -107,6 +107,18 @@ def _geo_boundary(country, fallback="PMAX_LONGTAIL"):
     return fallback
 
 
+def boundary_for(row):
+    """The boundary a listing or story should carry given its current geo and
+    intents. Used after a later step (attributes file, catalog feed) adds a
+    country or an intent, so a new pet-friendly intent also moves the page to
+    SEARCH_HEAD rather than leaving the boundary label() first gave it."""
+    if row["page_type"] not in ("PAGE_LISTING", "PAGE_STORY"):
+        return row["boundary"]
+    ints = {row.get("intent1"), row.get("intent2")}
+    return _geo_boundary(row["country"],
+                         "SEARCH_HEAD" if ints & cfg.SEARCH_HEAD_INTENTS else "PMAX_LONGTAIL")
+
+
 def _row(url, page_type, country="", state="", region="", stay="",
          i1="", i2="", boundary="", notes=""):
     return {
