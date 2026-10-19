@@ -243,6 +243,27 @@ class HTTPServerTests(unittest.TestCase):
             time.sleep(0.05)
         self.assertTrue(m.called)
 
+    def test_the_token_never_reaches_the_access_log(self):
+        logged = []
+        with mock.patch.object(svc, "run_pipeline"), \
+                mock.patch.object(svc, "log", side_effect=logged.append):
+            req = urllib.request.Request(
+                "http://127.0.0.1:%d/run?token=test-secret&full_status=false" % self.port,
+                method="POST")
+            with urllib.request.urlopen(req, timeout=5) as r:
+                self.assertEqual(r.status, 202)
+        access = [line for line in logged if "POST /run" in line]
+        self.assertTrue(access)
+        self.assertFalse(any("test-secret" in line for line in logged))
+        self.assertIn("token=[REDACTED]&full_status=false", access[0])
+
+
+class RedactTokenTests(unittest.TestCase):
+    def test_redacts_only_the_token_value(self):
+        self.assertEqual(svc.redact_token('"POST /run?token=abc123&x=1 HTTP/1.1" 202 -'),
+                         '"POST /run?token=[REDACTED]&x=1 HTTP/1.1" 202 -')
+        self.assertEqual(svc.redact_token('"GET / HTTP/1.1" 200 -'), '"GET / HTTP/1.1" 200 -')
+
 
 class EphemeralStateWarningTests(unittest.TestCase):
     """Reproduces, as a regression test, the exact mistake made once

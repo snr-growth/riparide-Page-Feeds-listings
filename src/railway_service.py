@@ -33,6 +33,7 @@ it - it just never deletes anything on disk itself.
 import hmac
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -144,11 +145,22 @@ def scheduler_loop(poll_seconds=1800, stop_event=None):
         stop_event.wait(poll_seconds)
 
 
+_TOKEN_IN_QUERY = re.compile(r"(token=)[^&\s\"]*")
+
+
+def redact_token(text):
+    """Replace any token=... query value with token=[REDACTED]."""
+    return _TOKEN_IN_QUERY.sub(r"\1[REDACTED]", text)
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "riparide-page-feed/1.0"
 
     def log_message(self, fmt, *args):
-        log("%s - %s" % (self.address_string(), fmt % args))
+        # The request line carries POST /run?token=..., and Railway's log
+        # viewer is readable by everyone on the project. Seen live on
+        # 19 Oct 2026: the whole token was in the logs. Redact it.
+        log("%s - %s" % (self.address_string(), redact_token(fmt % args)))
 
     def _send_json(self, status, payload, write_body=True):
         body = json.dumps(payload, indent=2).encode("utf-8")
