@@ -102,7 +102,7 @@ def load(path=None, log=print):
             if "region" in cols:
                 rg = (raw.get(cols["region"]) or "").strip()
                 if rg:
-                    slug = re.sub(r"[^a-z0-9]+", "-", rg.lower()).strip("-")
+                    slug = labeller.region_slug(rg)
                     rec["region"] = labeller.region_label(slug, rec.get("country", ""),
                                                           rec.get("state", ""))
             if "subcategory" in cols:
@@ -149,7 +149,14 @@ def apply(rows, by_id, log=print):
         r["country"] = r["country"] or rec.get("country", "")
         r["state"] = r["state"] or rec.get("state", "")
         r["region"] = r["region"] or rec.get("region", "")
-        r["stay"] = r["stay"] or rec.get("stay", "")
+        # A supplied subcategory is the platform's own data and beats both the
+        # page title and the slug guess, but only on a listing: the file is
+        # keyed by listing id, and a story or adventure with the same number
+        # is a different page, so there it may only fill a blank.
+        if r["page_type"] == "PAGE_LISTING":
+            r["stay"] = rec.get("stay", "") or r["stay"]
+        else:
+            r["stay"] = r["stay"] or rec.get("stay", "")
         for lab in rec.get("intents", []):
             if lab not in (r["intent1"], r["intent2"]):
                 if not r["intent1"]:

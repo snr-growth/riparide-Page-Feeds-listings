@@ -115,6 +115,19 @@ class ApplyTests(unittest.TestCase):
         self.assertEqual(row["country"], "")
         self.assertEqual(summary["rows_filled"], 0)
 
+    def test_supplied_stay_type_beats_slug_guess_on_a_listing(self):
+        row = self._row("https://www.riparide.com/listings/1-x")
+        row["stay"] = "TYPE_HOUSE"
+        attributes.apply([row], {"1": {"stay": "TYPE_CABIN"}})
+        self.assertEqual(row["stay"], "TYPE_CABIN")
+
+    def test_listing_id_never_overrides_a_story_stay_type(self):
+        # Story 1 and listing 1 are different pages sharing a number.
+        row = self._row("https://www.riparide.com/stories/1-x", "PAGE_STORY")
+        row["stay"] = "TYPE_HOUSE"
+        attributes.apply([row], {"1": {"stay": "TYPE_CABIN"}})
+        self.assertEqual(row["stay"], "TYPE_HOUSE")
+
 
 if __name__ == "__main__":
     unittest.main()

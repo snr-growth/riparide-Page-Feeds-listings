@@ -116,7 +116,7 @@ def parse_title(title):
     region_name = clean_region(rest[-1]) if rest else ""
     out = {"country": country, "state": state}
     if region_name:
-        slug = re.sub(r"[^a-z0-9]+", "-", region_name.lower()).strip("-")
+        slug = labeller.region_slug(region_name)
         out["region"] = labeller.region_label(slug, country, state)
         out["region_name"] = region_name
 
@@ -197,9 +197,28 @@ def region_is_stale(loc):
         return False
     if clean_region(rn) != rn:
         return True
-    slug = re.sub(r"[^a-z0-9]+", "-", rn.lower()).strip("-")
+    slug = labeller.region_slug(rn)
     expected = labeller.region_label(slug, loc.get("country", ""), loc.get("state", ""))
     return loc.get("region") != expected
+
+
+def heal_regions(cache):
+    """Rewrite a cached REG_ label that region_is_stale() flags, in place.
+
+    The page's region_name is stored beside the label, so a change to how
+    names become labels (accents, apostrophes, aliases) can be applied from
+    the cache alone. Re-reading the page is only needed when the stored name
+    itself no longer passes clean_region(). Returns the number rewritten.
+    """
+    n = 0
+    for loc in cache.values():
+        rn = (loc or {}).get("region_name")
+        if not rn or clean_region(rn) != rn or not region_is_stale(loc):
+            continue
+        loc["region"] = labeller.region_label(
+            labeller.region_slug(rn), loc.get("country", ""), loc.get("state", ""))
+        n += 1
+    return n
 
 
 def enrich(rows, limit=None, log=print, cache_path=None):
@@ -208,6 +227,10 @@ def enrich(rows, limit=None, log=print, cache_path=None):
     Only pages missing from the cache are fetched. Returns a summary.
     """
     cache = load_cache(cache_path)
+    healed = heal_regions(cache)
+    if healed:
+        log("relabelled %d cached region(s) from their stored region name" % healed)
+        save_cache(cache, cache_path)
     targets = [r for r in rows
                if r["page_type"] in ("PAGE_LISTING", "PAGE_STORY") and not r["country"]]
 
@@ -263,7 +286,9 @@ def enrich(rows, limit=None, log=print, cache_path=None):
         r["country"] = r["country"] or loc.get("country", "")
         r["state"] = r["state"] or loc.get("state", "")
         r["region"] = r["region"] or loc.get("region", "")
-        r["stay"] = r["stay"] or loc.get("stay", "")
+        # The title's "X for Rent" is the site's own category for the page;
+        # the slug match is only a guess, so it is the fallback, not the winner.
+        r["stay"] = loc.get("stay", "") or r["stay"]
         if r["country"] == "GEO_NZ":
             r["boundary"] = "NZ_REVIEW"
         elif r["country"] == "GEO_US":

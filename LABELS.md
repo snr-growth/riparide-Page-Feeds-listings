@@ -28,6 +28,7 @@ advertise.
 | `PAGE_REGION` | A region hub page — e.g. the Great Ocean Road page |
 | `PAGE_COLLECTION` | A themed or destination-based grouping of properties |
 | `PAGE_COLLECTION_HUB` | The index page listing all collections for a country/state |
+| `PAGE_SEARCH` | A search-results page that carries real traffic: all stays in a country or state, pet-friendly stays, or one region (e.g. the Blue Mountains search) |
 | `PAGE_FACET_TYPE` | An auto-generated page such as "all glamping stays in Victoria," so a search lands on the right filtered results instead of one listing |
 | `PAGE_CORE` | A brand/info page — About, Contact, etc. — left out of the feed entirely |
 
@@ -75,6 +76,8 @@ from the wording already used in the page's own title or URL:
 | `INT_GROUPS` | Suited to groups |
 | `INT_LUXURY` | Positioned as luxury |
 | `INT_GETAWAY` | General weekend-getaway framing |
+| `INT_OUTDOOR_BATH` | Outdoor baths and soaking (outdoor-baths, soak-it-up collections) |
+| `INT_STARGAZING` | Under-the-stars stays |
 
 ## Boundary — where it's allowed to advertise
 

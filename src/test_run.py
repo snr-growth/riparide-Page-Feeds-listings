@@ -89,6 +89,21 @@ class SelectStatusCheckTargetsTests(unittest.TestCase):
         targets = run.select_status_check_targets(self.rows, added_urls=added, full_status=False)
         self.assertEqual(targets.count(self.facets[0]["url"]), 1)
 
+    def test_search_rows_are_prioritised_like_facets(self):
+        search = _row("https://x/listings?country=AU&state=VIC&type=accommodation", "PAGE_SEARCH")
+        targets = run.select_status_check_targets(self.rows + [search], added_urls=[],
+                                                  full_status=False)
+        self.assertEqual(targets[:3], [r["url"] for r in self.facets] + [search["url"]])
+
+
+class BuildRowsSearchTests(unittest.TestCase):
+    def test_region_hub_in_sitemap_produces_its_region_search_row(self):
+        rows = run.build_rows({"destinations": ["https://www.riparide.com/au/nsw/blue-mountains"]})
+        urls = {r["url"] for r in rows if r["page_type"] == "PAGE_SEARCH"}
+        self.assertIn("https://www.riparide.com/listings?country=AU&regions%5B%5D=blue-mountains"
+                      "&state=NSW&type=accommodation", urls)
+        self.assertEqual(len(urls), len([r for r in rows if r["page_type"] == "PAGE_SEARCH"]))
+
 
 class FullRunTests(unittest.TestCase):
     def setUp(self):

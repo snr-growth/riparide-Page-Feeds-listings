@@ -177,5 +177,115 @@ class LabelStringTests(unittest.TestCase):
         self.assertNotIn(";;", labeller.label_string(row))
 
 
+class RegionSlugTests(unittest.TestCase):
+    def test_macrons_are_folded_not_dropped(self):
+        self.assertEqual(labeller.region_slug("Taupō"), "taupo")
+        self.assertEqual(labeller.region_slug("Manawatū-Whanganui"), "manawatu-whanganui")
+
+    def test_apostrophe_is_removed_not_hyphenated(self):
+        self.assertEqual(labeller.region_slug("Hawke's Bay"), "hawkes-bay")
+        self.assertEqual(labeller.region_slug("Hawke’s Bay"), "hawkes-bay")
+
+    def test_listing_title_spelling_maps_to_hub_spelling(self):
+        self.assertEqual(labeller.region_slug("Tairāwhiti Gisborne"), "tairawhiti-eastland")
+
+    def test_listing_labels_equal_hub_labels(self):
+        hubs = {"hawkes-bay": "Hawke's Bay", "taupo": "Taupō",
+                "manawatu-whanganui": "Manawatū-Whanganui",
+                "tairawhiti-eastland": "Tairāwhiti Gisborne"}
+        for hub_slug, title_name in hubs.items():
+            self.assertEqual(
+                labeller.region_label(labeller.region_slug(title_name), "GEO_NZ", ""),
+                labeller.region_label(hub_slug, "GEO_NZ", ""))
+
+    def test_every_alias_targets_a_real_hub_slug_and_title_wording_resolves(self):
+        cases = {"Northland & Bay of Islands": "northland", "Waikato": "hamilton-waikato",
+                 "The Coromandel": "coromandel", "Mt Hood & River Gorge": "hood-gorge"}
+        for name, hub in cases.items():
+            self.assertEqual(labeller.region_slug(name), hub)
+
+    def test_plain_names_unchanged(self):
+        self.assertEqual(labeller.region_slug("Bay of Plenty"), "bay-of-plenty")
+
+
+class CollectionTagTests(unittest.TestCase):
+    def _label(self, path):
+        return labeller.label_string(labeller.label_url(cfg.BASE + path, "collections"))
+
+    def test_beach_houses_collection_is_beach_house_not_house(self):
+        for path in ("/au/vic/collections/top-stays-beach-houses",
+                     "/au/nsw/collections/top-stays-beach-houses-7a16fe70-6a37-4312-8fc3-b4ba2226e76e"):
+            self.assertIn("TYPE_BEACH_HOUSE", self._label(path))
+            self.assertNotIn("TYPE_HOUSE;", self._label(path))
+
+    def test_plain_house_still_house(self):
+        self.assertEqual(labeller.stay_type_from("100-quiet-house-in-the-forest"), "TYPE_HOUSE")
+
+    def test_bare_extra_wording_not_matched_in_slug(self):
+        self.assertEqual(labeller.stay_type_from("12-cavendish-retreat"), "")
+
+    def test_outdoor_baths_soak_and_stars_get_intents(self):
+        self.assertIn("INT_OUTDOOR_BATH", self._label("/au/nsw/collections/outdoor-baths-nsw"))
+        self.assertIn("INT_OUTDOOR_BATH", self._label(
+            "/au/nsw/collections/soak-it-up-ba05795a-cc0d-48a6-916e-e247b3f02b6c"))
+        self.assertIn("INT_STARGAZING", self._label("/au/vic/collections/under-the-stars"))
+
+    def test_new_intents_do_not_displace_search_head_intents(self):
+        ints = labeller.intents_from("romantic-outdoor-baths-under-the-stars")
+        self.assertEqual(ints, ["INT_ROMANTIC", "INT_OUTDOOR_BATH"])
+        self.assertEqual(labeller.intents_from("dog-friendly-romantic-under-the-stars")[:2],
+                         ["INT_ROMANTIC", "INT_PET_FRIENDLY"])
+
+    def test_new_intents_are_not_search_head(self):
+        self.assertIn("PMAX_LONGTAIL", self._label("/au/vic/collections/under-the-stars"))
+
+
+class SearchRowTests(unittest.TestCase):
+    def setUp(self):
+        hub = labeller.label_url(cfg.BASE + "/au/nsw/blue-mountains", "destinations")
+        nz = labeller.label_url(cfg.BASE + "/nz/taupo", "destinations")
+        self.rows = labeller.build_search_rows([hub, nz])
+        self.by_url = {r["url"]: r for r in self.rows}
+
+    def test_blue_mountains_region_search_exists(self):
+        u = cfg.BASE + "/listings?country=AU&regions%5B%5D=blue-mountains&state=NSW&type=accommodation"
+        self.assertIn(u, self.by_url)
+        r = self.by_url[u]
+        self.assertEqual((r["region"], r["state"], r["boundary"]),
+                         ("REG_BLUE_MOUNTAINS", "GEO_NSW", "PMAX_LONGTAIL"))
+
+    def test_all_vic_search_exists(self):
+        u = cfg.BASE + "/listings?country=AU&state=VIC&type=accommodation"
+        self.assertEqual(self.by_url[u]["state"], "GEO_VIC")
+
+    def test_pet_friendly_with_and_without_geography(self):
+        r = self.by_url[cfg.BASE + "/listings?country=AU&petFriendly=true&state=VIC&type=accommodation"]
+        self.assertEqual((r["intent1"], r["boundary"]), ("INT_PET_FRIENDLY", "SEARCH_HEAD"))
+        bare = self.by_url[cfg.BASE + "/listings?petFriendly=true&type=accommodation"]
+        self.assertEqual(bare["country"], "")
+
+    def test_nz_region_search_has_no_state_and_review_boundary(self):
+        r = self.by_url[cfg.BASE + "/listings?country=NZ&regions%5B%5D=taupo&type=accommodation"]
+        self.assertEqual((r["state"], r["boundary"]), ("", "NZ_REVIEW"))
+
+    def test_us_pet_search_is_held(self):
+        r = self.by_url[cfg.BASE + "/listings?country=US&petFriendly=true&state=WA&type=accommodation"]
+        self.assertEqual(r["boundary"], "US_HOLD")
+
+    def test_all_params_alphabetical_and_urls_unique(self):
+        from urllib.parse import urlsplit
+        self.assertEqual(len(self.by_url), len(self.rows))
+        for u in self.by_url:
+            names = [p.split("=")[0] for p in urlsplit(u).query.split("&")]
+            self.assertEqual(names, sorted(names), u)
+
+    def test_page_type_and_validator_accepts(self):
+        import validator
+        self.assertTrue(all(r["page_type"] == "PAGE_SEARCH" for r in self.rows))
+        vrows = [{"url": r["url"], "label": labeller.label_string(r), "feed": "CORE"} for r in self.rows]
+        ok, results = validator.validate(vrows)
+        self.assertTrue(ok, validator.format_results(results))
+
+
 if __name__ == "__main__":
     unittest.main()

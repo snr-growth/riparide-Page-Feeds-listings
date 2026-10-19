@@ -122,7 +122,7 @@ def _taxonomy_sheet(wb):
 
     rows = [("Page type", pt, "") for pt in (
         "PAGE_LISTING", "PAGE_STORY", "PAGE_REGION", "PAGE_STATE", "PAGE_COUNTRY",
-        "PAGE_FACET_TYPE", "PAGE_ADVENTURE", "PAGE_COLLECTION", "PAGE_COLLECTION_HUB",
+        "PAGE_FACET_TYPE", "PAGE_SEARCH", "PAGE_ADVENTURE", "PAGE_COLLECTION", "PAGE_COLLECTION_HUB",
         "PAGE_CORE (excluded from both feeds)")]
 
     seen_geo = set()

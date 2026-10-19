@@ -169,7 +169,23 @@ INTENT_KEYWORDS = [
     ("split-the-bill", "INT_GROUPS"), ("split-the-check", "INT_GROUPS"), ("groups", "INT_GROUPS"),
     ("luxury", "INT_LUXURY"),
     ("getaway", "INT_GETAWAY"),  # substring match also covers "getaways" and "weekend-getaway"
+    # Added last so they never displace an earlier intent, only two are kept.
+    ("outdoor-bath", "INT_OUTDOOR_BATH"), ("soak-it-up", "INT_OUTDOOR_BATH"),
+    ("under-the-stars", "INT_STARGAZING"), ("stargazing", "INT_STARGAZING"),
 ]
+
+# Region names that the site spells differently on its listing titles than on
+# its own region hub page. Applied after accents and apostrophes are removed.
+# Without these a listing gets a REG_ label that no region hub, and so no
+# region-scoped asset group, uses. Each pair was read off the destinations
+# sitemap (hub slug) and the location cache (title wording), Aug 2026.
+REGION_SLUG_ALIASES = {
+    "tairawhiti-gisborne": "tairawhiti-eastland",     # /nz/tairawhiti-eastland
+    "northland-bay-of-islands": "northland",          # /nz/northland
+    "waikato": "hamilton-waikato",                    # /nz/hamilton-waikato
+    "the-coromandel": "coromandel",                   # /nz/coromandel
+    "mt-hood-river-gorge": "hood-gorge",              # /us/oregon/hood-gorge
+}
 
 # Clusters Search Generic outperforms PMax on 2x+, per the role-split research
 # (SNR, 9 Aug 2026): romantic, getaways, off-grid, pet-friendly. All four must

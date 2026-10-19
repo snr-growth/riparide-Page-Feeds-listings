@@ -379,3 +379,20 @@ This was an explicit, informed instruction, not an oversight: rather than keepin
 ### One gap this removal opens, not yet closed
 
 GitHub Actions gave a free, independent failure-notification email on any non-zero exit (D11/D12) - it marked the run failed and emailed repo watchers, on top of this project's own report email. Nothing on the Railway side replaces that yet: `railway_service.py` records a failed run in its own state file (visible at `GET /`), but nothing pushes a notification anywhere. Until this is addressed, a failed monthly run is silent unless someone actively checks the service's status.
+
+## D17. Client feed review (Oct 2026): region labels, search pages, stay-type precedence
+
+Each change below is covered by tests and was checked by an offline run over the saved snapshot and location cache (4,909 core rows, every validation check passing).
+
+- **Region names fold accents and apostrophes** (`labeller.slugify` / `region_slug`, used by the enricher and the attributes loader). "Taupō" gave `REG_TAUP` and "Hawke's Bay" gave `REG_HAWKE_S_BAY`, while their region hubs are `REG_TAUPO` and `REG_HAWKES_BAY`, so one region had two labels.
+- **`REGION_SLUG_ALIASES`** maps listing-title wording onto the hub slug where the site uses two names for one region: tairawhiti-gisborne, northland-bay-of-islands, waikato, the-coromandel and mt-hood-river-gorge. Before this, 160+ listings carried a `REG_` label that no region hub (and so no region asset group) uses. Only `REG_NORTH_COVE` (1 listing, a mis-split title) is still unmatched.
+- **Cached labels heal without a fetch.** `enricher.heal_regions` rewrites a stale cached label from its stored `region_name`. The existing re-read path skipped those entries because their `parser` version was already current.
+- **Stay type precedence is now supplied file > page title > URL slug.** The slug match used to win, and 630 of 3,467 listings carried a slug guess that contradicted the site's own "X for Rent" category. The supplied file overrides only on listings, because it is keyed by listing id and a story or adventure can share the number.
+- **Collection tags.** `beach house` and `train carriage` match as whole words in a slug, so `top-stays-beach-houses` is `TYPE_BEACH_HOUSE`. Bare words like `hotel` or `cave` are left to the title. New intents `INT_OUTDOOR_BATH` (outdoor-bath, soak-it-up) and `INT_STARGAZING` (under-the-stars, stargazing) go last in `INTENT_KEYWORDS`, so they never displace a `SEARCH_HEAD` intent, and they are not `SEARCH_HEAD`.
+- **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Unverified:** a parameter the site ignores still returns 200, so the exact formats need confirming against real landing-page URLs from Google Ads.
+
+### Still open, needs client input
+- Region labels for the town collections (apollo-bay, lorne, katoomba, kiama, jervis-bay, bright, jindabyne, plus bellingen, sorrento, torquay and wilson-s-prom). `POI_REGION` only takes confirmed mappings.
+- Stay type and intent for stories. Their titles carry neither, so this needs a story-to-listing mapping or an attributes file.
+- Whether the NSW pet and romantic collections stay in PMax under Option B.
+- The attributes file is keyed by listing id, but stories and adventures are looked up by their own id in the same table. When the file arrives, it needs a page-type column, or the stories and adventures must be left out of it.

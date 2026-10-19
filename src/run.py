@@ -36,6 +36,7 @@ def build_rows(urls_by_group):
         for u in urls:
             rows.append(labeller.label_url(u, group))
     rows.extend(labeller.build_facet_rows())
+    rows.extend(labeller.build_search_rows(rows))
 
     seen, unique = set(), []
     for r in rows:
@@ -60,7 +61,7 @@ def select_status_check_targets(rows, added_urls, full_status):
     (10,208 real URLs, all 132 facet URLs dropped by the 1500 cap).
     """
     by_url = {r["url"]: r for r in rows}
-    facet_urls = [r["url"] for r in rows if r["page_type"] == "PAGE_FACET_TYPE"]
+    facet_urls = [r["url"] for r in rows if r["page_type"] in ("PAGE_FACET_TYPE", "PAGE_SEARCH")]
     if full_status:
         rest = [r["url"] for r in rows if r["url"] in by_url]
     else:

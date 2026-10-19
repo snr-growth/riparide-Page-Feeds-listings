@@ -13,6 +13,7 @@ from unittest import mock
 
 import enricher
 import fetcher
+import labeller
 
 
 class ParseTitleTests(unittest.TestCase):
@@ -29,7 +30,7 @@ class ParseTitleTests(unittest.TestCase):
             "Hobbit Tree House in Waikino - Cabin for Rent in Waikino, The Coromandel, NZ")
         self.assertEqual(out["country"], "GEO_NZ")
         self.assertEqual(out["state"], "")
-        self.assertEqual(out["region"], "REG_THE_COROMANDEL")
+        self.assertEqual(out["region"], "REG_COROMANDEL")  # the /nz/coromandel hub label
         self.assertEqual(out["stay"], "TYPE_CABIN")
 
     def test_cabin_listing_us_wa(self):
@@ -217,6 +218,59 @@ class EnrichCacheStalenessTests(unittest.TestCase):
 
         self.assertEqual(rows[0]["region"], "REG_HIGH_COUNTRY")
         fetcher.get.assert_not_called()
+
+
+    def test_accent_and_apostrophe_labels_are_healed_from_cache_without_a_fetch(self):
+        cases = {
+            "Taupō": "REG_TAUPO", "Hawke's Bay": "REG_HAWKES_BAY",
+            "Manawatū-Whanganui": "REG_MANAWATU_WHANGANUI",
+            "Tairāwhiti Gisborne": "REG_TAIRAWHITI_EASTLAND",
+        }
+        old = {"Taupō": "REG_TAUP", "Hawke's Bay": "REG_HAWKE_S_BAY",
+               "Manawatū-Whanganui": "REG_MANAWAT_WHANGANUI",
+               "Tairāwhiti Gisborne": "REG_TAIR_WHITI_GISBORNE"}
+        cache = {"https://www.riparide.com/listings/%d" % i: {
+            "country": "GEO_NZ", "state": "", "region": old[n], "region_name": n,
+            "stay": "TYPE_CABIN", "parser": enricher.PARSER_VERSION} for i, n in enumerate(cases)}
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump(cache, f)
+        fetcher.get = mock.Mock(side_effect=AssertionError("healing must not fetch"))
+
+        rows = [{"url": u, "page_type": "PAGE_LISTING", "country": "", "state": "",
+                 "region": "", "stay": ""} for u in cache]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+
+        self.assertEqual(sorted(r["region"] for r in rows), sorted(cases.values()))
+        fetcher.get.assert_not_called()
+        with open(self.cache_path, encoding="utf-8") as f:
+            saved = json.load(f)
+        self.assertEqual({v["region"] for v in saved.values()}, set(cases.values()))
+
+    def test_title_stay_type_beats_slug_guess(self):
+        url = "https://www.riparide.com/listings/7-quiet-house-by-the-creek"
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({url: {"country": "GEO_AU", "state": "GEO_VIC", "region": "REG_HIGH_COUNTRY",
+                             "region_name": "High Country", "stay": "TYPE_CABIN",
+                             "parser": enricher.PARSER_VERSION}}, f)
+        fetcher.get = mock.Mock(side_effect=AssertionError("cached, must not fetch"))
+        rows = [labeller.label_url(url, "listings")]
+        self.assertEqual(rows[0]["stay"], "TYPE_HOUSE")       # the slug guess
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+        self.assertEqual(rows[0]["stay"], "TYPE_CABIN")
+
+    def test_slug_stay_kept_when_title_has_none(self):
+        url = "https://www.riparide.com/stories/8-a-cosy-cottage-weekend"
+        with open(self.cache_path, "w", encoding="utf-8") as f:
+            json.dump({url: {"country": "GEO_AU", "state": "GEO_VIC",
+                             "parser": enricher.PARSER_VERSION}}, f)
+        fetcher.get = mock.Mock(side_effect=AssertionError("cached, must not fetch"))
+        rows = [labeller.label_url(url, "stories")]
+        enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
+        self.assertEqual(rows[0]["stay"], "TYPE_COTTAGE")
+
+    def test_parse_title_gives_the_hub_label_for_a_macron_region(self):
+        out = enricher.parse_title("Lakeside Cabin - Cabin for Rent in Taupō, NZ | Riparide")
+        self.assertEqual(out["region"], "REG_TAUPO")
 
 
 if __name__ == "__main__":

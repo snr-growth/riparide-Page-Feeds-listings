@@ -5,6 +5,7 @@ Dimensions: page type, geo (country + state), region, stay type, intent,
 boundary. Blank dimensions are simply skipped when the label string is built.
 """
 import re
+import unicodedata
 
 import config as cfg
 
@@ -24,7 +25,37 @@ def slug_of(url):
     return url.rstrip("/").rsplit("/", 1)[-1].lower()
 
 
+def slugify(text):
+    """Lower-case ASCII slug: accents are folded and apostrophes dropped, so
+    "Taupo" with a macron gives taupo and "Hawke's Bay" gives hawkes-bay,
+    not the taup and hawke-s-bay a plain [^a-z0-9] replace produced."""
+    folded = unicodedata.normalize("NFKD", text or "")
+    folded = "".join(c for c in folded if not unicodedata.combining(c))
+    folded = re.sub(r"['‘’`]", "", folded)
+    return re.sub(r"[^a-z0-9]+", "-", folded.lower()).strip("-")
+
+
+def region_slug(name):
+    """Slug for a region name read off a listing title or attributes file."""
+    slug = slugify(name)
+    return cfg.REGION_SLUG_ALIASES.get(slug, slug)
+
+
+# Stay wordings with a label but no facet page, matched as whole words in a
+# slug (plural allowed). Only the multi-word ones: a bare "hotel" or "cave"
+# in a slug is as likely to be scenery as the stay type, and the listing
+# title (enricher) is the authority for those.
+_SLUG_EXTRA_WORDINGS = ("beach house", "train carriage")
+_EXTRA_STAY_RES = [
+    (re.compile(r"(?<![a-z0-9])%ss?(?![a-z0-9])" % slugify(w)), cfg.EXTRA_STAY_WORDINGS[w])
+    for w in _SLUG_EXTRA_WORDINGS
+]
+
+
 def stay_type_from(slug):
+    for rx, label in _EXTRA_STAY_RES:
+        if rx.search(slug):
+            return label
     for k in _TYPE_KEYS:
         if k in slug:
             return "TYPE_" + k.upper().replace("-", "_")
@@ -169,6 +200,62 @@ def build_facet_rows():
                              boundary=_geo_boundary(country, head),
                              notes="parameters in canonical alphabetical order"))
     return rows
+
+
+def _search_url(country_code, state_code, extra=()):
+    """A /listings search URL. Parameter names are sorted alphabetically
+    (country, petFriendly, regions[], state, type), the only order that does
+    not 301. `extra` is a list of (name, value) pairs."""
+    params = [("country", country_code), ("type", "accommodation")]
+    if state_code:
+        params.append(("state", state_code))
+    params.extend(extra)
+    params.sort(key=lambda kv: kv[0])
+    q = "&".join("%s=%s" % (k.replace("[]", "%5B%5D"), v) for k, v in params)
+    return "%s/listings?%s" % (cfg.BASE, q)
+
+
+def build_search_rows(rows):
+    """Search-results pages that carry real traffic but have no sitemap entry.
+
+    Three kinds: every stay in a country or state (no stay-type filter),
+    pet-friendly stays in each scope, and one per region hub found in `rows`
+    (the regions[] search that mirrors the region page). Every URL is
+    status-checked each run (run.select_status_check_targets) without
+    following redirects, so one that 301s or errors is dropped. A parameter
+    the site ignores still returns 200, so the formats here were taken from
+    the client's own traffic report, not proven by that check.
+    """
+    out = []
+    for cc, ss, country, state in cfg.FACET_SCOPES:
+        out.append(_row(_search_url(cc, ss), "PAGE_SEARCH", country, state,
+                        boundary=_geo_boundary(country),
+                        notes="all stays search, no stay-type filter"))
+        out.append(_row(_search_url(cc, ss, [("petFriendly", "true")]), "PAGE_SEARCH",
+                        country, state, i1="INT_PET_FRIENDLY",
+                        boundary=_geo_boundary(country, "SEARCH_HEAD"),
+                        notes="pet-friendly search"))
+    # Pet-friendly searches also arrive with no country or state at all.
+    out.append(_row("%s/listings?petFriendly=true&type=accommodation" % cfg.BASE,
+                    "PAGE_SEARCH", i1="INT_PET_FRIENDLY", boundary="SEARCH_HEAD",
+                    notes="pet-friendly search, no geography"))
+
+    code_of_country = {v: k for k, _s, v, _g in cfg.FACET_SCOPES}
+    code_of_state = {g: s for _k, s, _v, g in cfg.FACET_SCOPES if g}
+    for r in rows:
+        if r.get("page_type") != "PAGE_REGION" or not r.get("region"):
+            continue
+        cc = code_of_country.get(r["country"])
+        if not cc:
+            continue
+        ss = code_of_state.get(r["state"]) if r["state"] else None
+        if r["state"] and not ss:
+            continue
+        out.append(_row(_search_url(cc, ss, [("regions[]", slug_of(r["url"]))]),
+                        "PAGE_SEARCH", r["country"], r["state"], r["region"],
+                        boundary=_geo_boundary(r["country"]),
+                        notes="region search, mirrors the region page"))
+    return out
 
 
 def feed_of(row):
