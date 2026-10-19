@@ -188,16 +188,17 @@ REGION_SLUG_ALIASES = {
 }
 
 # Clusters Search Generic outperforms PMax on 2x+, per the role-split research
-# (SNR, 9 Aug 2026): romantic, getaways, off-grid, pet-friendly. All four must
-# be represented here or Option B's PMax exclusion list silently misses one.
+# (SNR, 9 Aug 2026): romantic, getaways, off-grid, pet-friendly. These are
+# only candidates for an Option B test now. They no longer set the boundary
+# (see SEARCH_HEAD_APPROVED_PATHS); the report lists them as candidates.
 SEARCH_HEAD_INTENTS = {"INT_ROMANTIC", "INT_OFFGRID", "INT_PET_FRIENDLY", "INT_GETAWAY"}
 
-# UNCONFIRMED, see DECISIONS.md D8. The role-split research names query-intent
-# clusters (romantic, getaways, off-grid, pet-friendly), not stay types, as
-# where Search Generic beats PMax. This set is an inference applied only to
-# the synthetic facet-type pages, not verified against SNR's own findings.
-# Do not extend it to listing/story rows without the same confirmation.
-SEARCH_HEAD_TYPES = {"TYPE_TINY_HOUSE", "TYPE_CABIN", "TYPE_GLAMPING", "TYPE_COTTAGE"}
+# Client decision, 19 Oct 2026 (DECISIONS.md D19): every page stays in PMax
+# for now. SEARCH_HEAD is applied only to the exact page paths listed here,
+# each approved by the client after an Option B test shows Search wins on it,
+# e.g. "/au/nsw/collections/romantic-retreats-nsw". An intent label alone,
+# or a stay type, never moves a page out of PMax. Empty until then.
+SEARCH_HEAD_APPROVED_PATHS = set()
 
 # POI collection to region, only where the platform's own product data confirmed it.
 POI_REGION = {

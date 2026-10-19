@@ -92,7 +92,7 @@ This is the tag that actually controls which campaign a page can appear in:
 | Code | Meaning |
 |---|---|
 | `PMAX_LONGTAIL` | No restriction — this is Performance Max's normal, default territory. Most pages carry this one. |
-| `SEARCH_HEAD` | Romantic, off-grid, pet-friendly, and getaway-themed pages, where Search has been outperforming Performance Max |
+| `SEARCH_HEAD` | Pages you have approved to be handled by Search instead of Performance Max. None yet: every page currently stays in Performance Max. Romantic, pet-friendly, off-grid and getaway pages still get their intent label, and are the candidates for an Option B test |
 | `NZ_REVIEW` | New Zealand |
 | `US_HOLD` | United States |
 | `ADV_HOLD` | Adventure pages |

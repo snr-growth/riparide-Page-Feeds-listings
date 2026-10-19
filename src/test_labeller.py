@@ -5,6 +5,7 @@ Run from the src/ directory: python -m unittest test_labeller -v
 (or `python -m unittest discover -p "test_*.py"` to run the whole suite).
 """
 import unittest
+from unittest import mock
 
 import config as cfg
 import labeller
@@ -94,9 +95,30 @@ class LabelUrlTests(unittest.TestCase):
         self.assertEqual(row["stay"], "TYPE_COTTAGE")
         self.assertEqual(row["boundary"], "PMAX_LONGTAIL")
 
-    def test_listing_with_search_head_intent(self):
+    def test_listing_with_search_head_intent_stays_in_pmax(self):
+        # D19: the intent is labelled, but only an approved path is SEARCH_HEAD.
         row = labeller.label_url(cfg.BASE + "/listings/1-romantic-cabin", "listings")
-        self.assertEqual(row["boundary"], "SEARCH_HEAD")
+        self.assertEqual(row["intent1"], "INT_ROMANTIC")
+        self.assertEqual(row["boundary"], "PMAX_LONGTAIL")
+
+    def test_only_an_approved_path_is_search_head(self):
+        approved = "/au/nsw/collections/romantic-retreats-nsw"
+        with mock.patch.object(cfg, "SEARCH_HEAD_APPROVED_PATHS", {approved}):
+            yes = labeller.label_url(cfg.BASE + approved, "collections")
+            no = labeller.label_url(cfg.BASE + "/au/vic/collections/romantic-retreats-vic", "collections")
+            nz = labeller.label_url(cfg.BASE + "/nz/collections/romantic-retreats-nz", "collections")
+        self.assertEqual(yes["boundary"], "SEARCH_HEAD")
+        self.assertEqual(no["boundary"], "PMAX_LONGTAIL")
+        self.assertEqual(nz["boundary"], "NZ_REVIEW")     # holds still win
+
+    def test_client_decision_nothing_is_search_head_by_default(self):
+        self.assertEqual(cfg.SEARCH_HEAD_APPROVED_PATHS, set())
+        rows = [labeller.label_url(cfg.BASE + p, g) for p, g in (
+            ("/au/nsw/collections/pet-friendly-escapes-ea2d4ad8-cdf2-4e00-b3d4-e8adbf5b197f", "collections"),
+            ("/au/nsw/collections/romantic-retreats-nsw", "collections"),
+            ("/stories/71-tiny-house-in-a-big-forest", "stories"))]
+        rows += labeller.build_facet_rows() + labeller.build_search_rows([])
+        self.assertFalse([r["url"] for r in rows if r["boundary"] == "SEARCH_HEAD"])
 
     def test_country_page(self):
         row = labeller.label_url(cfg.BASE + "/au", "destinations")
@@ -154,12 +176,13 @@ class FacetRowTests(unittest.TestCase):
             if "state=" not in q:
                 self.assertNotIn("state", names)
 
-    def test_search_head_type_gets_search_head_boundary(self):
+    def test_stay_type_no_longer_decides_the_boundary(self):
+        # D19 replaced the unconfirmed SEARCH_HEAD_TYPES inference (D8).
         matches = [r for r in self.rows if r["stay"] == "TYPE_TINY_HOUSE"]
         self.assertTrue(matches)
         for r in matches:
             if r["boundary"] not in ("NZ_REVIEW", "US_HOLD"):
-                self.assertEqual(r["boundary"], "SEARCH_HEAD")
+                self.assertEqual(r["boundary"], "PMAX_LONGTAIL")
 
     def test_all_facet_rows_are_page_facet_type(self):
         self.assertTrue(all(r["page_type"] == "PAGE_FACET_TYPE" for r in self.rows))
@@ -285,7 +308,7 @@ class SearchRowTests(unittest.TestCase):
 
     def test_pet_friendly_with_and_without_geography(self):
         r = self.by_url[cfg.BASE + "/listings?country=AU&petFriendly=true&state=VIC&type=accommodation"]
-        self.assertEqual((r["intent1"], r["boundary"]), ("INT_PET_FRIENDLY", "SEARCH_HEAD"))
+        self.assertEqual((r["intent1"], r["boundary"]), ("INT_PET_FRIENDLY", "PMAX_LONGTAIL"))
         bare = self.by_url[cfg.BASE + "/listings?petFriendly=true&type=accommodation"]
         self.assertEqual(bare["country"], "")
 

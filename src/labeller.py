@@ -107,16 +107,21 @@ def _geo_boundary(country, fallback="PMAX_LONGTAIL"):
     return fallback
 
 
+def _head(url):
+    """SEARCH_HEAD only for a page the client has approved by path
+    (config.SEARCH_HEAD_APPROVED_PATHS), PMAX_LONGTAIL for everything else.
+    Intents and stay types no longer decide this, see DECISIONS.md D19."""
+    path = url[len(cfg.BASE):] if url.startswith(cfg.BASE) else url
+    return "SEARCH_HEAD" if path in cfg.SEARCH_HEAD_APPROVED_PATHS else "PMAX_LONGTAIL"
+
+
 def boundary_for(row):
-    """The boundary a listing or story should carry given its current geo and
-    intents. Used after a later step (attributes file, catalog feed) adds a
-    country or an intent, so a new pet-friendly intent also moves the page to
-    SEARCH_HEAD rather than leaving the boundary label() first gave it."""
+    """The boundary a listing or story should carry given its current geo.
+    Used after a later step (attributes file, catalog feed) adds a country,
+    so a page that turns out to be NZ or US gets its hold."""
     if row["page_type"] not in ("PAGE_LISTING", "PAGE_STORY"):
         return row["boundary"]
-    ints = {row.get("intent1"), row.get("intent2")}
-    return _geo_boundary(row["country"],
-                         "SEARCH_HEAD" if ints & cfg.SEARCH_HEAD_INTENTS else "PMAX_LONGTAIL")
+    return _geo_boundary(row["country"], _head(row["url"]))
 
 
 def _row(url, page_type, country="", state="", region="", stay="",
@@ -147,8 +152,7 @@ def label_url(url, group):
         stay = stay_type_from(slug)
         ints = intents_from(slug)
         i1, i2 = (ints + ["", ""])[:2]
-        boundary = "SEARCH_HEAD" if set(ints) & cfg.SEARCH_HEAD_INTENTS else "PMAX_LONGTAIL"
-        return _row(url, page_type, stay=stay, i1=i1, i2=i2, boundary=boundary,
+        return _row(url, page_type, stay=stay, i1=i1, i2=i2, boundary=_head(url),
                     notes="location pending attributes file")
 
     # destinations and collections both live under /{country}[/{state}]/...
@@ -185,7 +189,7 @@ def _collection(url, country, state, slug):
     ints = intents_from(slug)
     i1, i2 = (ints + ["", ""])[:2]
     region = cfg.POI_REGION.get(slug, "")
-    head = "SEARCH_HEAD" if set(ints) & cfg.SEARCH_HEAD_INTENTS else "PMAX_LONGTAIL"
+    head = _head(url)
     notes = "collection landing page"
     if slug in cfg.POI_REGION:
         notes += ", point of interest"
@@ -207,9 +211,8 @@ def build_facet_rows():
             q += "subcategories%%5B%%5D=%s&type=accommodation" % sub
             url = "%s/listings?%s" % (cfg.BASE, q)
             stay = "TYPE_" + sub.upper().replace("-", "_")
-            head = "SEARCH_HEAD" if stay in cfg.SEARCH_HEAD_TYPES else "PMAX_LONGTAIL"
             rows.append(_row(url, "PAGE_FACET_TYPE", country, state, "", stay,
-                             boundary=_geo_boundary(country, head),
+                             boundary=_geo_boundary(country, _head(url)),
                              notes="parameters in canonical alphabetical order"))
     return rows
 
@@ -243,13 +246,13 @@ def build_search_rows(rows):
         out.append(_row(_search_url(cc, ss), "PAGE_SEARCH", country, state,
                         boundary=_geo_boundary(country),
                         notes="all stays search, no stay-type filter"))
-        out.append(_row(_search_url(cc, ss, [("petFriendly", "true")]), "PAGE_SEARCH",
-                        country, state, i1="INT_PET_FRIENDLY",
-                        boundary=_geo_boundary(country, "SEARCH_HEAD"),
+        pet = _search_url(cc, ss, [("petFriendly", "true")])
+        out.append(_row(pet, "PAGE_SEARCH", country, state, i1="INT_PET_FRIENDLY",
+                        boundary=_geo_boundary(country, _head(pet)),
                         notes="pet-friendly search"))
     # Pet-friendly searches also arrive with no country or state at all.
-    out.append(_row("%s/listings?petFriendly=true&type=accommodation" % cfg.BASE,
-                    "PAGE_SEARCH", i1="INT_PET_FRIENDLY", boundary="SEARCH_HEAD",
+    bare = "%s/listings?petFriendly=true&type=accommodation" % cfg.BASE
+    out.append(_row(bare, "PAGE_SEARCH", i1="INT_PET_FRIENDLY", boundary=_head(bare),
                     notes="pet-friendly search, no geography"))
 
     code_of_country = {v: k for k, _s, v, _g in cfg.FACET_SCOPES}

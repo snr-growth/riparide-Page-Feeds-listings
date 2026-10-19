@@ -79,7 +79,7 @@ class WriteReportTests(unittest.TestCase):
         report.write_report(SAMPLE_ROWS, SAMPLE_CHECKS, SAMPLE_SUMMARY, path=self.path)
         ws = load_workbook(self.path)["Label Taxonomy"]
         labels = [row[1] for row in ws.iter_rows(min_row=2, values_only=True)]
-        self.assertIn("INT_GETAWAY (SEARCH_HEAD boundary)", labels)
+        self.assertIn("INT_GETAWAY (Option B test candidate)", labels)
         self.assertIn("SEARCH_HEAD", labels)
         # every SUBCATS entry must be represented so the sheet can't silently
         # drift out of sync with config.py

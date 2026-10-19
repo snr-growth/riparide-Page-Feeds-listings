@@ -158,11 +158,12 @@ def _taxonomy_sheet(wb):
             continue
         seen_intent.add(label)
         keywords = ", ".join(k for k, l in cfg.INTENT_KEYWORDS if l == label)
-        head = " (SEARCH_HEAD boundary)" if label in cfg.SEARCH_HEAD_INTENTS else ""
+        head = " (Option B test candidate)" if label in cfg.SEARCH_HEAD_INTENTS else ""
         rows.append(("Intent", label + head, "keyword(s): " + keywords))
 
     rows.extend([
-        ("Boundary", "SEARCH_HEAD", "Search Generic beats PMax 2x+ here; excluded from PMax under Option B"),
+        ("Boundary", "SEARCH_HEAD", "Only pages the client has approved after an Option B test "
+                                    "(config.SEARCH_HEAD_APPROVED_PATHS, none yet); excluded from PMax"),
         ("Boundary", "PMAX_LONGTAIL", "PMax's proven territory"),
         ("Boundary", "NZ_REVIEW", "NZ PMax at 0.68 ROAS; held out of asset groups"),
         ("Boundary", "US_HOLD", "US is not a paid market; held out of asset groups"),

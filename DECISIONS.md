@@ -158,7 +158,7 @@ The SNR spec names four query-intent clusters where Search Generic beats PMax 2x
 
 `INTENT_KEYWORDS` and `SEARCH_HEAD_INTENTS` only covered three of the four clusters (romantic, off-grid, pet-friendly). Getaway-type listings/stories could never be excluded from PMax under Option B, silently defeating the reason the boundary dimension exists. Added `("getaway", "INT_GETAWAY")` to `INTENT_KEYWORDS` (substring match also covers "getaways" and "weekend-getaway") and `INT_GETAWAY` to `SEARCH_HEAD_INTENTS`. Covered by `test_labeller.IntentTests`.
 
-### Unconfirmed, left as-is pending client/SNR sign-off: `SEARCH_HEAD_TYPES`
+### Unconfirmed, left as-is pending client/SNR sign-off: `SEARCH_HEAD_TYPES` (superseded by D19: removed)
 
 `config.SEARCH_HEAD_TYPES` (`TYPE_TINY_HOUSE`, `TYPE_CABIN`, `TYPE_GLAMPING`, `TYPE_COTTAGE`) marks synthetic facet-type pages as `SEARCH_HEAD` by stay *type*. Nothing in the SNR spec discusses stay types for this purpose — the spec's own SEARCH_HEAD rationale is entirely about query-intent clusters. This constant appears to have been inferred by whoever first wrote `config.py`, with no citation and no DECISIONS.md entry, which breaks this file's own rule that nothing here is guessed. It has been left in place (removing it without direction is just as much a guess as leaving it) but is now flagged in `config.py` directly. **Needs an explicit answer from SNR/the client** before the Option A/B split goes live: either confirm the stay-type inference, or replace it with nothing until a real basis exists.
 
@@ -439,3 +439,16 @@ The stories-feed design above was built blind and was wrong about the feed's sha
 | Duplicate NZ region labels | 4 pairs | 0 |
 
 Story intents: outdoor bath 200, pet-friendly 188, getaway 114 (mostly the Family Getaways collection), romantic 102, luxury 77. The `SEARCH_HEAD` rise follows the existing rule (pet-friendly, romantic, getaway and off-grid count as `SEARCH_HEAD`). Under Option B it takes 334 stories out of PMax, so it has been raised with the client rather than assumed.
+
+## D19. Every page stays in PMax; SEARCH_HEAD becomes opt-in by page path (19 Oct 2026)
+
+**Decision (client, via Usama):** keep all pages in PMax for now.
+
+**Why:** `SEARCH_HEAD` used to be applied automatically from intents (romantic, pet-friendly, getaway, off-grid) and, on facet pages, from stay type (D8). Once stories got real intents (D18), that tagged 335 stories, the NSW pet and romantic collections and the pet-friendly searches. Under Option B all of them would leave PMax. But the NSW pet and romantic collections are NSW PMax's best-performing pages, and about 114 stories were tagged only because they sit in the "Family Getaways" collection. The research behind `SEARCH_HEAD_INTENTS` is query-level, not page-level evidence. Excluding proven PMax winners on that basis is the wrong default.
+
+**What changed:**
+- `labeller._head(url)` is the only place a boundary is chosen. It returns `SEARCH_HEAD` only if the page's path is in `config.SEARCH_HEAD_APPROVED_PATHS`, and `PMAX_LONGTAIL` otherwise. NZ and US holds still win.
+- The set is empty. `SEARCH_HEAD_TYPES` is removed. `SEARCH_HEAD_INTENTS` is kept only to mark the intents that are Option B test candidates in the report's taxonomy sheet.
+- Intent labels are unchanged, so asset groups can still target pet-friendly or romantic pages.
+
+**Recommended next step:** if the role split is tested, run it in one market (e.g. VIC, with NSW as control) for 4–6 weeks. Add a page to `SEARCH_HEAD_APPROVED_PATHS` only where Search proves better on that page. Covered by `test_labeller` (`test_client_decision_nothing_is_search_head_by_default`, `test_only_an_approved_path_is_search_head`).

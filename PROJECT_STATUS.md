@@ -167,7 +167,7 @@ These were found by cross-checking the built code line-by-line against the spec.
 | 3 | No robots.txt / AdsBot-Google check anywhere | ✅ **Fixed** — added, reported in every run's email (non-blocking by design, see below) |
 | 4 | D4's "full status check every 6 months" was a recommendation nobody had wired up | ✅ **Fixed** — now automatic in January and July |
 | 5 | Nothing would catch a feed silently collapsing to near-zero rows (e.g. during a site/network outage) | ✅ **Fixed and proven** — reproduced the exact failure deliberately, confirmed the new guard stops it before anything is written |
-| 6 | Facet pages tagged `SEARCH_HEAD` by stay type — not backed by anything in the spec | ⚠️ **Still open** — flagged clearly in code and DECISIONS.md, needs an explicit answer from SNR/the client, not a code change |
+| 6 | Facet pages tagged `SEARCH_HEAD` by stay type — not backed by anything in the spec | ✅ **Resolved, 19 Oct 2026** — the stay-type rule was removed. Only client-approved pages are `SEARCH_HEAD` (D19) |
 | 7 | Adventures/Collections content types and their separate feed handling aren't in the original spec | ⚠️ **Still open** — same as above, a confirmation needed rather than a bug |
 
 None of the fixes above were large changes, but leaving any of them unresolved would have undermined the actual experiment the feed exists to support (a bad facet URL or a missing exclusion keyword directly affects the Option A/B read).
@@ -180,12 +180,12 @@ The client checked the live feed and raised six points. Each was checked against
 |---|---|---|
 | 1 | Collections barely tagged | ✅ **Fixed.** 14 town collections now carry their region, checked against the region on every listing in that town. `top-stays-beach-houses` is now a beach house. Outdoor-bath, soak-it-up and under-the-stars collections have intent labels. Most of the other 70+ collections are state-wide themes that correctly have no single region. |
 | 2 | Region search pages missing | ✅ **Added and checked on the live site.** 70 search pages: Blue Mountains and every other region, all-VIC and the other scopes, and pet-friendly with and without a state. All return 200. The site honours the filters: the Blue Mountains search is titled "Stays in Blue Mountains, New South Wales", and a made-up region returns no stays. |
-| 3 | Stories barely labelled | ✅ **Fixed and checked on the live site.** Each story page features one listing, and the story now takes that listing's stay type: **1,052 of 1,087 stories (97%) now have one, up from 260**. Intents come from the Riparide collections each story belongs to, such as Pet Friendly Escapes or Outdoor Baths: 605 stories now have one. ⚠️ 334 AU stories are now `SEARCH_HEAD` (pet-friendly, romantic or getaway), up from 55, so under Option B they would leave PMax. |
-| 4 | `SEARCH_HEAD` covers NSW pet and romantic collections | ⚠️ **Decision for the client.** Under Option B these leave PMax. Nothing changed. |
+| 3 | Stories barely labelled | ✅ **Fixed and checked on the live site.** Each story page features one listing, and the story now takes that listing's stay type: **1,052 of 1,087 stories (97%) now have one, up from 260**. Intents come from the Riparide collections each story belongs to, such as Pet Friendly Escapes or Outdoor Baths: 605 stories now have one. |
+| 4 | `SEARCH_HEAD` covers NSW pet and romantic collections | ✅ **Decided, 19 Oct 2026: everything stays in PMax for now.** `SEARCH_HEAD` is no longer applied automatically from intents or stay types. It is set only for pages the client approves after an Option B test (`config.SEARCH_HEAD_APPROVED_PATHS`, empty). Intent labels are kept for asset-group targeting. |
 | 5 | Listing URLs change | ✅ **Already handled.** Matching uses the listing id. |
 | 6 | Duplicate NZ region labels | ✅ **Fixed**, plus five more regions whose listing titles used a different name from their region page. About 160 listings were affected. |
 
-Two further problems were found and fixed during this work. Listing stay types now come from the listing's own category instead of a guess from its URL; the guess was wrong on 630 of 3,467 listings (18%). And a listing or story that gains a pet-friendly label now moves to `SEARCH_HEAD`, as the rule intends.
+Two further problems were found and fixed during this work. Listing stay types now come from the listing's own category instead of a guess from its URL; the guess was wrong on 630 of 3,467 listings (18%). Following the PMax decision above, no page is `SEARCH_HEAD` until the client approves it.
 
 ---
 
@@ -199,9 +199,7 @@ Riparide's site fingerprints and blocks common tools (`requests`, `curl`) even w
 
 ## 7. Open decisions for the client
 
-- Confirm whether facet pages should really be tagged `SEARCH_HEAD` by stay type (tiny house, cabin, glamping, cottage) — this wasn't in the spec and needs a yes/no before the Option A/B split goes live.
-- **Decide whether the NSW pet-friendly and romantic collections stay in PMax** (§5b point 4).
-- **Decide whether stories should follow the `SEARCH_HEAD` rule.** 334 AU stories are now `SEARCH_HEAD`, including 114 that get "getaway" from the Family Getaways collection (§5b point 3).
+- **Option B test:** if the role split is tested, run it in one market (e.g. VIC, with NSW as control) for 4–6 weeks. Only pages where Search proves better get added to `config.SEARCH_HEAD_APPROVED_PATHS` (D19).
 - Confirm whether Adventures pages should have their own feed/asset-group treatment, since this wasn't part of the original spec.
 - Confirm ownership/timing for the still-manual steps: brand negatives, asset-group restructuring around labels, and the URL-expansion account setting — none of these are things this codebase can do.
 - **Watch the first real GitHub Actions run.** Everything above is verified by code and tests running locally; the one thing that can only be confirmed by actually watching a live scheduled or manually-triggered run is whether GitHub's infrastructure can reach riparide.com the way Railway's did.

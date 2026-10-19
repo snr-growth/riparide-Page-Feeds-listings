@@ -297,7 +297,7 @@ class EnrichCacheStalenessTests(unittest.TestCase):
         out = enricher.enrich(rows, log=lambda *a: None, cache_path=self.cache_path)
         self.assertEqual(rows[0]["stay"], "TYPE_CABIN")
         self.assertEqual(rows[0]["intent1"], "INT_ROMANTIC")       # from the listing's slug
-        self.assertEqual(rows[0]["boundary"], "SEARCH_HEAD")
+        self.assertEqual(rows[0]["boundary"], "PMAX_LONGTAIL")     # D19: intent alone keeps PMax
         self.assertEqual(out["stories_linked"], 1)
 
     def test_old_story_cache_entry_is_re_read_once_for_its_link(self):

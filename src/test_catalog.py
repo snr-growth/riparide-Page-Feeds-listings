@@ -7,6 +7,7 @@ pet_friendly). The live CSV's header has not been seen from this
 environment, which is why unrecognised headers must fail soft.
 """
 import unittest
+from unittest import mock
 
 import catalog
 import config as cfg
@@ -174,14 +175,21 @@ class ApplyTests(unittest.TestCase):
         self.assertEqual((a["country"], a["state"], a["region"]),
                          ("GEO_AU", "GEO_VIC", "REG_GREAT_OCEAN_ROAD"))
 
-    def test_pet_friendly_story_moves_to_search_head(self):
+    def test_pet_friendly_story_gets_the_intent_but_stays_in_pmax(self):
+        # D19: the intent label is kept for targeting; the boundary is not moved.
         a = _story("https://www.riparide.com/stories/142-autumn-leaves",
                    country="GEO_AU", state="GEO_VIC")
-        self.assertEqual(a["boundary"], "PMAX_LONGTAIL")
         s = catalog.apply([a], self.by_id, log=lambda *a: None)
         self.assertEqual((a["intent1"], a["intent2"]), ("INT_PET_FRIENDLY", "INT_HOT_TUB"))
+        self.assertEqual(a["boundary"], "PMAX_LONGTAIL")
+        self.assertEqual(s["now_search_head"], 0)
+
+    def test_an_approved_story_path_is_search_head(self):
+        path = "/stories/142-autumn-leaves"
+        with mock.patch.object(cfg, "SEARCH_HEAD_APPROVED_PATHS", {path}):
+            a = _story("https://www.riparide.com" + path, country="GEO_AU", state="GEO_VIC")
+            catalog.apply([a], self.by_id, log=lambda *a: None)
         self.assertEqual(a["boundary"], "SEARCH_HEAD")
-        self.assertEqual(s["now_search_head"], 1)
 
     def test_existing_intents_are_not_displaced(self):
         a = _story("https://www.riparide.com/stories/142-a-romantic-luxury-escape")

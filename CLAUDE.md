@@ -170,8 +170,10 @@ Open items:
    listing id, but `attributes.apply` looks stories and adventures up in the
    same table by their own id (D17). It needs a page-type column, or the
    stories and adventures must be left out of it.
-5. **`config.SEARCH_HEAD_TYPES` is an unconfirmed inference** (D8) — needs an
-   explicit answer from SNR/the client before the Option A/B split goes live.
+5. **`SEARCH_HEAD` is opt-in by page path** (D19, 19 Oct 2026). The client kept
+   every page in PMax. Never derive it from intents or stay types again; add
+   a page to `config.SEARCH_HEAD_APPROVED_PATHS` only when the client approves
+   it after an Option B test. (`SEARCH_HEAD_TYPES` from D8 is removed.)
 6. **Past months' `.xlsx` reports are no longer kept in git history.** Under
    GitHub Actions every month's report was committed to `reports/`, giving a
    browsable history; on Railway's volume only the current report is being

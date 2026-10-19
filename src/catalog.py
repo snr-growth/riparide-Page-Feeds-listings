@@ -181,8 +181,8 @@ def apply(rows, by_id, log=print):
     The feed's category is the platform's own stay type, so it replaces the
     slug guess. Location only fills blanks, because a story's location read
     off its own page is already the platform's. Intents are added into empty
-    slots, then the boundary is recomputed so a newly pet-friendly story
-    moves to SEARCH_HEAD like any other.
+    slots, then the boundary is recomputed (geo holds only; SEARCH_HEAD is
+    opt-in by path, DECISIONS.md D19).
     """
     summary = {"stories": 0, "matched": 0, "stay_set": 0, "intent_added": 0,
                "now_search_head": 0, "stories_without_stay": 0}
