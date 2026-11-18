@@ -149,6 +149,20 @@ def build_report(summary):
             L.append("    %s  %s" % (code, u))
         L.append("")
 
+    sc = summary.get("search_counts") or {}
+    if sc:
+        L.append("Search page result counts (minimum %d)" % sc.get("minimum", 0))
+        if sc.get("skipped"):
+            L.append("  Skipped this run")
+        else:
+            L.append("  Counted:   %d" % sc.get("counted", 0))
+            L.append("  Dropped:   %d (%d with no results)" % (sc.get("dropped", 0),
+                                                            sc.get("dropped_zero", 0)))
+            L.append("  Unknown:   %d (count unreadable, kept)" % len(sc.get("unknown") or []))
+            for u, n in (sc.get("dropped_examples") or [])[:10]:
+                L.append("    %d  %s" % (n, u))
+        L.append("")
+
     loc = summary.get("location") or {}
     if loc and not loc.get("skipped"):
         L.append("Location")

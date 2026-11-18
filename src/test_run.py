@@ -105,6 +105,92 @@ class BuildRowsSearchTests(unittest.TestCase):
         self.assertEqual(len(urls), len([r for r in rows if r["page_type"] == "PAGE_SEARCH"]))
 
 
+class ApplySearchMinimumTests(unittest.TestCase):
+    """D20: a search/facet page can return 200 yet show 0 stays."""
+
+    def setUp(self):
+        self.rows = [_row("https://x/listings?a", "PAGE_SEARCH"),
+                     _row("https://x/listings?b", "PAGE_FACET_TYPE"),
+                     _row("https://x/listings?c", "PAGE_SEARCH"),
+                     _row("https://x/listings?d", "PAGE_SEARCH"),
+                     _row("https://x/au/vic/grampians", "PAGE_REGION")]
+
+    def test_below_minimum_dropped_at_minimum_kept_none_kept(self):
+        totals = {"https://x/listings?a": 0, "https://x/listings?b": 5,
+                  "https://x/listings?c": 6, "https://x/listings?d": None}
+        kept, rep = run.apply_search_minimum(self.rows, totals, 6)
+        self.assertEqual([r["url"] for r in kept],
+                         ["https://x/listings?c", "https://x/listings?d",
+                          "https://x/au/vic/grampians"])
+        self.assertEqual((rep["counted"], rep["dropped"], rep["dropped_zero"]), (3, 2, 1))
+        self.assertEqual(rep["unknown"], ["https://x/listings?d"])
+
+    def test_other_page_types_never_dropped_even_if_counted(self):
+        kept, rep = run.apply_search_minimum(self.rows, {"https://x/au/vic/grampians": 0}, 6)
+        self.assertEqual(len(kept), len(self.rows))
+        self.assertEqual(rep["dropped"], 0)
+
+
+class SearchCountRunTests(unittest.TestCase):
+    """run.main() wiring of the search-count step, all network mocked."""
+
+    SEARCH_ALL_VIC = "https://www.riparide.com/listings?country=AU&state=VIC&type=accommodation"
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.snapshot_in = os.path.join(self.tmp, "offline-snapshot.json")
+        with open(self.snapshot_in, "w", encoding="utf-8") as f:
+            json.dump(SAMPLE_SNAPSHOT, f)
+        self._orig_cfg = {k: getattr(cfg, k) for k in
+                          ("DATA_DIR", "SNAPSHOT_FILE", "OUTPUT_DIR", "REPORT_DIR")}
+        cfg.DATA_DIR = self.tmp
+        cfg.SNAPSHOT_FILE = os.path.join(self.tmp, "snapshot.json")
+        cfg.OUTPUT_DIR = os.path.join(self.tmp, "output")
+        cfg.REPORT_DIR = os.path.join(self.tmp, "reports")
+        self._orig = (fetcher.get, fetcher.status_check, fetcher.search_totals)
+        fetcher.get = lambda url, retries=None: ROBOTS_TXT
+        fetcher.status_check = lambda urls, log=print: {u: 200 for u in urls}
+        self.counted = []
+
+        def fake_totals(urls, log=print):
+            urls = list(urls)
+            self.counted.extend(urls)
+            out = {u: 50 for u in urls}
+            out[self.SEARCH_ALL_VIC] = 0
+            out[urls[0] if urls[0] != self.SEARCH_ALL_VIC else urls[1]] = None
+            return out
+        fetcher.search_totals = fake_totals
+
+    def tearDown(self):
+        for key, value in self._orig_cfg.items():
+            setattr(cfg, key, value)
+        fetcher.get, fetcher.status_check, fetcher.search_totals = self._orig
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _core_urls(self):
+        import csv
+        with open(os.path.join(cfg.OUTPUT_DIR, cfg.CORE_CSV), encoding="utf-8") as f:
+            return {row[0] for row in csv.reader(f)}
+
+    def test_zero_result_search_dropped_and_unknown_kept(self):
+        rc = run.main(["--offline-snapshot", self.snapshot_in, "--skip-location",
+                       "--skip-catalog", "--dry-run"])
+        self.assertEqual(rc, 0)
+        self.assertTrue(self.counted)
+        self.assertTrue(all("/listings?" in u for u in self.counted))
+        urls = self._core_urls()
+        self.assertNotIn(self.SEARCH_ALL_VIC, urls)
+        unknown = self.counted[0] if self.counted[0] != self.SEARCH_ALL_VIC else self.counted[1]
+        self.assertIn(unknown, urls)
+
+    def test_skip_status_skips_counting(self):
+        rc = run.main(["--offline-snapshot", self.snapshot_in, "--skip-location",
+                       "--skip-catalog", "--skip-status", "--dry-run"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(self.counted, [])
+        self.assertIn(self.SEARCH_ALL_VIC, self._core_urls())
+
+
 class FullRunTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

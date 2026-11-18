@@ -24,8 +24,14 @@ def _check(name, passed, detail, threshold):
     return {"check": name, "passed": bool(passed), "detail": detail, "threshold": threshold}
 
 
-def validate(rows, status_by_url=None, previous_counts=None):
+def validate(rows, status_by_url=None, previous_counts=None, search_counts=None):
     """rows = [{'url':..,'label':..,'feed':..}, ...] across BOTH feeds.
+
+    search_counts is optional, {url: live result count or None} for the
+    search and stay-type facet URLs (fetcher.search_totals). When given, any
+    of those URLs still in the output with a known count below
+    cfg.MIN_SEARCH_RESULTS fails (D20); None is unknown and is not a failure.
+    When not given (counts skipped this run) the check passes and says so.
 
     Returns (all_passed, [check dicts]). status_by_url is optional; when given,
     any URL whose recorded status is a real non-200 is reported. previous_counts
@@ -82,6 +88,21 @@ def validate(rows, status_by_url=None, previous_counts=None):
                           "%d remaining%s" % (len(bad_status),
                                               (", e.g. %d" % bad_status[0][1]) if bad_status else ""),
                           "0"))
+
+    search_name = "Search/facet URLs in output with fewer than %d results" % cfg.MIN_SEARCH_RESULTS
+    if search_counts is None:
+        results.append(_check(search_name, True,
+                              "not counted this run (status checks skipped)", "0"))
+    else:
+        url_set = set(urls)
+        thin = [(u, n) for u, n in search_counts.items()
+                if u in url_set and n is not None and n < cfg.MIN_SEARCH_RESULTS]
+        unknown = sum(1 for u, n in search_counts.items() if u in url_set and n is None)
+        results.append(_check(search_name, not thin,
+                              "%d remaining%s; %d count unknown" % (
+                                  len(thin), (", e.g. %s (%d)" % thin[0]) if thin else "",
+                                  unknown),
+                              "0"))
 
     bad_label_chars = [r["url"] for r in rows
                        if any(c not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_;"

@@ -76,6 +76,37 @@ def select_status_check_targets(rows, added_urls, full_status):
     return targets
 
 
+SEARCH_PAGE_TYPES = ("PAGE_SEARCH", "PAGE_FACET_TYPE")
+
+
+def apply_search_minimum(rows, totals, minimum):
+    """Drop search/facet rows whose live result count is below `minimum`.
+
+    `totals` is fetcher.search_totals' {url: count or None}. A None count
+    (page not fetched, or no count in it) is unknown: the row is kept and
+    listed, never treated as zero. Rows of other page types are untouched.
+    Returns (kept_rows, report dict). See DECISIONS.md D20.
+    """
+    counted, dropped, unknown = 0, [], []
+    drop_set = set()
+    for r in rows:
+        if r["page_type"] not in SEARCH_PAGE_TYPES or r["url"] not in totals:
+            continue
+        n = totals[r["url"]]
+        if n is None:
+            unknown.append(r["url"])
+            continue
+        counted += 1
+        if n < minimum:
+            dropped.append((r["url"], n))
+            drop_set.add(r["url"])
+    kept = [r for r in rows if r["url"] not in drop_set]
+    return kept, {"skipped": False, "minimum": minimum, "targets": len(totals),
+                  "counted": counted, "dropped": len(dropped),
+                  "dropped_zero": sum(1 for _, n in dropped if n == 0),
+                  "dropped_examples": dropped, "unknown": unknown}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Riparide page feed monthly refresh")
     ap.add_argument("--dry-run", action="store_true",
@@ -205,6 +236,29 @@ def main(argv=None):
                 log("removed %d url(s) that did not return 200" % len(dead_set))
         summary["status"] = status
 
+        # 6a. search/facet result counts (D20) --------------------------------
+        # A search page that returns 200 can still show 0 stays (an unknown
+        # region or a stay type with no stock), so read each one's count.
+        log(LINE)
+        search_counts = None
+        if args.skip_status:
+            log("search result counts skipped by flag (--skip-status)")
+            summary["search_counts"] = {"skipped": True, "minimum": cfg.MIN_SEARCH_RESULTS}
+        else:
+            search_urls = [r["url"] for r in rows if r["page_type"] in SEARCH_PAGE_TYPES]
+            log("counting results on %d search/facet url(s), minimum %d"
+                % (len(search_urls), cfg.MIN_SEARCH_RESULTS))
+            search_counts = fetcher.search_totals(search_urls, log)
+            rows, sc = apply_search_minimum(rows, search_counts, cfg.MIN_SEARCH_RESULTS)
+            summary["search_counts"] = sc
+            log("counted %d, dropped %d below %d results (%d with 0), count unknown %d"
+                % (sc["counted"], sc["dropped"], sc["minimum"], sc["dropped_zero"],
+                   len(sc["unknown"])))
+            for u, n in sc["dropped_examples"]:
+                log("  dropped (%d results) %s" % (n, u))
+            for u in sc["unknown"]:
+                log("  count unknown, kept %s" % u)
+
         # 6b. robots.txt / AdsBot check ---------------------------------------
         log(LINE)
         summary["robots"] = fetcher.check_adsbot_access(cfg.ADSBOT_CHECK_PATHS, log)
@@ -215,7 +269,8 @@ def main(argv=None):
                      "feed": labeller.feed_of(r)} for r in rows]
         feed_rows = [r for r in out_rows if r["feed"] != cfg.FEED_EXCLUDE]
         previous_counts = (previous or {}).get("feed_counts")
-        passed, checks = validator.validate(feed_rows, previous_counts=previous_counts)
+        passed, checks = validator.validate(feed_rows, previous_counts=previous_counts,
+                                            search_counts=search_counts)
         summary["checks"] = checks
         log(validator.format_results(checks))
         if not passed:

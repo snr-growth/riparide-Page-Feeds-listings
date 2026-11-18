@@ -187,11 +187,18 @@ Open items:
    Sheet) is not confirmed anywhere in Google's docs** (D14) — check the
    Business Data feed's schedule setting once the connection exists, don't
    assume it matches any figure from this file.
-10. **Live checks run from GitHub runners, not this machine** (D18). This
-   machine can't reach riparide.com. To check something against the live
-   site, push a temporary `verify-live-*` branch carrying a workflow that
-   does a `--dry-run`, read its log with `gh run view --log`, then delete
-   the branch. Never merge such a workflow to `main`: D16 removed Actions.
+10. **Live checks run inside the Railway container or from GitHub runners,
+   not this machine** (D18, D20). This machine can't reach riparide.com.
+   Quickest: from a folder linked to Railway project
+   `1d566a14-d4aa-42ee-8dbe-a1c21f42603f`, service `feed-refresh` (Railway
+   CLI logged in as `concaptions`), run `railway ssh -- "<cmd>"`
+   (e.g. `python3 -c '...'`; calls are flaky, retry if output is empty).
+   Keep it read-only and write nothing outside `/tmp`. Alternative: push a
+   temporary `verify-live-*` branch carrying a workflow that does a
+   `--dry-run`, read its log with `gh run view --log`, then delete the
+   branch. Never merge such a workflow to `main`: D16 removed Actions.
+   **A 200 is not proof a search page works** (D20): check its
+   `"totalCount"` too.
 11. **If the stories feed changes shape,** the run's "Stories feed" section
    says "no story url or id column" or "no category, region, location ..."
    and stories keep their other labels. Add the new column names to

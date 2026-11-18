@@ -58,6 +58,21 @@ class WriteReportTests(unittest.TestCase):
         self.assertIn("Changes", values)
         self.assertIn("Added", values)
 
+    def test_summary_sheet_shows_search_counts(self):
+        summary = dict(SAMPLE_SUMMARY, search_counts={
+            "skipped": False, "minimum": 6, "counted": 10, "dropped": 3,
+            "dropped_zero": 2, "dropped_examples": [], "unknown": ["https://x/u"]})
+        report.write_report(SAMPLE_ROWS, SAMPLE_CHECKS, summary, path=self.path)
+        rows = {c[0]: c[1] for c in load_workbook(self.path)["Summary"].iter_rows(values_only=True) if c[0]}
+        self.assertEqual(rows["Dropped (below minimum)"], 3)
+        self.assertEqual(rows["Count unknown (kept)"], 1)
+
+    def test_summary_sheet_says_when_search_counts_skipped(self):
+        summary = dict(SAMPLE_SUMMARY, search_counts={"skipped": True, "minimum": 6})
+        report.write_report(SAMPLE_ROWS, SAMPLE_CHECKS, summary, path=self.path)
+        rows = {c[0]: c[1] for c in load_workbook(self.path)["Summary"].iter_rows(values_only=True) if c[0]}
+        self.assertIn("skipped", rows["Search result counts"])
+
     def test_qa_sheet_has_header_and_one_row_per_check(self):
         report.write_report(SAMPLE_ROWS, SAMPLE_CHECKS, SAMPLE_SUMMARY, path=self.path)
         ws = load_workbook(self.path)["QA Checks"]

@@ -335,5 +335,46 @@ class SearchRowTests(unittest.TestCase):
         self.assertTrue(ok, validator.format_results(results))
 
 
+class LandmarkSearchTests(unittest.TestCase):
+    """D20: the site only accepts region hub slugs as regions[]. A landmark
+    page one segment below a hub (/au/vic/grampians/venus-baths) got a
+    regions[]=venus-baths search that returned 200 with 0 results."""
+
+    def _label(self, path):
+        return labeller.label_url(cfg.BASE + path, "destinations")
+
+    def _region_searches(self, paths):
+        rows = labeller.build_search_rows([self._label(p) for p in paths])
+        return {r["url"] for r in rows if "regions%5B%5D" in r["url"]}
+
+    def test_hub_shapes(self):
+        self.assertTrue(labeller.is_region_hub(self._label("/au/vic/grampians")))
+        self.assertTrue(labeller.is_region_hub(self._label("/us/oregon/north-coast")))
+        self.assertTrue(labeller.is_region_hub(self._label("/nz/taupo")))
+
+    def test_landmark_shapes(self):
+        self.assertFalse(labeller.is_region_hub(self._label("/au/vic/grampians/venus-baths")))
+        self.assertFalse(labeller.is_region_hub(self._label("/au/nsw/north-coast/byron-bay")))
+        self.assertFalse(labeller.is_region_hub(self._label("/nz/taupo/huka-falls")))
+
+    def test_non_region_rows_are_not_hubs(self):
+        self.assertFalse(labeller.is_region_hub(self._label("/au/vic")))
+        self.assertFalse(labeller.is_region_hub(self._label("/au/vic/collections/beach")))
+
+    def test_only_hubs_get_region_searches(self):
+        urls = self._region_searches([
+            "/au/vic/grampians", "/au/vic/grampians/venus-baths",
+            "/au/vic/great-ocean-road/lorne", "/nz/taupo", "/nz/taupo/huka-falls"])
+        self.assertEqual(urls, {
+            cfg.BASE + "/listings?country=AU&regions%5B%5D=grampians&state=VIC&type=accommodation",
+            cfg.BASE + "/listings?country=NZ&regions%5B%5D=taupo&type=accommodation",
+        })
+
+    def test_landmark_page_itself_is_still_labelled_as_a_region_page(self):
+        r = self._label("/au/vic/grampians/venus-baths")
+        self.assertEqual(r["page_type"], "PAGE_REGION")
+        self.assertEqual(labeller.feed_of(r), cfg.FEED_CORE)
+
+
 if __name__ == "__main__":
     unittest.main()

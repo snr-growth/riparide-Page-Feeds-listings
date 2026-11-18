@@ -29,5 +29,15 @@ class IntEnvTests(unittest.TestCase):
             self.assertEqual(config._int_env("_FEED_TEST_PORT", "587"), 2525)
 
 
+class MinSearchResultsTests(unittest.TestCase):
+    def test_default_and_override(self):
+        import importlib
+        with mock.patch.dict(os.environ, {"FEED_MIN_SEARCH_RESULTS": ""}):
+            self.assertEqual(importlib.reload(config).MIN_SEARCH_RESULTS, 6)
+        with mock.patch.dict(os.environ, {"FEED_MIN_SEARCH_RESULTS": "10"}):
+            self.assertEqual(importlib.reload(config).MIN_SEARCH_RESULTS, 10)
+        importlib.reload(config)
+
+
 if __name__ == "__main__":
     unittest.main()

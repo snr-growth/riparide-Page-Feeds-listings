@@ -230,16 +230,35 @@ def _search_url(country_code, state_code, extra=()):
     return "%s/listings?%s" % (cfg.BASE, q)
 
 
+def is_region_hub(row):
+    """True for a region hub page, False for a landmark page below one.
+
+    Hubs are /{country}/{state}/{slug} (AU, US: three path segments) or
+    /{country}/{slug} (NZ, no state: two). Anything one segment deeper, e.g.
+    /au/vic/grampians/venus-baths, is a landmark page. The site only accepts
+    hub slugs as regions[] (DECISIONS.md D20): a landmark slug returns 200
+    with 0 results.
+    """
+    if row.get("page_type") != "PAGE_REGION":
+        return False
+    url = row["url"]
+    path = url[len(cfg.BASE):] if url.startswith(cfg.BASE) else url
+    parts = [p for p in path.split("?", 1)[0].split("/") if p]
+    return len(parts) == (3 if row.get("state") else 2)
+
+
 def build_search_rows(rows):
     """Search-results pages that carry real traffic but have no sitemap entry.
 
     Three kinds: every stay in a country or state (no stay-type filter),
     pet-friendly stays in each scope, and one per region hub found in `rows`
-    (the regions[] search that mirrors the region page). Every URL is
-    status-checked each run (run.select_status_check_targets) without
-    following redirects, so one that 301s or errors is dropped. A parameter
-    the site ignores still returns 200, so the formats here were taken from
-    the client's own traffic report, not proven by that check.
+    (the regions[] search that mirrors the region page; landmark pages below
+    a hub get no search, D20). Every URL is status-checked each run
+    (run.select_status_check_targets) without following redirects, so one
+    that 301s or errors is dropped, and its live result count is read
+    (run.apply_search_minimum), so one showing fewer than
+    cfg.MIN_SEARCH_RESULTS stays is dropped too: a 200 alone does not prove
+    the site honoured the filter.
     """
     out = []
     for cc, ss, country, state in cfg.FACET_SCOPES:
@@ -258,7 +277,7 @@ def build_search_rows(rows):
     code_of_country = {v: k for k, _s, v, _g in cfg.FACET_SCOPES}
     code_of_state = {g: s for _k, s, _v, g in cfg.FACET_SCOPES if g}
     for r in rows:
-        if r.get("page_type") != "PAGE_REGION" or not r.get("region"):
+        if not r.get("region") or not is_region_hub(r):
             continue
         cc = code_of_country.get(r["country"])
         if not cc:

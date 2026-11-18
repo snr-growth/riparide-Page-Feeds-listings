@@ -107,6 +107,41 @@ class StatusCheckTests(unittest.TestCase):
         self.assertTrue(passed)
 
 
+class SearchCountTests(unittest.TestCase):
+    """D20: no search/facet URL with a known count below the minimum may ship."""
+    SEARCH = cfg.BASE + "/listings?country=AU&state=VIC&type=accommodation"
+
+    def _check(self, checks):
+        return [c for c in checks if c["check"].startswith("Search/facet URLs")][0]
+
+    def test_thin_search_remaining_fails(self):
+        rows = _rows((self.SEARCH, "PAGE_SEARCH;GEO_AU"))
+        passed, checks = validator.validate(
+            rows, search_counts={self.SEARCH: cfg.MIN_SEARCH_RESULTS - 1})
+        self.assertFalse(passed)
+        self.assertFalse(self._check(checks)["passed"])
+
+    def test_count_at_minimum_passes(self):
+        rows = _rows((self.SEARCH, "PAGE_SEARCH;GEO_AU"))
+        passed, _ = validator.validate(rows, search_counts={self.SEARCH: cfg.MIN_SEARCH_RESULTS})
+        self.assertTrue(passed)
+
+    def test_unknown_count_is_not_a_failure(self):
+        rows = _rows((self.SEARCH, "PAGE_SEARCH;GEO_AU"))
+        passed, checks = validator.validate(rows, search_counts={self.SEARCH: None})
+        self.assertTrue(passed)
+        self.assertIn("1 count unknown", self._check(checks)["detail"])
+
+    def test_thin_url_already_dropped_from_output_passes(self):
+        passed, _ = validator.validate(_rows(GOOD_ROW), search_counts={self.SEARCH: 0})
+        self.assertTrue(passed)
+
+    def test_skipped_counts_pass_and_say_so(self):
+        passed, checks = validator.validate(_rows((self.SEARCH, "PAGE_SEARCH;GEO_AU")))
+        self.assertTrue(passed)
+        self.assertIn("not counted", self._check(checks)["detail"])
+
+
 class LabelCharsetTests(unittest.TestCase):
     def test_lowercase_or_symbol_in_label_fails(self):
         rows = _rows((cfg.BASE + "/listings/1-x", "page_listing"))

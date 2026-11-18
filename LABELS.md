@@ -28,7 +28,7 @@ advertise.
 | `PAGE_REGION` | A region hub page — e.g. the Great Ocean Road page |
 | `PAGE_COLLECTION` | A themed or destination-based grouping of properties |
 | `PAGE_COLLECTION_HUB` | The index page listing all collections for a country/state |
-| `PAGE_SEARCH` | A search-results page that carries real traffic: all stays in a country or state, pet-friendly stays, or one region (e.g. the Blue Mountains search) |
+| `PAGE_SEARCH` | A search-results page that carries real traffic: all stays in a country or state, pet-friendly stays, or one region (e.g. the Blue Mountains search). Search and facet pages showing fewer than 6 stays are left out (D20) |
 | `PAGE_FACET_TYPE` | An auto-generated page such as "all glamping stays in Victoria," so a search lands on the right filtered results instead of one listing |
 | `PAGE_CORE` | A brand/info page — About, Contact, etc. — left out of the feed entirely |
 

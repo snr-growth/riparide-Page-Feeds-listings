@@ -64,6 +64,12 @@ MIN_ROW_RATIO = 0.5
 # newest ones and reports the rest as unchecked rather than running for hours.
 MAX_STATUS_CHECKS = int(os.environ.get("FEED_MAX_STATUS_CHECKS", "1500"))
 
+# A search or stay-type facet page (PAGE_SEARCH, PAGE_FACET_TYPE) whose live
+# result count ("totalCount" in the page) is below this is dropped from the
+# feed: a 200 page that shows no stays is a bad ad landing page. A count that
+# could not be read is kept, never treated as zero. See DECISIONS.md D20.
+MIN_SEARCH_RESULTS = _int_env("FEED_MIN_SEARCH_RESULTS", "6")
+
 # Listing and story pages are read once to recover their location, then cached.
 # The first run pays for the whole catalogue; later runs only read new pages.
 # The cap keeps any single run bounded.

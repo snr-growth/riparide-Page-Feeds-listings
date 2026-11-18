@@ -77,6 +77,18 @@ def _summary_sheet(wb, summary):
             rows.append(("Unchecked (above cap)", st["unchecked"]))
         _section(ws, "Status checks", rows)
 
+    sc = summary.get("search_counts") or {}
+    if sc:
+        if sc.get("skipped"):
+            rows = [("Search result counts", "skipped this run (--skip-status)")]
+        else:
+            rows = [("Minimum results to stay in the feed", sc.get("minimum", 0)),
+                    ("Search/facet URLs counted", sc.get("counted", 0)),
+                    ("Dropped (below minimum)", sc.get("dropped", 0)),
+                    ("  of which 0 results", sc.get("dropped_zero", 0)),
+                    ("Count unknown (kept)", len(sc.get("unknown", [])))]
+        _section(ws, "Search result counts", rows)
+
     loc = summary.get("location") or {}
     if loc and not loc.get("skipped"):
         _section(ws, "Location", [

@@ -66,5 +66,23 @@ class SendTests(unittest.TestCase):
         self.assertIn("not verified", detail)
 
 
+class ReportSearchCountTests(unittest.TestCase):
+    def _summary(self, sc):
+        return {"run_at": "2026-11-18", "search_counts": sc, "files": {}}
+
+    def test_dropped_search_pages_are_listed(self):
+        text = emailer.build_report(self._summary({
+            "skipped": False, "minimum": 6, "counted": 237, "dropped": 2, "dropped_zero": 1,
+            "dropped_examples": [("https://x/a", 0), ("https://x/b", 3)], "unknown": ["https://x/c"]}))
+        self.assertIn("Search page result counts (minimum 6)", text)
+        self.assertIn("Dropped:   2 (1 with no results)", text)
+        self.assertIn("Unknown:   1", text)
+        self.assertIn("0  https://x/a", text)
+
+    def test_skipped_counts_say_so(self):
+        text = emailer.build_report(self._summary({"skipped": True, "minimum": 6}))
+        self.assertIn("Skipped this run", text)
+
+
 if __name__ == "__main__":
     unittest.main()
