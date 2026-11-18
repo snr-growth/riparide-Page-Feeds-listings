@@ -93,5 +93,28 @@ class CheckAdsbotAccessTests(unittest.TestCase):
         self.assertIn("simulated network failure", report["note"])
 
 
+class SearchTotalTests(unittest.TestCase):
+    def test_reads_total_count(self):
+        html = '..."results":{"__typename":"SearchResultConnection","minPrice":60,"totalCount":51,...'
+        self.assertEqual(fetcher.parse_search_total(html), 51)
+
+    def test_zero_is_zero_not_none(self):
+        self.assertEqual(fetcher.parse_search_total('"totalCount":0'), 0)
+
+    def test_missing_count_is_none(self):
+        self.assertIsNone(fetcher.parse_search_total("<html>blocked</html>"))
+        self.assertIsNone(fetcher.parse_search_total(None))
+
+    def test_fetch_failure_is_none(self):
+        orig = fetcher.get
+        def boom(url, retries=None):
+            raise fetcher.FetchError("x")
+        fetcher.get = boom
+        try:
+            self.assertEqual(fetcher.search_totals(["https://e/x"], log=lambda m: None), {"https://e/x": None})
+        finally:
+            fetcher.get = orig
+
+
 if __name__ == "__main__":
     unittest.main()

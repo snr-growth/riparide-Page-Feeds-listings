@@ -13,6 +13,7 @@ The site's protection layer fingerprints the client, not just the user agent,
 so this module deliberately uses only the standard library. That also leaves
 the project with no third-party dependencies at all.
 """
+import re
 import time
 import urllib.error
 import urllib.request
@@ -196,6 +197,49 @@ def check_adsbot_access(paths, log=print):
         log("robots.txt: AdsBot-Google / AdsBot-Google-Mobile not blocked for %d checked path(s)"
             % len(paths))
     return report
+
+
+_TOTAL_COUNT = re.compile(r'"totalCount"\s*:\s*(\d+)')
+
+
+def parse_search_total(html):
+    """The result count a /listings search page reports, or None.
+
+    Verified live 18 Nov 2026: the page embeds its search state as JSON with
+    "totalCount":N, equal to the visible "N results"; one result is one stay.
+    A 200 alone proves nothing: an unknown region or subcategory still returns
+    200, with totalCount 0.
+    """
+    m = _TOTAL_COUNT.search(html or "")
+    return int(m.group(1)) if m else None
+
+
+def search_totals(urls, log=print):
+    """GET each search URL and return {url: result count, or None}.
+
+    None means the page could not be fetched or carried no count. Callers
+    must treat None as unknown, never as zero.
+    """
+    urls = list(urls)
+    if not urls:
+        return {}
+    results = {}
+
+    def work(u):
+        time.sleep(cfg.REQUEST_DELAY)
+        try:
+            return u, parse_search_total(get(u))
+        except FetchError:
+            return u, None
+
+    done = 0
+    with ThreadPoolExecutor(max_workers=cfg.STATUS_CHECK_WORKERS) as pool:
+        for u, total in pool.map(work, urls):
+            results[u] = total
+            done += 1
+            if done % 100 == 0:
+                log("  search-counted %d/%d" % (done, len(urls)))
+    return results
 
 
 def status_check(urls, log=print):
