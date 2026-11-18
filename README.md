@@ -173,6 +173,54 @@ A second finding, from a residential/office IP on 27 August 2026: the exact same
 
 ---
 
+## Meta catalogue feed
+
+A second, daily job (`src/meta_feed.py`, DECISIONS.md D21) rebuilds Riparide's four Meta catalogue feeds so that each item's `link` opens a riparide.com **search-results page** that matches the stay and shows at least 6 stays, instead of the stay's own page.
+
+**What it does, every day:**
+
+1. Downloads the four client feeds: `https://www.riparide.com/public_api/{listings,stories}.csv?market={VIC,NSW}`.
+2. Joins each item (`listing_106`, `story_47`) to the labels the monthly PMax run wrote to `riparide-page-feed-core.csv` (region `REG_*`, stay type `TYPE_*`). Region labels become site slugs through the region-hub rows of the same file (`/au/<state>/<slug>`, never landmark pages).
+3. Works out which stays are pet-friendly, since the feeds do not say: the ids shown by the site's own `petFriendly=true` searches (a search page only shows its first 24 results and cannot be paged, so the job searches per state, then per region hub, then per region hub and stay type for regions with more than 24; a Story card counts for both the story and its featured listing), stories whose `custom_label_4` holds the `Pet Friendly Escapes` collection, and the `INT_PET_FRIENDLY` label. The report's `pet` section shows coverage against the site's pet total per state. The counts seen while harvesting are reused, not fetched twice.
+4. Counts the results of every candidate search live, and picks the first rung with at least `META_MIN_RESULTS` results:
+   - pet-friendly stay: region + type + pet → region + pet → region + type → region → state + pet → state
+   - other stay: region + type → region → state + type → state
+   - a stay the monthly run has not labelled yet: state
+   - type rungs only when the stay type is one of the site's 22 filters; an unknown count never wins; if even the state count is unknown the original link is kept.
+5. Writes four CSVs that are identical to the inputs (same columns, order, rows) except `link` and `applink.ios_url`, plus `meta-feed-report.json` (rung counts, unjoined rows, pet coverage, errors).
+
+A feed that fails to download or validate keeps yesterday's file and the report says so. The job fails as a whole only when the PMax core CSV is missing or all four feeds failed. Pet harvesting failing never fails the feed; it is built without pet rungs.
+
+**URLs** (served by the same Railway service, `Cache-Control: no-store`):
+
+| Feed | URL |
+|---|---|
+| Listings, VIC | https://feed-refresh-production.up.railway.app/meta-listings-vic.csv |
+| Listings, NSW | https://feed-refresh-production.up.railway.app/meta-listings-nsw.csv |
+| Stories, VIC | https://feed-refresh-production.up.railway.app/meta-stories-vic.csv |
+| Stories, NSW | https://feed-refresh-production.up.railway.app/meta-stories-nsw.csv |
+| Run report | https://feed-refresh-production.up.railway.app/meta-feed-report.json |
+
+**Schedule:** once per UTC day, on the first scheduler poll (every 30 minutes) at or after `META_RUN_HOUR` (default 18 UTC, about 5am AEDT / 4am AEST). It shares the monthly run's lock: if the monthly PMax run is going, the Meta job waits for the next poll. On the 1st of the month the monthly run goes first, so the Meta job uses fresh labels. `GET /` shows the last Meta run (`last_meta_run`). Manual run: `curl -X POST "https://feed-refresh-production.up.railway.app/run-meta?token=<RUN_TRIGGER_TOKEN>"` (same token as `/run`, redacted from logs the same way).
+
+**Environment variables** (all optional):
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `META_RUN_HOUR` | `18` | UTC hour from which the daily run fires |
+| `META_MIN_RESULTS` | `6` | minimum results a landing search must show |
+| `META_MAX_ORIGINAL_RATIO` | `0.5` | a feed where more than this share of rows had to keep their original link (counts unknown, site not answering) is not written; yesterday's file stays |
+| `META_PET_DELAY` | `1.0` | seconds between pet-harvesting requests |
+| `META_SOURCE_URL` | `https://www.riparide.com/public_api/{kind}.csv?market={market}` | input feed URL template |
+
+Run it locally (offline, from saved files): `python src/meta_feed.py --offline-feeds DIR --core CORE.csv --counts-json COUNTS.json --skip-pet --out DIR`. `DIR` holds `listings_VIC.csv`, `listings_NSW.csv`, `stories_VIC.csv`, `stories_NSW.csv`.
+
+**Client's one-time setup in Meta Commerce Manager** (we have no Meta access): for each of the four catalogues, open Commerce Manager → the catalogue → **Catalogue → Data sources → Add items → Data feed → Use a URL** (or edit the existing scheduled feed's URL), enter the matching URL from the table above, choose **Scheduled feed**, set it to repeat **daily** (a time after about 6am AEDT so the day's file is ready), currency AUD, and save. Run "Request update now" once and check the upload shows no errors. Item ids are unchanged, so existing ads and product sets keep working.
+
+**Caveat — A/B test it before rolling out:** Meta describes the `link` field as the URL of the product's own page. Sending people to a search page is a deliberate deviation. It may change how Meta reviews or optimises the ads, so run it as a test (one catalogue or one ad set against the original feed) before switching every campaign.
+
+---
+
 ## Deployment
 
 Runs as a single always-on Railway service (`src/railway_service.py` + `railway.json`), not GitHub Actions. See DECISIONS.md D12 for why it was on GitHub Actions before, and D15/D16 for the move to Railway and why.

@@ -96,6 +96,7 @@ flowchart LR
 | Location recovery from listing/story page titles | ✅ Built — cached, so only new pages are fetched each month |
 | Optional attributes-file merge | ✅ Built, not yet in use (no file supplied yet) |
 | Month-to-month change detection (diff) | ✅ Built and self-tested (`prove_diff.py`, runs in CI on every push) |
+| Meta catalogue feeds (D21) | ✅ Built 18 Nov 2026: Riparide's four Meta feeds rebuilt daily so each ad opens a matching search page with at least 6 stays. Waiting on the client to connect the URLs in Meta |
 | robots.txt / AdsBot-Google check | ✅ Added — reports (non-blocking) if AdsBot is blocked from any feed page type |
 | Pre-upload validation (now 9 checks) | ✅ Built — duplicates, missing labels, label count, tracking params, domain, facet param order, dead links, label character set, **and a new feed-collapse guard** |
 | Automatic 6-monthly full status check | ✅ Now genuinely automatic (Jan/Jul) — previously only a recommendation nobody had wired up |
@@ -179,7 +180,7 @@ The client checked the live feed and raised six points. Each was checked against
 | # | Point raised | Status |
 |---|---|---|
 | 1 | Collections barely tagged | ✅ **Fixed.** 14 town collections now carry their region, checked against the region on every listing in that town. `top-stays-beach-houses` is now a beach house. Outdoor-bath, soak-it-up and under-the-stars collections have intent labels. Most of the other 70+ collections are state-wide themes that correctly have no single region. |
-| 2 | Region search pages missing | ✅ **Added and checked on the live site.** 70 search pages: Blue Mountains and every other region, all-VIC and the other scopes, and pet-friendly with and without a state. All return 200. The site honours the filters: the Blue Mountains search is titled "Stays in Blue Mountains, New South Wales", and a made-up region returns no stays. |
+| 2 | Region search pages missing | ✅ **Added and checked on the live site.** 70 search pages: Blue Mountains and every other region, all-VIC and the other scopes, and pet-friendly with and without a state. All return 200. The site honours the filters: the Blue Mountains search is titled "Stays in Blue Mountains, New South Wales", and a made-up region returns no stays. **Update 18 Nov 2026:** returning 200 turned out not to mean "has stays". 52 search pages in the live feed showed 0 results. The feed now leaves out searches for landmark pages and drops any search page showing fewer than 6 stays, checked every run (D20). |
 | 3 | Stories barely labelled | ✅ **Fixed and checked on the live site.** Each story page features one listing, and the story now takes that listing's stay type: **1,052 of 1,087 stories (97%) now have one, up from 260**. Intents come from the Riparide collections each story belongs to, such as Pet Friendly Escapes or Outdoor Baths: 605 stories now have one. |
 | 4 | `SEARCH_HEAD` covers NSW pet and romantic collections | ✅ **Decided, 19 Oct 2026: everything stays in PMax for now.** `SEARCH_HEAD` is no longer applied automatically from intents or stay types. It is set only for pages the client approves after an Option B test (`config.SEARCH_HEAD_APPROVED_PATHS`, empty). Intent labels are kept for asset-group targeting. |
 | 5 | Listing URLs change | ✅ **Already handled.** Matching uses the listing id. |

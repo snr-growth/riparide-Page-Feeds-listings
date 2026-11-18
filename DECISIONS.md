@@ -389,7 +389,7 @@ Each change below is covered by tests and was checked by an offline run over the
 - **Cached labels heal without a fetch.** `enricher.heal_regions` rewrites a stale cached label from its stored `region_name`. The existing re-read path skipped those entries because their `parser` version was already current.
 - **Stay type precedence is now supplied file > page title > URL slug.** The slug match used to win, and 630 of 3,467 listings carried a slug guess that contradicted the site's own "X for Rent" category. The supplied file overrides only on listings, because it is keyed by listing id and a story or adventure can share the number.
 - **Collection tags.** `beach house` and `train carriage` match as whole words in a slug, so `top-stays-beach-houses` is `TYPE_BEACH_HOUSE`. Bare words like `hotel` or `cave` are left to the title. New intents `INT_OUTDOOR_BATH` (outdoor-bath, soak-it-up) and `INT_STARGAZING` (under-the-stars, stargazing) go last in `INTENT_KEYWORDS`, so they never displace a `SEARCH_HEAD` intent, and they are not `SEARCH_HEAD`.
-- **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Verified live (D18):** all return 200, and the site honours the parameters, because the page title names the region or "Pet friendly" and a made-up region returns no stays.
+- **`PAGE_SEARCH` rows** (`labeller.build_search_rows`) cover all-stays and pet-friendly searches for each facet scope, one pet-friendly search with no geography, and one `regions[]` search per region hub. They are status-checked every run alongside the facet URLs, without following redirects. **Verified live (D18):** all return 200, and the site honours the parameters, because the page title names the region or "Pet friendly" and a made-up region returns no stays. **Corrected 18 Nov 2026 (D20):** a 200 did not prove the page had results. 52 of 237 live search/facet pages returned 200 with 0 results, including 36 `regions[]` searches built from landmark pages, where the title fell back to the state. Each search/facet page's result count is now read every run.
 
 ### Still open, needs client input
 - ~~Region labels for the town collections~~ and ~~stay type and intent for stories~~: both done, see D18.
@@ -438,6 +438,8 @@ The stories-feed design above was built blind and was wrong about the feed's sha
 | Search pages returning 200 | not built | 70 of 70 |
 | Duplicate NZ region labels | 4 pairs | 0 |
 
+**Correction (18 Nov 2026, D20):** "70 of 70 return 200" was read as "the site honours the filters". It did not prove that. A 200 search page can show 0 stays, and many did. See D20.
+
 Story intents: outdoor bath 200, pet-friendly 188, getaway 114 (mostly the Family Getaways collection), romantic 102, luxury 77. The `SEARCH_HEAD` rise follows the existing rule (pet-friendly, romantic, getaway and off-grid count as `SEARCH_HEAD`). Under Option B it takes 334 stories out of PMax, so it has been raised with the client rather than assumed.
 
 ## D19. Every page stays in PMax; SEARCH_HEAD becomes opt-in by page path (19 Oct 2026)
@@ -452,3 +454,46 @@ Story intents: outdoor bath 200, pet-friendly 188, getaway 114 (mostly the Famil
 - Intent labels are unchanged, so asset groups can still target pet-friendly or romantic pages.
 
 **Recommended next step:** if the role split is tested, run it in one market (e.g. VIC, with NSW as control) for 4–6 weeks. Add a page to `SEARCH_HEAD_APPROVED_PATHS` only where Search proves better on that page. Covered by `test_labeller` (`test_client_decision_nothing_is_search_head_by_default`, `test_only_an_approved_path_is_search_head`).
+
+## D20. Search and facet pages must show results, not just return 200 (18 Nov 2026)
+
+**Problem:** the live PMax feed carried search and stay-type facet URLs that return 200 but show 0 stays. A 200 alone proves nothing here: an unknown `regions[]` slug or a stay type with no stock still returns 200, with 0 results. D17/D18 took "70 of 70 return 200" as proof the filters worked; it was not.
+
+**Live evidence (18 Nov 2026, run inside the Railway container):**
+- Every `/listings` search page embeds `"totalCount":N`, equal to the visible "N results" (`fetcher.parse_search_total`).
+- 52 of 237 search/facet URLs in the live feed showed 0 results. 43 more showed 1 to 5.
+- 36 of the 52 were landmark searches. `build_search_rows` made one `regions[]` search per `PAGE_REGION` row, and those rows include landmark pages one path segment below a region hub (`/au/vic/grampians/venus-baths`, `/au/vic/great-ocean-road/lorne`, `/au/nsw/north-coast/byron-bay`). The site does not accept landmark slugs as `regions[]`: 0 results, and the title falls back to the state. Hub searches all have results (grampians 51, great-ocean-road 218).
+- The other 16 were NZ/US stay-type facets with no stock (e.g. `country=US&state=OR&subcategories[]=yurt`).
+- `regions[]` without `state` is silently ignored (every stay shows), so AU/US region searches keep `state`.
+
+**Fix:**
+- `labeller.is_region_hub`: a hub is `/{country}/{state}/{slug}` (AU, US) or `/{country}/{slug}` (NZ, no state). `build_search_rows` makes `regions[]` searches for hubs only. Landmark pages themselves stay in the feed unchanged.
+- `run.py` step 6a: unless `--skip-status`, `fetcher.search_totals` reads the count of every `PAGE_SEARCH` and `PAGE_FACET_TYPE` URL. A row with fewer than `config.MIN_SEARCH_RESULTS` results is dropped. A count that could not be read (`None`) is kept and listed as "count unknown", never treated as 0. The run log, the run summary and the `.xlsx` Summary sheet show counted / dropped / unknown.
+- `validator.py`: a check that no search/facet URL with a known count below the minimum remains. It passes, and says "not counted", when counts were skipped.
+
+**Threshold:** `MIN_SEARCH_RESULTS = 6` (env `FEED_MIN_SEARCH_RESULTS`). A page with a handful of stays is a weak landing page and the next booking can empty it. 6 drops the 0-result pages and the 43 with 1 to 5. Change it with the env var, not code.
+
+Covered by `test_labeller.LandmarkSearchTests`, `test_run.ApplySearchMinimumTests` / `SearchCountRunTests`, `test_validator.SearchCountTests`, `test_report` and `test_config`.
+
+## D21. Daily Meta catalogue feeds that land on search pages (18 Nov 2026)
+
+**Ask (client):** the Meta catalogue ads are built from Riparide's own feeds, `/public_api/{listings,stories}.csv?market=VIC|NSW`. Each item should open a matching search results page instead of its own page, and only a search with enough results. The client will not add region, stay type or pet columns to those feeds.
+
+**What:** `src/meta_feed.py` rebuilds the four feeds daily (listings/stories × VIC/NSW). Only `link` and `applink.ios_url` change; every other column, row and id is identical to the input. Region and stay type come from the PMax core CSV, joined by `listing_N`/`story_N` (98% join on 18 Nov). Region slugs come only from hub pages `/au/<state>/<slug>`, because landmark slugs give 0 results (D20).
+
+**Ladder** (first rung with at least `META_MIN_RESULTS`, default 6, results):
+- pet-friendly item: region+type+pet → region+pet → region+type → region → state+pet → state
+- other item: region+type → region → state+type → state
+- not yet in the PMax labels: state
+
+Type rungs exist only for stay types that are site filters (`config.SUBCATS`). An unknown count never wins. If no rung reaches the minimum, the state search is used; if even its count is unknown, the original link is kept. `state` is always sent, because `regions[]` without it is silently ignored and shows every stay (verified live).
+
+**Pet-friendly:** the site knows which stays allow pets (`petFriendly=true`), but the feeds don't say, so the job harvests ids from the site's pet searches. A search page embeds only its first 24 results and can't be paged (verified live: `page=` is ignored; `after`, `cursor`, `offset`, `p` and `first` return nothing). So the search is split state → region hub → hub × stay type. A story card names its stay as `featuredListing.id`. Stories in the "Pet Friendly Escapes" collection (`custom_label_4`) and pages labelled `INT_PET_FRIENDLY` count too. A harvest failure never fails the feed; pet items then fall back to the ordinary ladder.
+
+**Safety:** before a feed file is replaced, the output must match the input (same rows, ids and non-link columns) and every changed link must be a `state`-scoped search. A feed that fails to fetch or validate, is empty, or would keep more than 50% original links (the site was not answering) keeps its previous file. The job exits non-zero only when the core CSV is missing or every feed failed.
+
+**Schedule and delivery:** once per UTC day from `META_RUN_HOUR` (18 UTC, about 5am AEDT) in the Railway scheduler. It shares the monthly run's lock, so the two never overlap. Served at `/meta-listings-vic.csv`, `/meta-listings-nsw.csv`, `/meta-stories-vic.csv`, `/meta-stories-nsw.csv` and `/meta-feed-report.json`; `POST /run-meta?token=` runs it by hand. The client connects these URLs in Meta Commerce Manager themselves. We have no Meta access.
+
+**Meta constraints (checked in Meta's docs, 18 Nov 2026):** a supplementary feed cannot override `link`, so this has to be a full replacement feed. Meta describes `link` as the item's own product page, and catalogue retargeting matches pixel `content_ids` to item ids. Landing on a search page may lift searches, but it can lower bookings and shrink retargeting audiences, so the client should A/B test it before switching every ad.
+
+**Offline check (18 Nov data):** listings land about 67% on region+type, 29% on region and 2% on state (only the rows not yet labelled). No original links were kept. Covered by `test_meta_feed` and `test_railway_service`.

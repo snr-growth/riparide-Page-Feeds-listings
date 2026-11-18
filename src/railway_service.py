@@ -24,6 +24,9 @@ Environment variables (see railway.json / README for the full list):
   RAILWAY_RUN_DAY       day-of-month to auto-run (default 1, matches the
                         GitHub Actions "0 3 1 * *" schedule)
   RAILWAY_RUN_HOUR      UTC hour to auto-run (default 3)
+  META_RUN_HOUR         UTC hour from which the daily Meta catalogue feed
+                        job (src/meta_feed.py) runs, once per UTC day
+                        (default 18, about 5am AEDT)
 
 A failed run is never able to remove or overwrite a previously-good file:
 that guarantee already lives in run.py itself (the CSVs/xlsx are only
@@ -46,6 +49,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config as cfg  # noqa: E402
 
 RUN_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "run.py")
+META_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meta_feed.py")
+META_FILES = ["meta-listings-vic.csv", "meta-listings-nsw.csv", "meta-stories-vic.csv",
+              "meta-stories-nsw.csv", "meta-feed-report.json"]
 STATE_FILE = os.path.join(cfg.DATA_DIR, "railway-service-state.json")
 
 SERVED_FILES = {
@@ -54,8 +60,17 @@ SERVED_FILES = {
     "/riparide-page-feed-report.xlsx": lambda: os.path.join(cfg.REPORT_DIR, cfg.REPORT_XLSX),
 }
 
+
+def meta_dir():
+    return os.path.join(cfg.OUTPUT_DIR, "meta")
+
+
+for _name in META_FILES:
+    SERVED_FILES["/" + _name] = (lambda n: lambda: os.path.join(meta_dir(), n))(_name)
+
 CONTENT_TYPES = {".csv": "text/csv; charset=utf-8",
-                  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+                  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  ".json": "application/json"}
 
 _lock = threading.Lock()
 _run_in_progress = False
@@ -118,6 +133,51 @@ def run_pipeline(extra_args=None, reason="scheduled"):
     return ok
 
 
+def run_meta(reason="scheduled"):
+    """Run src/meta_feed.py as a subprocess, writing into <OUTPUT_DIR>/meta.
+    Shares the monthly run's lock, so the two never run at the same time: if
+    the lock is taken this returns None without touching state, and the
+    scheduler simply tries again on its next poll. Never raises."""
+    global _run_in_progress
+    with _lock:
+        if _run_in_progress:
+            log("a run is in progress, meta run skipped for now (%s)" % reason)
+            return None
+        _run_in_progress = True
+
+    started = datetime.now(timezone.utc)
+    log("starting meta feed run (%s)" % reason)
+    try:
+        args = [sys.executable, META_SCRIPT, "--out", meta_dir()]
+        result = subprocess.run(args, cwd=os.path.dirname(META_SCRIPT), timeout=60 * 60)
+        ok = result.returncode == 0
+        log("meta feed run finished, exit code %d" % result.returncode)
+    except Exception as e:
+        ok = False
+        log("meta feed run crashed before completing: %s: %s" % (type(e).__name__, e))
+    finally:
+        with _lock:
+            _run_in_progress = False
+
+    state = load_state()  # re-read: never clobber what another writer saved
+    state["last_meta_run_at"] = started.strftime("%Y-%m-%dT%H:%M:%SZ")
+    state["last_meta_run_date"] = started.strftime("%Y-%m-%d")
+    state["last_meta_run_ok"] = ok
+    state["last_meta_run_reason"] = reason
+    save_state(state)
+    return ok
+
+
+def should_auto_run_meta(now, state):
+    """True once per UTC day, at or after META_RUN_HOUR. A failed run still
+    counts as that day's run (same as the monthly job); a run skipped
+    because the lock was taken does not, so it is retried next poll."""
+    run_hour = int(os.environ.get("META_RUN_HOUR", "18"))
+    if now.hour < run_hour:
+        return False
+    return state.get("last_meta_run_date") != now.strftime("%Y-%m-%d")
+
+
 def should_auto_run(now, state):
     """True once per calendar month, on or after the configured day/hour -
     mirrors the "0 3 1 * *" GitHub Actions schedule, but checked from an
@@ -140,6 +200,9 @@ def scheduler_loop(poll_seconds=1800, stop_event=None):
             now = datetime.now(timezone.utc)
             if should_auto_run(now, state):
                 run_pipeline(reason="scheduled")
+                state = load_state()
+            if should_auto_run_meta(datetime.now(timezone.utc), state):
+                run_meta(reason="scheduled")
         except Exception as e:
             log("scheduler tick failed (will retry next tick): %s: %s" % (type(e).__name__, e))
         stop_event.wait(poll_seconds)
@@ -191,6 +254,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(200, {
                 "service": "riparide-page-feed",
                 "last_run": state,
+                "last_meta_run": {k: v for k, v in state.items() if k.startswith("last_meta_run")},
                 "files": list(SERVED_FILES.keys()),
             }, write_body)
             return
@@ -242,7 +306,7 @@ class Handler(BaseHTTPRequestHandler):
             self.rfile.read(length)
 
         path = urlparse(self.path).path
-        if path != "/run":
+        if path not in ("/run", "/run-meta"):
             self._send_json(404, {"error": "not found"})
             return
         qs = parse_qs(urlparse(self.path).query)
@@ -253,6 +317,11 @@ class Handler(BaseHTTPRequestHandler):
         # characters of a guess were correct.
         if not expected or not hmac.compare_digest(token, expected):
             self._send_json(403, {"error": "invalid or missing token"})
+            return
+        if path == "/run-meta":
+            t = threading.Thread(target=run_meta, args=("manual",), daemon=True)
+            t.start()
+            self._send_json(202, {"status": "meta run started"})
             return
         full_status = (qs.get("full_status") or ["false"])[0] == "true"
         extra = ["--full-status"] if full_status else []
@@ -283,7 +352,7 @@ def _warn_if_state_looks_ephemeral():
             "default is not nested under FEED_DATA_DIR) and will be lost "
             "on the next restart or redeploy." % cfg.REPORT_DIR)
     if not os.environ.get("RUN_TRIGGER_TOKEN"):
-        log("WARNING: RUN_TRIGGER_TOKEN is not set - POST /run will reject "
+        log("WARNING: RUN_TRIGGER_TOKEN is not set - POST /run and /run-meta will reject "
             "every request (by design: no token configured means no "
             "manual trigger is possible, not an open one).")
 

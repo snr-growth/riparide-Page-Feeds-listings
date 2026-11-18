@@ -257,6 +257,70 @@ class HTTPServerTests(unittest.TestCase):
         self.assertFalse(any("test-secret" in line for line in logged))
         self.assertIn("token=[REDACTED]&full_status=false", access[0])
 
+    # --- Meta catalogue feed ---------------------------------------------
+
+    def _wait_called(self, m):
+        import time
+        for _ in range(20):
+            if m.called:
+                break
+            time.sleep(0.05)
+        return m.called
+
+    def test_meta_csv_404_until_written_then_served(self):
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            self._get("/meta-listings-vic.csv")
+        self.assertEqual(ctx.exception.code, 404)
+        os.makedirs(os.path.join(self.output_dir, "meta"))
+        with open(os.path.join(self.output_dir, "meta", "meta-listings-vic.csv"), "w") as f:
+            f.write("id,link\nlisting_1,https://x\n")
+        with self._get("/meta-listings-vic.csv") as r:
+            self.assertEqual(r.status, 200)
+            self.assertEqual(r.headers["Content-Type"], "text/csv; charset=utf-8")
+            self.assertEqual(r.headers["Cache-Control"], "no-store")
+            self.assertIn(b"listing_1", r.read())
+
+    def test_all_meta_files_are_served(self):
+        os.makedirs(os.path.join(self.output_dir, "meta"))
+        for name in svc.META_FILES:
+            with open(os.path.join(self.output_dir, "meta", name), "w") as f:
+                f.write("{}" if name.endswith(".json") else "id\n")
+            with self._get("/" + name) as r:
+                self.assertEqual(r.status, 200)
+        with self._get("/meta-feed-report.json") as r:
+            self.assertEqual(r.headers["Content-Type"], "application/json")
+
+    def test_root_shows_the_last_meta_run(self):
+        svc.save_state({"last_run_ok": True, "last_meta_run_ok": False,
+                        "last_meta_run_date": "2026-11-18"})
+        with self._get("/") as r:
+            body = json.loads(r.read())
+        self.assertEqual(body["last_meta_run"],
+                         {"last_meta_run_ok": False, "last_meta_run_date": "2026-11-18"})
+        self.assertIn("/meta-stories-nsw.csv", body["files"])
+
+    def test_run_meta_rejects_a_wrong_or_missing_token(self):
+        for q in ("", "?token=wrong"):
+            req = urllib.request.Request(
+                "http://127.0.0.1:%d/run-meta%s" % (self.port, q), method="POST")
+            with self.assertRaises(urllib.error.HTTPError) as ctx:
+                urllib.request.urlopen(req, timeout=5)
+            self.assertEqual(ctx.exception.code, 403)
+
+    def test_run_meta_accepts_the_token_and_redacts_it(self):
+        logged = []
+        with mock.patch.object(svc, "run_meta") as m, \
+                mock.patch.object(svc, "run_pipeline") as p, \
+                mock.patch.object(svc, "log", side_effect=logged.append):
+            req = urllib.request.Request(
+                "http://127.0.0.1:%d/run-meta?token=test-secret" % self.port, method="POST")
+            with urllib.request.urlopen(req, timeout=5) as r:
+                self.assertEqual(r.status, 202)
+            self.assertTrue(self._wait_called(m))
+            p.assert_not_called()
+        self.assertFalse(any("test-secret" in line for line in logged))
+        self.assertTrue(any("POST /run-meta?token=[REDACTED]" in line for line in logged))
+
 
 class RedactTokenTests(unittest.TestCase):
     def test_redacts_only_the_token_value(self):
@@ -305,3 +369,99 @@ class EphemeralStateWarningTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MetaScheduleTests(unittest.TestCase):
+    def setUp(self):
+        self._env = dict(os.environ)
+        self.tmp = tempfile.mkdtemp()
+        self._orig_state_file = svc.STATE_FILE
+        svc.STATE_FILE = os.path.join(self.tmp, "state.json")
+        svc._run_in_progress = False
+
+    def tearDown(self):
+        os.environ.clear()
+        os.environ.update(self._env)
+        svc.STATE_FILE = self._orig_state_file
+        svc._run_in_progress = False
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_before_the_hour_does_not_run(self):
+        os.environ["META_RUN_HOUR"] = "18"
+        self.assertFalse(svc.should_auto_run_meta(datetime(2026, 11, 18, 17, 59, tzinfo=timezone.utc), {}))
+
+    def test_default_hour_is_18_utc(self):
+        os.environ.pop("META_RUN_HOUR", None)
+        self.assertFalse(svc.should_auto_run_meta(datetime(2026, 11, 18, 17, 0, tzinfo=timezone.utc), {}))
+        self.assertTrue(svc.should_auto_run_meta(datetime(2026, 11, 18, 18, 0, tzinfo=timezone.utc), {}))
+
+    def test_runs_once_per_utc_day(self):
+        os.environ["META_RUN_HOUR"] = "18"
+        now = datetime(2026, 11, 18, 20, 0, tzinfo=timezone.utc)
+        self.assertTrue(svc.should_auto_run_meta(now, {"last_meta_run_date": "2026-11-17"}))
+        self.assertFalse(svc.should_auto_run_meta(now, {"last_meta_run_date": "2026-11-18"}))
+        tomorrow = datetime(2026, 11, 19, 18, 30, tzinfo=timezone.utc)
+        self.assertTrue(svc.should_auto_run_meta(tomorrow, {"last_meta_run_date": "2026-11-18"}))
+
+    def test_meta_run_records_its_own_state_keys(self):
+        svc.save_state({"last_run_month": "2026-11", "last_run_ok": True})
+        with mock.patch("subprocess.run") as m:
+            m.return_value = mock.Mock(returncode=0)
+            self.assertTrue(svc.run_meta(reason="test"))
+        args = m.call_args[0][0]
+        self.assertTrue(args[1].endswith("meta_feed.py"))
+        self.assertIn("--out", args)
+        state = svc.load_state()
+        self.assertTrue(state["last_meta_run_ok"])
+        self.assertEqual(state["last_meta_run_reason"], "test")
+        self.assertRegex(state["last_meta_run_date"], r"^\d{4}-\d{2}-\d{2}$")
+        self.assertEqual(state["last_run_month"], "2026-11")   # monthly keys untouched
+        self.assertTrue(state["last_run_ok"])
+
+    def test_failed_and_crashed_meta_runs_are_recorded_not_raised(self):
+        with mock.patch("subprocess.run") as m:
+            m.return_value = mock.Mock(returncode=1)
+            self.assertFalse(svc.run_meta(reason="test"))
+        self.assertFalse(svc.load_state()["last_meta_run_ok"])
+        with mock.patch("subprocess.run", side_effect=OSError("boom")):
+            self.assertFalse(svc.run_meta(reason="test"))
+        self.assertFalse(svc._run_in_progress)
+
+    def test_meta_skips_while_the_monthly_run_holds_the_lock(self):
+        svc._run_in_progress = True
+        with mock.patch("subprocess.run") as m:
+            self.assertIsNone(svc.run_meta(reason="test"))
+        m.assert_not_called()
+        self.assertNotIn("last_meta_run_date", svc.load_state())  # retried next poll
+
+    def test_monthly_skips_while_meta_holds_the_lock(self):
+        svc._run_in_progress = True
+        with mock.patch("subprocess.run") as m:
+            self.assertFalse(svc.run_pipeline(reason="test"))
+        m.assert_not_called()
+
+    def test_scheduler_tick_runs_monthly_then_meta(self):
+        os.environ["META_RUN_HOUR"] = "0"
+        calls = []
+        stop = threading.Event()
+
+        def meta(**k):
+            calls.append("meta")
+            stop.set()
+        with mock.patch.object(svc, "should_auto_run", return_value=True), \
+                mock.patch.object(svc, "run_pipeline", side_effect=lambda **k: calls.append("monthly")), \
+                mock.patch.object(svc, "run_meta", side_effect=meta):
+            svc.scheduler_loop(poll_seconds=0, stop_event=stop)
+        self.assertEqual(calls, ["monthly", "meta"])
+
+    def test_scheduler_does_not_rerun_meta_the_same_day(self):
+        os.environ["META_RUN_HOUR"] = "0"
+        now = datetime.now(timezone.utc)
+        svc.save_state({"last_meta_run_date": now.strftime("%Y-%m-%d"),
+                        "last_run_month": now.strftime("%Y-%m")})
+        stop = threading.Event()
+        stop.wait = lambda _: stop.set()
+        with mock.patch.object(svc, "run_meta") as m, mock.patch.object(svc, "run_pipeline") as p:
+            svc.scheduler_loop(poll_seconds=0, stop_event=stop)
+        m.assert_not_called()
+        p.assert_not_called()
