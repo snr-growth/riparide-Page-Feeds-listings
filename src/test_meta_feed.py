@@ -247,6 +247,8 @@ class ValidateTests(unittest.TestCase):
 
 class BuildTests(unittest.TestCase):
     def setUp(self):
+        self._delay, mf.PAGE_DELAY = mf.PAGE_DELAY, 0
+        self.addCleanup(setattr, mf, "PAGE_DELAY", self._delay)
         self.tmp = tempfile.mkdtemp()
         self.core = os.path.join(self.tmp, "core.csv")
         write_csv(self.core, CORE)
@@ -341,6 +343,75 @@ class BuildTests(unittest.TestCase):
         for name, f in rep["feeds"].items():
             self.assertEqual(f["pet_identified"], 0, name)
             self.assertFalse(any("pet" in k for k in f["rungs"]), name)
+
+    # --- items newer than the PMax labels: labelled from their own page ---
+
+    def page_fetch(self, pages, seen=None):
+        def fetch(u):
+            if seen is not None:
+                seen.append(u)
+            if u in pages:
+                return pages[u]
+            return self.fetch(u)
+        return fetch
+
+    def test_new_listing_labelled_from_its_page_title(self):
+        self.counts[url("VIC", "grampians", "glamping")] = 7
+        pages = {B + "/listings/8-new":
+                 "<title>Dome - Glamping for Rent in Halls Gap, Grampians, VIC, AU | Riparide</title>"}
+        rep = self.build(fetch=self.page_fetch(pages))
+        links = {r[0]: r[2] for r in self.read("meta-listings-vic.csv")[1:]}
+        self.assertEqual(links["listing_8"], url("VIC", "grampians", "glamping"))
+        f = rep["feeds"]["meta-listings-vic.csv"]
+        self.assertEqual(f["labelled_from_page"], 1)
+        self.assertEqual(f["unjoined"], 1)                      # listing_4: page unreadable
+        self.assertEqual(rep["new_pages"]["labelled"], 1)
+        self.assertEqual(rep["new_pages"]["unreadable"], 2)     # listing_4 and story_99
+
+    def test_new_story_takes_its_featured_listing_stay_type(self):
+        pages = {B + "/stories/99-z":
+                 '<title>A weekend away | Riparide</title>{"listing":{"id":9}}'}
+        self.build(fetch=self.page_fetch(pages))
+        self.assertEqual(self.read("meta-stories-nsw.csv")[1][2], url("NSW", "north-coast", "house"))
+
+    def test_new_story_whose_listing_is_also_new(self):
+        self.counts[url("NSW", "north-coast", "cabin")] = 9
+        pages = {B + "/stories/99-z": '<title>A weekend away | Riparide</title>{"listing":{"id":55}}',
+                 B + "/listings/55": "<title>Cabin for Rent in Byron Bay, North Coast, NSW, AU</title>"}
+        self.build(fetch=self.page_fetch(pages))
+        self.assertEqual(self.read("meta-stories-nsw.csv")[1][2], url("NSW", "north-coast", "cabin"))
+
+    def test_page_read_once_then_cached(self):
+        pages = {B + "/listings/8-new": "<title>Cabin for Rent in Halls Gap, Grampians, VIC, AU</title>"}
+        seen = []
+        self.build(fetch=self.page_fetch(pages, seen))
+        self.assertEqual(seen.count(B + "/listings/8-new"), 1)
+        seen.clear()
+        rep = self.build(fetch=self.page_fetch(pages, seen))
+        self.assertNotIn(B + "/listings/8-new", seen)
+        self.assertGreaterEqual(rep["new_pages"]["from_cache"], 1)
+        links = {r[0]: r[2] for r in self.read("meta-listings-vic.csv")[1:]}
+        self.assertEqual(links["listing_8"], url("VIC", "grampians", "cabin"))
+
+    def test_unreadable_page_is_retried_next_run(self):
+        seen = []
+        self.build(fetch=self.page_fetch({}, seen))
+        self.assertIn(B + "/listings/8-new", seen)
+        seen.clear()
+        self.build(fetch=self.page_fetch({}, seen))
+        self.assertIn(B + "/listings/8-new", seen)              # not cached as a failure
+
+    def test_page_with_no_location_goes_to_state(self):
+        pages = {B + "/listings/8-new": "<title>Something | Riparide</title>"}
+        rep = self.build(fetch=self.page_fetch(pages))
+        links = {r[0]: r[2] for r in self.read("meta-listings-vic.csv")[1:]}
+        self.assertEqual(links["listing_8"], url("VIC"))
+        self.assertEqual(rep["feeds"]["meta-listings-vic.csv"]["labelled_from_page"], 0)
+
+    def test_already_labelled_items_never_fetch_their_page(self):
+        seen = []
+        self.build(fetch=self.page_fetch({}, seen))
+        self.assertNotIn(B + "/listings/1-a", seen)
 
     def test_unknown_state_count_keeps_original_link(self):
         self.counts = {}

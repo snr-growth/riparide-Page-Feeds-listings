@@ -484,7 +484,7 @@ Covered by `test_labeller.LandmarkSearchTests`, `test_run.ApplySearchMinimumTest
 **Ladder** (first rung with at least `META_MIN_RESULTS`, default 6, results):
 - pet-friendly item: region+type+pet → region+pet → region+type → region → state+pet → state
 - other item: region+type → region → state+type → state
-- not yet in the PMax labels: state
+- not yet in the PMax labels: labelled from the item's own page title first (see the update below); state only if that fails
 
 Type rungs exist only for stay types that are site filters (`config.SUBCATS`). An unknown count never wins. If no rung reaches the minimum, the state search is used; if even its count is unknown, the original link is kept. `state` is always sent, because `regions[]` without it is silently ignored and shows every stay (verified live).
 
@@ -497,5 +497,7 @@ Type rungs exist only for stay types that are site filters (`config.SUBCATS`). A
 **Meta constraints (checked in Meta's docs, 18 Nov 2026):** a supplementary feed cannot override `link`, so this has to be a full replacement feed. Meta describes `link` as the item's own product page, and catalogue retargeting matches pixel `content_ids` to item ids. Landing on a search page may lift searches, but it can lower bookings and shrink retargeting audiences, so the client should A/B test it before switching every ad.
 
 **Update 19 Nov 2026: pet-friendly is off.** The client chose to skip pet-friendly landing pages entirely. `META_PET` defaults to off: no item is treated as pet-friendly (not the harvest, not `INT_PET_FRIENDLY`, not the collection), no pet searches are fetched, and every item uses the ordinary ladder. With pet off, every item on the 18 Nov feeds landed on region + type (72%) or region (28%), using the 19 Nov live labels. The pet code stays in place behind `META_PET=on`. When it was on, the live QA harvest found 87% (VIC) and 89% (NSW) of the site's pet stays.
+
+**Update 19 Nov 2026: new pages are labelled on day one.** The monthly labels are up to a month old, so a page added after the 1st used to land on the state search. The job now reads each such item's own page title with the monthly run's parser (`enricher.parse_title`), giving region and stay type. A new story takes its featured listing's stay type, and that listing is read too if it is also new. Each page is read once and cached (`meta-new-pages-cache.json`, pruned to the items still missing from the labels). A page that can't be fetched is not cached, so it is retried the next day. Capped by `META_MAX_PAGE_FETCHES` (300). The report shows `labelled_from_page` per feed.
 
 **Offline check (18 Nov data):** listings land about 67% on region+type, 29% on region and 2% on state (only the rows not yet labelled). No original links were kept. Covered by `test_meta_feed` and `test_railway_service`.

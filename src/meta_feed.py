@@ -23,7 +23,9 @@ never wins):
   pet-friendly: region+type+pet, region+pet, region+type, region, state+pet, state
   other:        region+type, region, state+type, state
 Type rungs need a stay type that is a site filter (config.SUBCATS); region
-rungs need a known hub slug. Rows without labels go to their state search.
+rungs need a known hub slug. Items newer than the monthly PMax labels are
+labelled from their own page title (cached); only those whose page can't be
+read or parsed go to their state search.
 If no rung qualifies the state search is still used when its count is known;
 if even that is unknown the original link is kept.
 
@@ -50,10 +52,18 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config as cfg  # noqa: E402
+import enricher  # noqa: E402
 import fetcher  # noqa: E402
 import labeller  # noqa: E402
 
 # --- constants (env-overridable) -------------------------------------------
+
+# Pages newer than the monthly PMax labels are read directly (their page title
+# names region and stay type) so they get a specific search on day one. Each
+# is read once and cached until the monthly run labels it.
+PAGE_CACHE_JSON = "meta-new-pages-cache.json"
+MAX_PAGE_FETCHES = int(os.environ.get("META_MAX_PAGE_FETCHES") or 300)
+PAGE_DELAY = float(os.environ.get("META_PAGE_DELAY") or 0.5)
 
 MIN_RESULTS = int(os.environ.get("META_MIN_RESULTS") or 6)
 SOURCE_URL = os.environ.get(
@@ -305,6 +315,123 @@ def harvest_pet(regions, fetch=fetcher.get, log=print, sleep=time.sleep):
             state, found["stays"], found["total"], found["searches"], found["complete_searches"]))
     return out
 
+# --- pages newer than the PMax labels -------------------------------------
+
+def read_page(url, fetch=fetcher.get):
+    """Location and stay type from a listing or story page's own title, the
+    same parser the monthly run uses (enricher.parse_title). A story page also
+    names its featured listing. Returns a dict ({} when the title carries
+    nothing usable), or None when the page could not be fetched, so it is
+    tried again next run."""
+    try:
+        body = fetch(url)
+    except Exception:
+        return None
+    m = enricher._TITLE.search(body or "")
+    out = enricher.parse_title(m.group(1)) if m else {}
+    out = {k: v for k, v in out.items() if k in ("country", "state", "region", "stay")}
+    if "/stories/" in url:
+        lid = enricher.featured_listing_id(body or "")
+        if lid:
+            out["listing_id"] = lid
+    return out
+
+
+def labels_from_page(kind, loc, labels, page_locs):
+    """The label set the PMax run would give this page, from its own title.
+    A story takes its featured listing's stay type (the site's own category)
+    and fills a missing region or state from it, like enricher.link_stories."""
+    loc = dict(loc or {})
+    if kind == "stories" and loc.get("listing_id"):
+        key = ("listings", loc["listing_id"])
+        listing = labels.get(key)
+        if listing is None and key in page_locs:
+            listing = labels_from_page("listings", page_locs[key], labels, page_locs)
+        listing = listing or set()
+        stay = [x for x in listing if x.startswith("TYPE_")]
+        if stay:
+            loc["stay"] = stay[0]
+        for prefix, field in (("REG_", "region"), ("GEO_", "state")):
+            if not loc.get(field):
+                vals = [x for x in listing if x.startswith(prefix) and (
+                    field != "state" or x[4:] in ("VIC", "NSW", "QLD", "SA", "WA", "TAS", "NT", "ACT"))]
+                if vals:
+                    loc[field] = vals[0]
+    labs = set(v for k, v in loc.items() if k in ("country", "state", "region", "stay") and v)
+    return labs
+
+
+def label_new_pages(inputs, labels, out_dir, fetch, log):
+    """{key: label set} for feed items missing from the PMax labels, read from
+    their own pages (cached in out_dir). Returns (page_labels, report)."""
+    cache_path = os.path.join(out_dir, PAGE_CACHE_JSON)
+    try:
+        with open(cache_path, encoding="utf-8") as f:
+            cache = json.load(f)
+    except Exception:
+        cache = {}
+    wanted = {}
+    for name, (header, rows) in inputs.items():
+        i_id, i_link = header.index("id"), header.index("link")
+        for r in rows:
+            key = feed_key(r[i_id])
+            if key and key not in labels:
+                wanted[key] = r[i_link]
+    rep = {"not_in_labels": len(wanted), "read_this_run": 0, "from_cache": 0,
+           "unreadable": 0, "labelled": 0}
+    page_locs = {}
+    for key, link in sorted(wanted.items()):
+        ck = "%s/%s" % key
+        if ck in cache:
+            page_locs[key] = cache[ck]
+            rep["from_cache"] += 1
+            continue
+        if rep["read_this_run"] >= MAX_PAGE_FETCHES:
+            continue
+        if rep["read_this_run"]:
+            time.sleep(PAGE_DELAY)
+        loc = read_page(link, fetch)
+        rep["read_this_run"] += 1
+        if loc is None:
+            rep["unreadable"] += 1
+            continue
+        page_locs[key] = cache[ck] = loc
+    # Stories need their featured listing, which may itself be new and not in
+    # any feed: read it too (once, cached) so the story gets its stay type.
+    for key, loc in list(page_locs.items()):
+        lid = loc.get("listing_id")
+        lkey = ("listings", lid) if lid else None
+        if not lkey or lkey in labels or lkey in page_locs:
+            continue
+        ck = "listings/%s" % lid
+        if ck not in cache and rep["read_this_run"] < MAX_PAGE_FETCHES:
+            time.sleep(PAGE_DELAY)
+            got = read_page("%s/listings/%s" % (cfg.BASE, lid), fetch)
+            rep["read_this_run"] += 1
+            if got is not None:
+                cache[ck] = got
+        if ck in cache:
+            page_locs[lkey] = cache[ck]
+    page_labels = {}
+    for key in wanted:
+        if key in page_locs:
+            labs = labels_from_page(key[0], page_locs[key], labels, page_locs)
+            if labs:
+                page_labels[key] = labs
+                rep["labelled"] += 1
+    keep = {"%s/%s" % k for k in wanted} | {"listings/%s" % (page_locs[k] or {}).get("listing_id")
+                                            for k in page_locs if (page_locs[k] or {}).get("listing_id")}
+    try:
+        write_atomic(cache_path, json.dumps({k: v for k, v in cache.items() if k in keep}, indent=0))
+    except Exception as e:
+        log("meta: could not save the new-pages cache: %s" % e)
+    log("meta: %d item(s) not yet in the PMax labels: %d labelled from their own page "
+        "(%d read now, %d cached, %d unreadable)" % (rep["not_in_labels"], rep["labelled"],
+                                                     rep["read_this_run"], rep["from_cache"],
+                                                     rep["unreadable"]))
+    return page_labels, rep
+
+
 # --- CSV in/out and validation ---------------------------------------------
 
 def parse_feed(text):
@@ -413,6 +540,9 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
                 "searches": h["searches"], "complete_searches": h["complete_searches"],
                 "error": h["error"]}
 
+    # 2b. items newer than the PMax labels: label them from their own page
+    page_labels, report["new_pages"] = label_new_pages(inputs, labels, out_dir, fetch, log)
+
     # 3. work out every item's candidates, count all searches once
     plans = {}
     for name, (header, rows) in inputs.items():
@@ -423,8 +553,8 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
         plan = []
         for r in rows:
             key = feed_key(r[i_id])
-            labs = labels.get(key) if key else None
-            joined = labs is not None
+            labs = (labels.get(key) or page_labels.get(key)) if key else None
+            joined = bool(labs)
             labs = labs or set()
             state = item_state(labs, market)
             num = key[1] if key else None
@@ -432,11 +562,12 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
                 (num and num in pet[kind])
                 or "INT_PET_FRIENDLY" in labs
                 or (kind == "stories" and i_cl4 is not None and _PET_COLLECTION.search(r[i_cl4])))
+            from_page = bool(key) and key not in labels and joined
             plan.append((joined, is_pet, candidates(
-                state, region_slug(labs, state, hubs), stay_type(labs), is_pet, joined)))
+                state, region_slug(labs, state, hubs), stay_type(labs), is_pet, joined), from_page))
         plans[name] = plan
 
-    urls = sorted({u for plan in plans.values() for _, _, cands in plan for _, u in cands})
+    urls = sorted({u for plan in plans.values() for _, _, cands, _ in plan for _, u in cands})
     to_count = [u for u in urls if u not in known_counts]
     log("meta: counting %d searches (%d already counted while harvesting pet)"
         % (len(to_count), len(urls) - len(to_count)))
@@ -449,10 +580,11 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
     for name, (header, rows) in inputs.items():
         i_link = header.index("link")
         i_app = header.index("applink.ios_url")
-        rungs, kept, unjoined, pets = Counter(), 0, 0, 0
+        rungs, kept, unjoined, pets, from_page = Counter(), 0, 0, 0, 0
         out_rows = []
-        for r, (joined, is_pet, cands) in zip(rows, plans[name]):
+        for r, (joined, is_pet, cands, fp) in zip(rows, plans[name]):
             unjoined += not joined
+            from_page += fp
             pets += is_pet
             rung, url = choose(cands, counts, min_results)
             new = list(r)
@@ -465,7 +597,7 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
                 new[i_link] = new[i_app] = url
             out_rows.append(new)
         info = {"rows": len(rows), "rungs": dict(rungs.most_common()), "unjoined": unjoined,
-                "original_link_kept": kept, "pet_identified": pets}
+                "labelled_from_page": from_page, "original_link_kept": kept, "pet_identified": pets}
         path = os.path.join(out_dir, name)
         try:
             if not rows:
