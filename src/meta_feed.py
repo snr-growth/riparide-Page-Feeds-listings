@@ -29,12 +29,12 @@ if even that is unknown the original link is kept.
 
 A feed that fails to fetch or validate keeps its previous good file. The
 build fails as a whole (exit 1) only if the core CSV is missing or every
-feed failed. Pet harvesting failing never fails anything: the feed is built
-without pet rungs and the report says so.
+feed failed. Pet-friendly rungs are off unless META_PET=on (client decision,
+19 Nov 2026); when on, pet harvesting failing never fails anything.
 
 CLI:
   python src/meta_feed.py [--out DIR] [--core CSV] [--offline-feeds DIR]
-                          [--counts-json FILE] [--skip-pet]
+                          [--counts-json FILE] [--skip-pet | --pet]
 """
 import argparse
 import csv
@@ -65,6 +65,10 @@ REPORT_JSON = "meta-feed-report.json"
 # searches) and the previous good file is kept instead.
 MAX_ORIGINAL_RATIO = float(os.environ.get("META_MAX_ORIGINAL_RATIO") or 0.5)
 PET_DELAY = float(os.environ.get("META_PET_DELAY") or 1.0)
+# Pet-friendly landing pages are OFF: the client chose to skip them (19 Nov
+# 2026). With pet off, no item is treated as pet-friendly at all and no pet
+# searches are fetched. META_PET=on brings the pet rungs and harvest back.
+PET_ENABLED = (os.environ.get("META_PET") or "off").strip().lower() in ("1", "on", "true", "yes")
 
 # (output file, feed kind, market)
 FEEDS = [
@@ -355,13 +359,14 @@ def write_atomic(path, text):
 # --- build -----------------------------------------------------------------
 
 def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
-          totals=fetcher.search_totals, skip_pet=False, min_results=None):
+          totals=fetcher.search_totals, skip_pet=None, min_results=None):
     """Rebuild the four Meta feeds into out_dir. Returns the report dict
     (also written to out_dir/meta-feed-report.json); report['ok'] is False
     when the core CSV is missing or every feed failed."""
     out_dir = out_dir or default_out_dir()
     core_csv = core_csv or default_core_csv()
     min_results = MIN_RESULTS if min_results is None else min_results
+    skip_pet = (not PET_ENABLED) if skip_pet is None else skip_pet
     os.makedirs(out_dir, exist_ok=True)
     report = {"built_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
               "min_results": min_results, "core_csv": core_csv, "ok": False,
@@ -423,7 +428,7 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
             labs = labs or set()
             state = item_state(labs, market)
             num = key[1] if key else None
-            is_pet = bool(
+            is_pet = not skip_pet and bool(
                 (num and num in pet[kind])
                 or "INT_PET_FRIENDLY" in labs
                 or (kind == "stories" and i_cl4 is not None and _PET_COLLECTION.search(r[i_cl4])))
@@ -524,14 +529,16 @@ def main(argv=None):
     ap.add_argument("--core", help="PMax core page feed CSV (default the monthly run's)")
     ap.add_argument("--offline-feeds", help="read the 4 input feeds from <kind>_<MARKET>.csv here")
     ap.add_argument("--counts-json", help="take result counts from this saved file, no fetching")
-    ap.add_argument("--skip-pet", action="store_true", help="do not harvest pet-friendly stays")
+    ap.add_argument("--skip-pet", action="store_true", help="no pet-friendly rungs (the default unless META_PET=on)")
+    ap.add_argument("--pet", action="store_true", help="use pet-friendly rungs and harvest pet stays")
     a = ap.parse_args(argv)
     kw = {}
     if a.offline_feeds:
         kw["fetch"] = offline_fetch(a.offline_feeds)
     if a.counts_json:
         kw["totals"] = counts_from_json(a.counts_json)
-    report = build(out_dir=a.out, core_csv=a.core, skip_pet=a.skip_pet, **kw)
+    skip_pet = True if a.skip_pet else (False if a.pet else None)
+    report = build(out_dir=a.out, core_csv=a.core, skip_pet=skip_pet, **kw)
     print(json.dumps({n: {k: i.get(k) for k in ("status", "rows", "rungs", "error")}
                       for n, i in report["feeds"].items()}, indent=2))
     return 0 if report["ok"] else 1

@@ -496,4 +496,6 @@ Type rungs exist only for stay types that are site filters (`config.SUBCATS`). A
 
 **Meta constraints (checked in Meta's docs, 18 Nov 2026):** a supplementary feed cannot override `link`, so this has to be a full replacement feed. Meta describes `link` as the item's own product page, and catalogue retargeting matches pixel `content_ids` to item ids. Landing on a search page may lift searches, but it can lower bookings and shrink retargeting audiences, so the client should A/B test it before switching every ad.
 
+**Update 19 Nov 2026: pet-friendly is off.** The client chose to skip pet-friendly landing pages entirely. `META_PET` defaults to off: no item is treated as pet-friendly (not the harvest, not `INT_PET_FRIENDLY`, not the collection), no pet searches are fetched, and every item uses the ordinary ladder. With pet off, every item on the 18 Nov feeds landed on region + type (72%) or region (28%), using the 19 Nov live labels. The pet code stays in place behind `META_PET=on`. When it was on, the live QA harvest found 87% (VIC) and 89% (NSW) of the site's pet stays.
+
 **Offline check (18 Nov data):** listings land about 67% on region+type, 29% on region and 2% on state (only the rows not yet labelled). No original links were kept. Covered by `test_meta_feed` and `test_railway_service`.

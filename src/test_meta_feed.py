@@ -299,7 +299,7 @@ class BuildTests(unittest.TestCase):
             return list(csv.reader(f))
 
     def test_end_to_end(self):
-        rep = self.build()
+        rep = self.build(skip_pet=False)
         self.assertTrue(rep["ok"])
         rows = self.read("meta-listings-vic.csv")
         self.assertEqual(rows[0], HEADER)
@@ -325,6 +325,22 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(json.load(fh)["min_results"], 6)
         self.assertEqual(rep["pet"]["VIC"]["site_pet_total"], 1)
         self.assertEqual(rep["pet"]["VIC"]["coverage"], 1.0)
+
+    def test_pet_is_off_by_default(self):
+        # Client decision 19 Nov 2026: no pet-friendly landing pages.
+        fetched = []
+        def fetch(u):
+            fetched.append(u)
+            return self.fetch(u)
+        rep = self.build(fetch=fetch)
+        self.assertFalse(rep["pet"]["enabled"])
+        self.assertFalse(any("petFriendly" in u for u in fetched))
+        links = {r[0]: r[2] for r in self.read("meta-listings-vic.csv")[1:]}
+        self.assertEqual(links["listing_3"], url("VIC", "grampians", "cabin"))  # INT_PET_FRIENDLY ignored
+        self.assertEqual(self.read("meta-stories-vic.csv")[1][2], url("VIC", "grampians", "cabin"))
+        for name, f in rep["feeds"].items():
+            self.assertEqual(f["pet_identified"], 0, name)
+            self.assertFalse(any("pet" in k for k in f["rungs"]), name)
 
     def test_unknown_state_count_keeps_original_link(self):
         self.counts = {}
@@ -409,7 +425,7 @@ class BuildTests(unittest.TestCase):
             if "petFriendly" in u:
                 raise mf.fetcher.FetchError("blocked")
             return self.fetch(u)
-        rep = self.build(fetch=fetch)
+        rep = self.build(fetch=fetch, skip_pet=False)
         self.assertTrue(rep["ok"])
         self.assertIn("blocked", rep["pet"]["VIC"]["error"])
 
