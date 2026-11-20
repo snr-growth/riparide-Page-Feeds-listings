@@ -187,14 +187,15 @@ A second, daily job (`src/meta_feed.py`, DECISIONS.md D21) rebuilds Riparide's f
    - other stay: region + type → region → state + type → state
    - a stay whose own page could not be read or names no location: state
    - type rungs only when the stay type is one of the site's 22 filters; an unknown count never wins; if even the state count is unknown the original link is kept.
-5. Writes four CSVs that are identical to the inputs (same columns, order, rows) except `link` and `applink.ios_url`, plus `meta-feed-report.json` (rung counts, items labelled from their own page, items left unlabelled, pet coverage, errors).
+5. Writes four CSVs that are identical to the inputs (same columns, order, rows) except `link` and `applink.ios_url`, plus `meta-all.csv`, the four in one file with the market (`VIC`/`NSW`) in `custom_label_2`, and `meta-feed-report.json` (rung counts, items labelled from their own page, items left unlabelled, pet coverage, errors).
 
-A feed that fails to download or validate keeps yesterday's file and the report says so. The job fails as a whole only when the PMax core CSV is missing or all four feeds failed. Pet harvesting failing never fails the feed; it is built without pet rungs.
+A feed that fails to download or validate keeps yesterday's file and the report says so. `meta-all.csv` is built from the four files on disk, so it then holds yesterday's version of that part; it is not written at all (yesterday's stays) if a part has never been built or ids repeat across parts. The job fails as a whole when the PMax core CSV is missing, all four feeds failed, or the combined file could not be written. Pet harvesting failing never fails the feed; it is built without pet rungs.
 
 **URLs** (served by the same Railway service, `Cache-Control: no-store`):
 
 | Feed | URL |
 |---|---|
+| **All four in one** (VIC/NSW in `custom_label_2`) | https://feed-refresh-production.up.railway.app/meta-all.csv |
 | Listings, VIC | https://feed-refresh-production.up.railway.app/meta-listings-vic.csv |
 | Listings, NSW | https://feed-refresh-production.up.railway.app/meta-listings-nsw.csv |
 | Stories, VIC | https://feed-refresh-production.up.railway.app/meta-stories-vic.csv |
@@ -218,7 +219,9 @@ A feed that fails to download or validate keeps yesterday's file and the report 
 
 Run it locally (offline, from saved files): `python src/meta_feed.py --offline-feeds DIR --core CORE.csv --counts-json COUNTS.json --out DIR`. `DIR` holds `listings_VIC.csv`, `listings_NSW.csv`, `stories_VIC.csv`, `stories_NSW.csv`.
 
-**Client's one-time setup in Meta Commerce Manager** (we have no Meta access): for each of the four catalogues, open Commerce Manager → the catalogue → **Catalogue → Data sources → Add items → Data feed → Use a URL** (or edit the existing scheduled feed's URL), enter the matching URL from the table above, choose **Scheduled feed**, set it to repeat **daily** (a time after about 6am AEDT so the day's file is ready), currency AUD, and save. Run "Request update now" once and check the upload shows no errors. Item ids are unchanged, so existing ads and product sets keep working.
+**Client's one-time setup for the combined feed** (`meta-all.csv`): in the catalogue, edit one existing scheduled data source to the `meta-all.csv` URL, run "Request update now", check it shows about 3,950 items with no errors, then delete the other three data sources and check the catalogue still has about 3,950 items. Product sets: `product_type` contains `Listing` or `Story`; `custom_label_2` is `VIC` or `NSW`.
+
+**Client's one-time setup in Meta Commerce Manager, four separate feeds** (we have no Meta access): for each of the four catalogues, open Commerce Manager → the catalogue → **Catalogue → Data sources → Add items → Data feed → Use a URL** (or edit the existing scheduled feed's URL), enter the matching URL from the table above, choose **Scheduled feed**, set it to repeat **daily** (a time after about 6am AEDT so the day's file is ready), currency AUD, and save. Run "Request update now" once and check the upload shows no errors. Item ids are unchanged, so existing ads and product sets keep working.
 
 **Caveat — A/B test it before rolling out:** Meta describes the `link` field as the URL of the product's own page. Sending people to a search page is a deliberate deviation. It may change how Meta reviews or optimises the ads, so run it as a test (one catalogue or one ad set against the original feed) before switching every campaign.
 

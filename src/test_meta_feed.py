@@ -245,7 +245,9 @@ class ValidateTests(unittest.TestCase):
             mf.validate(HEADER, self.rows, [])
 
 
-class BuildTests(unittest.TestCase):
+class BuildFixture(unittest.TestCase):
+    """Stubbed site and core CSV for build() runs."""
+
     def setUp(self):
         self._delay, mf.PAGE_DELAY = mf.PAGE_DELAY, 0
         self.addCleanup(setattr, mf, "PAGE_DELAY", self._delay)
@@ -300,6 +302,8 @@ class BuildTests(unittest.TestCase):
         with open(os.path.join(self.out, name), encoding="utf-8") as f:
             return list(csv.reader(f))
 
+
+class BuildTests(BuildFixture):
     def test_end_to_end(self):
         rep = self.build(skip_pet=False)
         self.assertTrue(rep["ok"])
@@ -517,3 +521,94 @@ class BuildTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CombinedTests(BuildFixture):
+    """meta-all.csv: the four feeds in one file plus a market label."""
+
+    def test_combined_has_every_row_and_a_market_label(self):
+        rep = self.build(skip_pet=True)
+        self.assertTrue(rep["ok"])
+        rows = self.read(mf.COMBINED_CSV)
+        self.assertEqual(rows[0], HEADER + [mf.MARKET_COL])   # no custom_label_1 here: appended
+        body = rows[1:]
+        parts = []
+        for name, _, market in mf.FEEDS:
+            for r in self.read(name)[1:]:
+                parts.append(r + [market])
+        self.assertEqual(body, parts)                          # same rows, same links, in order
+        self.assertEqual(len({r[0] for r in body}), len(body))
+        self.assertEqual(rep["combined"]["rows"], 8)
+        self.assertEqual(rep["combined"]["markets"], {"VIC": 6, "NSW": 2})
+        self.assertTrue(all(p["today"] for p in rep["combined"]["parts"].values()))
+
+    def test_market_label_sits_after_custom_label_1(self):
+        os.makedirs(self.out)
+        for i, (name, _, _) in enumerate(mf.FEEDS):
+            write_csv(os.path.join(self.out, name),
+                      [["id", "custom_label_0", "custom_label_1", "custom_label_4"],
+                       ["listing_%d" % i, "a", "b", "c"]])
+        info = mf.combine(self.out, {}, log=lambda *_: None)
+        self.assertEqual(info["status"], "ok")
+        rows = self.read(mf.COMBINED_CSV)
+        self.assertEqual(rows[0], ["id", "custom_label_0", "custom_label_1", mf.MARKET_COL, "custom_label_4"])
+        self.assertEqual([r[3] for r in rows[1:]], ["VIC", "NSW", "VIC", "NSW"])
+        self.assertEqual(rows[1], ["listing_0", "a", "b", "VIC", "c"])
+
+    def test_different_columns_are_merged_by_name(self):
+        os.makedirs(self.out)
+        for i, (name, _, _) in enumerate(mf.FEEDS):
+            hdr = ["id", "title"] + (["extra"] if i == 3 else [])
+            write_csv(os.path.join(self.out, name), [hdr, ["story_%d" % i, "t"] + (["x"] if i == 3 else [])])
+        self.assertEqual(mf.combine(self.out, {}, log=lambda *_: None)["status"], "ok")
+        rows = self.read(mf.COMBINED_CSV)
+        self.assertEqual(rows[0], ["id", "title", "extra", mf.MARKET_COL])
+        self.assertEqual(rows[1], ["story_0", "t", "", "VIC"])
+        self.assertEqual(rows[4], ["story_3", "t", "x", "NSW"])
+
+    def test_failed_part_uses_its_previous_file(self):
+        self.build(skip_pet=True)
+        del self.feeds[("stories", "VIC")]
+        rep = self.build(skip_pet=True)
+        self.assertTrue(rep["ok"])
+        self.assertEqual(rep["combined"]["status"], "ok")
+        self.assertFalse(rep["combined"]["parts"]["meta-stories-vic.csv"]["today"])
+        ids = [r[0] for r in self.read(mf.COMBINED_CSV)[1:]]
+        self.assertIn("story_7", ids)
+        self.assertEqual(len(ids), 8)
+
+    def test_part_never_built_keeps_previous_combined(self):
+        self.build(skip_pet=True)
+        before = self.read(mf.COMBINED_CSV)
+        os.remove(os.path.join(self.out, "meta-stories-nsw.csv"))
+        del self.feeds[("stories", "NSW")]
+        rep = self.build(skip_pet=True)
+        self.assertFalse(rep["ok"])
+        self.assertEqual(rep["combined"]["status"], "failed")
+        self.assertTrue(rep["combined"]["kept_previous"])
+        self.assertIn("never been built", rep["error"])
+        self.assertEqual(self.read(mf.COMBINED_CSV), before)
+
+    def test_first_run_with_a_missing_part_writes_no_combined(self):
+        del self.feeds[("stories", "NSW")]
+        rep = self.build(skip_pet=True)
+        self.assertFalse(rep["ok"])
+        self.assertFalse(rep["combined"]["kept_previous"])
+        self.assertFalse(os.path.exists(os.path.join(self.out, mf.COMBINED_CSV)))
+        self.assertEqual(rep["feeds"]["meta-listings-vic.csv"]["status"], "ok")   # parts still written
+
+    def test_duplicate_id_across_feeds_is_refused(self):
+        self.feeds[("listings", "NSW")] = feed_text([item("listing_1", B + "/listings/9-n")])
+        self.counts[url("NSW")] = 1339
+        rep = self.build(skip_pet=True)
+        self.assertEqual(rep["combined"]["status"], "failed")
+        self.assertIn("duplicate id listing_1", rep["combined"]["error"])
+        self.assertFalse(rep["ok"])
+
+    def test_source_with_its_own_custom_label_2_is_not_overwritten(self):
+        os.makedirs(self.out)
+        for i, (name, _, _) in enumerate(mf.FEEDS):
+            write_csv(os.path.join(self.out, name), [["id", mf.MARKET_COL], ["x_%d" % i, "theirs"]])
+        info = mf.combine(self.out, {}, log=lambda *_: None)
+        self.assertEqual(info["status"], "failed")
+        self.assertIn("already has", info["error"])

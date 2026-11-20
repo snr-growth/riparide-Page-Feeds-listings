@@ -96,7 +96,7 @@ flowchart LR
 | Location recovery from listing/story page titles | ✅ Built — cached, so only new pages are fetched each month |
 | Optional attributes-file merge | ✅ Built, not yet in use (no file supplied yet) |
 | Month-to-month change detection (diff) | ✅ Built and self-tested (`prove_diff.py`, runs in CI on every push) |
-| Meta catalogue feeds (D21) | ✅ Built 18 Nov 2026: Riparide's four Meta feeds rebuilt daily so each ad opens a matching search page with at least 6 stays. Waiting on the client to connect the URLs in Meta |
+| Meta catalogue feeds (D21) | ✅ Built 18 Nov 2026: Riparide's four Meta feeds rebuilt daily so each ad opens a matching search page with at least 6 stays. Waiting on the client to connect the URLs in Meta. 20 Nov: also one combined feed, `meta-all.csv` (VIC/NSW in `custom_label_2`), at the client's request |
 | robots.txt / AdsBot-Google check | ✅ Added — reports (non-blocking) if AdsBot is blocked from any feed page type |
 | Pre-upload validation (now 9 checks) | ✅ Built — duplicates, missing labels, label count, tracking params, domain, facet param order, dead links, label character set, **and a new feed-collapse guard** |
 | Automatic 6-monthly full status check | ✅ Now genuinely automatic (Jan/Jul) — previously only a recommendation nobody had wired up |

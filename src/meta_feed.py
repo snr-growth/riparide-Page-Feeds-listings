@@ -87,7 +87,14 @@ FEEDS = [
     ("meta-stories-vic.csv", "stories", "VIC"),
     ("meta-stories-nsw.csv", "stories", "NSW"),
 ]
-OUTPUT_FILES = [f for f, _, _ in FEEDS] + [REPORT_JSON]
+# One file with all four feeds (client request, 20 Nov 2026), built from the
+# four finished files so a part that failed today is the last good version
+# of that part. Market goes in custom_label_2 so product sets can still be
+# split by VIC/NSW: the location column is not reliable for that (some
+# stories say "Victoria" or a region name).
+COMBINED_CSV = "meta-all.csv"
+MARKET_COL = "custom_label_2"
+OUTPUT_FILES = [f for f, _, _ in FEEDS] + [COMBINED_CSV, REPORT_JSON]
 
 LINK_COLS = ("link", "applink.ios_url")
 SEARCH_PREFIX = cfg.BASE + "/listings?"
@@ -487,7 +494,7 @@ def write_atomic(path, text):
 
 def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
           totals=fetcher.search_totals, skip_pet=None, min_results=None):
-    """Rebuild the four Meta feeds into out_dir. Returns the report dict
+    """Rebuild the four Meta feeds, and the combined one, into out_dir. Returns the report dict
     (also written to out_dir/meta-feed-report.json); report['ok'] is False
     when the core CSV is missing or every feed failed."""
     out_dir = out_dir or default_out_dir()
@@ -615,11 +622,61 @@ def build(out_dir=None, log=print, core_csv=None, fetch=fetcher.get,
         report["feeds"][name] = info
 
     ok_feeds = [n for n, i in report["feeds"].items() if i.get("status") == "ok"]
-    report["ok"] = bool(ok_feeds)
+    report["combined"] = combine(out_dir, report["feeds"], log)
+    report["ok"] = bool(ok_feeds) and report["combined"]["status"] == "ok"
     if not ok_feeds:
         report["error"] = "every feed failed"
+    elif report["combined"]["status"] != "ok":
+        report["error"] = "combined feed: " + report["combined"]["error"]
     _write_report(out_dir, report)
     return report
+
+
+def combine(out_dir, feeds, log=print):
+    """Write COMBINED_CSV from the four files on disk (today's, or the
+    previous one where today's failed), adding the market in MARKET_COL.
+    All four parts must exist and ids must be unique, otherwise the previous
+    combined file is kept: a part missing from the file would delete its
+    items from the Meta catalogue."""
+    path = os.path.join(out_dir, COMBINED_CSV)
+    info = {"rows": 0, "parts": {}, "markets": {}}
+    try:
+        header, rows, seen = None, [], set()
+        for name, _, market in FEEDS:
+            part = os.path.join(out_dir, name)
+            if not os.path.exists(part):
+                raise ValueError("%s has never been built" % name)
+            with open(part, encoding="utf-8", newline="") as f:
+                h, part_rows = parse_feed(f.read())
+            if MARKET_COL in h:
+                raise ValueError("%s already has a %s column" % (name, MARKET_COL))
+            if header is None:
+                header = list(h)
+            for c in h:
+                if c not in header:
+                    header.append(c)
+            i_id = h.index("id")
+            for r in part_rows:
+                if r[i_id] in seen:
+                    raise ValueError("duplicate id %s (in %s)" % (r[i_id], name))
+                seen.add(r[i_id])
+                rec = dict(zip(h, r))
+                rec[MARKET_COL] = market
+                rows.append(rec)
+            info["parts"][name] = {"rows": len(part_rows),
+                                   "today": (feeds.get(name) or {}).get("status") == "ok"}
+            info["markets"][market] = info["markets"].get(market, 0) + len(part_rows)
+        # market label sits next to the other custom labels
+        at = header.index("custom_label_1") + 1 if "custom_label_1" in header else len(header)
+        header.insert(at, MARKET_COL)
+        write_atomic(path, to_csv(header, [[rec.get(c, "") for c in header] for rec in rows]))
+        info.update(status="ok", rows=len(rows))
+        log("meta: %s written, %d rows %s" % (COMBINED_CSV, len(rows), info["markets"]))
+    except Exception as e:
+        info.update(status="failed", error=str(e), kept_previous=os.path.exists(path))
+        log("meta: %s NOT written (%s), previous file %s" % (
+            COMBINED_CSV, e, "kept" if info["kept_previous"] else "absent"))
+    return info
 
 
 def _write_report(out_dir, report):
@@ -671,8 +728,11 @@ def main(argv=None):
         kw["totals"] = counts_from_json(a.counts_json)
     skip_pet = True if a.skip_pet else (False if a.pet else None)
     report = build(out_dir=a.out, core_csv=a.core, skip_pet=skip_pet, **kw)
-    print(json.dumps({n: {k: i.get(k) for k in ("status", "rows", "rungs", "error")}
-                      for n, i in report["feeds"].items()}, indent=2))
+    summary = {n: {k: i.get(k) for k in ("status", "rows", "rungs", "error")}
+               for n, i in report["feeds"].items()}
+    if "combined" in report:
+        summary[COMBINED_CSV] = {k: report["combined"].get(k) for k in ("status", "rows", "markets", "error")}
+    print(json.dumps(summary, indent=2))
     return 0 if report["ok"] else 1
 
 

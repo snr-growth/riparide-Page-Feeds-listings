@@ -51,7 +51,7 @@ import config as cfg  # noqa: E402
 RUN_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "run.py")
 META_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meta_feed.py")
 META_FILES = ["meta-listings-vic.csv", "meta-listings-nsw.csv", "meta-stories-vic.csv",
-              "meta-stories-nsw.csv", "meta-feed-report.json"]
+              "meta-stories-nsw.csv", "meta-all.csv", "meta-feed-report.json"]
 STATE_FILE = os.path.join(cfg.DATA_DIR, "railway-service-state.json")
 
 SERVED_FILES = {
